@@ -10,4 +10,8 @@ public final class NativeDsp {
     public static native double nativeStartStream(long ptr, double sampleRate, int blockSize);
 
     public static native void nativeStopStream(long ptr);
+
+    public static native void nativeSetPadLayer(long ptr, int layerIdx, float[] interleavedLr, int frames);
+
+    public static native void nativePitchBend(long ptr, int bend14);
 }

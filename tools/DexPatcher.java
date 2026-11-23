@@ -257,12 +257,12 @@ public class DexPatcher {
                 "stopBleMidiScan()V",
                 "connectBleMidiDevice(Ljava/lang/String;)V",
                 "disconnectBleMidiDevice(Ljava/lang/String;)V",
-                "getAudioRouteStatus()Ljava/lang/String;",
-                "applyAudioMode(Ljava/lang/String;I)Ljava/lang/String;",
-                "openBluetoothSettings()V"
+                "getAudioRouteStatus()Ljava/lang/String;"
         );
 
         List<String> addedEngineVirtualKeys = Arrays.asList(
+                "getDspPtrForPatch()J",
+                "fixPadSemitonesForPatch()V",
                 "getHwBlockSizeForPatch()I",
                 "getHwSampleRateForPatch()I",
                 "getLatencyMsForPatch()D",

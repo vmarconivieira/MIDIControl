@@ -131,15 +131,5 @@ public final class MainActivity extends Activity {
         public String getAudioRouteStatus() {
             return P61xAudioHelper.getAudioRouteStatusJson(MainActivity.this, P61xPatch.getReadyEngine());
         }
-
-        @JavascriptInterface
-        public String applyAudioMode(String mode, int customBlockSize) {
-            return P61xAudioHelper.applyAudioMode(MainActivity.this, P61xPatch.getReadyEngine(), mode, customBlockSize);
-        }
-
-        @JavascriptInterface
-        public void openBluetoothSettings() {
-            P61xAudioHelper.openBluetoothSettings(MainActivity.this);
-        }
     }
 }

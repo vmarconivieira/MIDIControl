@@ -125,6 +125,12 @@ public final class P61xPatch {
 
     public static void markEngineReady(P61xEngine engine) {
         readyEngine = engine;
+        if (engine != null) {
+            try {
+                engine.fixPadSemitonesForPatch();
+            } catch (Throwable ignored) {
+            }
+        }
         try {
             MainActivity act = getActiveActivity();
             if (act != null) {

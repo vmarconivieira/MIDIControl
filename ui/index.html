@@ -626,33 +626,11 @@
       border-color: rgba(34, 197, 94, 0.62);
       background: linear-gradient(180deg, #112219 0%, #0d1612 100%);
     }
-    .audio-route-card.bt, .audio-route-card.is-bt {
-      border-color: rgba(59, 130, 246, 0.62);
-      background: linear-gradient(180deg, #121d31 0%, #0d1421 100%);
-    }
     .audio-route-icon {
       width: 28px; height: 28px; border-radius: 8px;
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
       display: inline-flex; align-items: center; justify-content: center;
       font-size: 15px; flex-shrink: 0;
-    }
-    .audio-mode-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
-    }
-    .audio-mode-btn {
-      padding: 8px 6px; border-radius: 9px; border: 1px solid var(--border-subtle);
-      background: #141923; color: var(--text-secondary); cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center;
-      font-size: 10.5px; font-weight: 800;
-    }
-    .audio-mode-btn small { font-size: 9px; font-weight: 600; color: var(--text-muted); }
-    .audio-mode-btn.active {
-      border-color: var(--mt-accent); background: var(--mt-accent-soft); color: var(--mt-accent-bright);
-    }
-    .audio-bt-tip {
-      background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.28);
-      border-radius: 9px; padding: 8px 10px; font-size: 10.5px; color: #cbd5e1;
-      line-height: 1.4; display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     .btn-master-fx-strip.active {
       border-color: var(--mt-accent) !important;
@@ -1940,7 +1918,7 @@
       <div>
         <div class="drawer-title">P61X CONSOLE</div>
         <div class="drawer-sub mono">STAGE RIG WORKSTATION</div>
-        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.0</span>
+        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.1</span>
       </div>
       <button id="btnCloseNavDrawer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -1959,7 +1937,7 @@
       <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL (61 TECLAS)</span></button>
       <button id="btnDrawerUpdates" class="drawer-item-btn">
         <i class="fa-solid fa-circle-exclamation"></i><span>SOBRE</span>
-        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.0</span>
+        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.1</span>
       </button>
       <button id="btnPanic" class="btn-panic learnable" data-control-id="btn_panic" data-control-label="PANIC (Silenciar Tudo)">
         <span class="midi-badge" data-badge-for="btn_panic"></span>
@@ -2048,8 +2026,8 @@
       <div class="upd-ver-grid">
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VERSÃO INSTALADA</span>
-          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.0</span>
-          <span id="updInstalledCode" class="upd-ver-sub mono">Build 3 • AAudio + USB/BLE MIDI</span>
+          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.1</span>
+          <span id="updInstalledCode" class="upd-ver-sub mono">Build 4 • AAudio + USB/BLE MIDI</span>
         </div>
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VIGENTE NO GITHUB</span>
@@ -2293,42 +2271,14 @@
         </label>
       </div>
 
-      <div id="settingsPaneAudio" style="display:none; flex-direction:column; gap:9px;">
+      <div id="settingsPaneAudio" style="display:none; flex-direction:column; gap:10px;">
         <div id="audioRouteCard" class="audio-route-card">
-          <span id="audioRouteIcon" class="audio-route-icon" style="color:var(--mt-accent-bright);"><i class="fa-solid fa-headphones"></i></span>
+          <span id="audioRouteIcon" class="audio-route-icon" style="color:var(--mt-accent-bright);"><i class="fa-solid fa-volume-high"></i></span>
           <div style="flex:1; min-width:0;">
             <div id="audioRouteTitle" style="font-size:12px; font-weight:800; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detectando saída de áudio...</div>
-            <div id="audioRouteSub" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">AAudio Low-Latency • 48 kHz</div>
+            <div id="audioRouteSub" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">AAudio • 48 kHz</div>
           </div>
           <span id="audioRouteLatChip" class="patch-code-chip mono">-- ms</span>
-        </div>
-
-        <div>
-          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:5px;">PERFIL DE LATÊNCIA (TROCA AUTOMÁTICA AO PLUGAR HUB USB)</label>
-          <div class="audio-mode-grid">
-            <button id="btnModeBtLowLat" class="audio-mode-btn" data-audio-mode="bt_low_latency">
-              <svg class="bt-svg-icon" style="color:#60a5fa; font-size:14px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg>
-              <span>Bluetooth Otim.</span>
-              <small>96f • Modo Jogo</small>
-            </button>
-            <button id="btnModeUsbPro" class="audio-mode-btn active" data-audio-mode="usb_pro">
-              <i class="fa-solid fa-gauge-high" style="color:#4ade80;"></i>
-              <span>USB / Palco</span>
-              <small>128f • Hub + Placa</small>
-            </button>
-            <button id="btnModeSafe" class="audio-mode-btn" data-audio-mode="safe">
-              <i class="fa-solid fa-wave-square" style="color:var(--mt-accent-bright);"></i>
-              <span>Estável</span>
-              <small>256f • Sem estalos</small>
-            </button>
-          </div>
-        </div>
-
-        <div class="audio-bt-tip">
-          <span><strong>Bluetooth no dia a dia:</strong> o modo <em>Bluetooth Otim.</em> reduz o buffer interno do app para ~2ms e solicita baixa latência (<em>USAGE_GAME</em>). Para latência ainda menor no Galaxy M55, ative <strong>Modo Jogo</strong> no fone ou use <strong>LE Audio / aptX</strong>. Ao conectar seu Hub USB + Placa de Áudio, o app entra automaticamente em modo palco (&lt;10ms).</span>
-          <button id="btnOpenBtSettings" class="btn-tool" style="flex-shrink:0; height:30px; font-size:10px; padding:0 9px;" title="Abrir Configurações Bluetooth do Android">
-            <svg class="bt-svg-icon" style="color:#60a5fa; font-size:13px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg><span>Config. BT</span>
-          </button>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
@@ -2339,8 +2289,6 @@
           <div>
             <label class="mono" style="font-size:9.5px; color:var(--text-muted); display:block; margin-bottom:4px;">BUFFER DSP (FRAMES)</label>
             <select id="audioBlockSizeSelect" class="bank-select">
-              <option value="64">64 frames (Ultra)</option>
-              <option value="96">96 frames (BT Otim.)</option>
               <option value="128">128 frames (USB / Palco)</option>
               <option value="256" selected>256 frames (Estável)</option>
               <option value="512">512 frames</option>
@@ -4591,20 +4539,15 @@
       const chip = document.getElementById("audioRouteLatChip");
 
       const isUsb = !!st.isUsbAudio;
-      const isBt = !!st.isBluetooth;
       const isWired = st.routeType === "wired";
 
       if (card) {
         card.classList.toggle("is-usb", isUsb || isWired);
-        card.classList.toggle("is-bt", isBt && !isUsb);
       }
       if (icon) {
         if (isUsb) {
           icon.innerHTML = '<i class="fa-solid fa-plug"></i>';
           icon.style.color = "#4ade80";
-        } else if (isBt) {
-          icon.innerHTML = '<svg class="bt-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg>';
-          icon.style.color = "#60a5fa";
         } else if (isWired) {
           icon.innerHTML = '<i class="fa-solid fa-headphones"></i>';
           icon.style.color = "#4ade80";
@@ -4619,21 +4562,13 @@
       if (sub) sub.textContent = `${st.routeLabel || "AAudio"} • ${bs}f @ ${(sr / 1000).toFixed(sr % 1000 === 0 ? 0 : 1)}kHz`;
 
       const lat = (typeof st.latencyMs === "number" && st.latencyMs > 0) ? st.latencyMs : ((bs / sr) * 1000);
-      if (chip) chip.textContent = isBt ? `${lat.toFixed(1)} ms DSP` : `${lat.toFixed(1)} ms`;
+      if (chip) chip.textContent = `${lat.toFixed(1)} ms`;
 
       const bsSel = document.getElementById("audioBlockSizeSelect");
       if (bsSel && bs > 0) {
         const hasOpt = Array.from(bsSel.options).some(o => Number(o.value) === bs);
         if (hasOpt) bsSel.value = String(bs);
       }
-
-      let activeBtnMode = st.mode || "auto";
-      if (activeBtnMode === "auto") {
-        activeBtnMode = isUsb ? "usb_pro" : (isBt ? "bt_low_latency" : (bs <= 128 ? "usb_pro" : "safe"));
-      }
-      document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.audioMode === activeBtnMode);
-      });
 
       if (Array.isArray(st.devices) && st.devices.length > 0) {
         const outSel = document.getElementById("audioOutDeviceSelect");
@@ -4643,7 +4578,7 @@
           st.devices.forEach(d => {
             const opt = document.createElement("option");
             opt.value = String(d.id || "default");
-            const prefix = d.category === "usb" ? "[USB] " : (d.category === "bt_a2dp" || d.category === "ble_audio" ? "[BT] " : "");
+            const prefix = d.category === "usb" ? "[USB] " : "";
             opt.textContent = `${prefix}${d.name}`;
             if (opt.value === prev) opt.selected = true;
             outSel.appendChild(opt);
@@ -4665,8 +4600,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.2.0",
-      installedVersionCode: 3,
+      installedVersionName: "1.2.1",
+      installedVersionCode: 4,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -4994,8 +4929,6 @@
         connectBleMidiDevice: (addr) => wrapCb("connectBleMidiDevice", String(addr || "")),
         disconnectBleMidiDevice: (addr) => wrapCb("disconnectBleMidiDevice", String(addr || "")),
         getAudioRouteStatus: (cb) => wrapCb("getAudioRouteStatus", cb),
-        applyAudioMode: (mode, bsz, cb) => wrapCb("applyAudioMode", String(mode || "auto"), Number(bsz || 0), cb),
-        openBluetoothSettings: () => wrapCb("openBluetoothSettings"),
       };
     }
 
@@ -5628,39 +5561,9 @@
         if (numaBackend) numaBackend.selectInputPort(e.target.value);
       });
 
-      /* Audio Latency Modes (Bluetooth Otim. / USB Palco / Estável) */
-      document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const mode = btn.dataset.audioMode || "usb_pro";
-          const defBlock = mode === "bt_low_latency" ? 96 : (mode === "usb_pro" ? 128 : 256);
-          const labels = {
-            bt_low_latency: "Modo Bluetooth Otimizado (96f • USAGE_GAME)",
-            usb_pro: "Modo USB / Palco (128f • Baixa Latência)",
-            safe: "Modo Estável (256f • Sem estalos)"
-          };
-          if (numaBackend && numaBackend.applyAudioMode) {
-            try {
-              const res = numaBackend.applyAudioMode(mode, defBlock);
-              if (res) renderAudioRouteUI(JSON.parse(res));
-            } catch (_) {}
-          } else {
-            document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(b => b.classList.toggle("active", b === btn));
-            const bsEl = document.getElementById("audioBlockSizeSelect");
-            if (bsEl) bsEl.value = String(defBlock);
-          }
-          setStatusMessage(labels[mode] || "Modo de áudio aplicado");
-        });
-      });
-      document.getElementById("btnOpenBtSettings")?.addEventListener("click", () => {
-        if (numaBackend && numaBackend.openBluetoothSettings) {
-          numaBackend.openBluetoothSettings();
-        } else {
-          setStatusMessage("Atalho Bluetooth disponível no APK Android");
-        }
-      });
       document.getElementById("btnApplyAudioCfg").addEventListener("click", () => {
         const dev = document.getElementById("audioOutDeviceSelect").value;
-        const bsz = parseInt(document.getElementById("audioBlockSizeSelect").value, 10) || 128;
+        const bsz = parseInt(document.getElementById("audioBlockSizeSelect").value, 10) || 256;
         if (numaBackend && numaBackend.selectAudioConfig) {
           numaBackend.selectAudioConfig(dev, bsz, () => { refreshAudioRouteUI(); });
         }

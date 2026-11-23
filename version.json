@@ -1,16 +1,14 @@
 {
-  "versionCode": 3,
-  "versionName": "1.2.0",
-  "tag": "v1.2.0",
+  "versionCode": 4,
+  "versionName": "1.2.1",
+  "tag": "v1.2.1",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.2.0.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.0/P61x_Console_v1.2.0.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.0",
+  "apkFileName": "P61x_Console_v1.2.1.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.1/P61x_Console_v1.2.1.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.1",
   "notes": [
-    "Transpose Global (-12 a +12 semitons) não-destrutivo no topo, preservando splits e oitavas das zonas",
-    "Controles de FX Master com knobs rotativos LED-ring idênticos aos das zonas (no rack superior e no modal, com zoom e MIDI Learn)",
-    "Menu (!) SOBRE exibindo versão instalada, informações do sistema e verificação/atualização via GitHub",
-    "Suporte nativo a MIDI Bluetooth (BLE MIDI) com scanner, pareamento rápido e integração completa ao motor DSP",
-    "Otimização de latência de áudio para Bluetooth (96 frames + AudioFocus baixa latência) e troca automática ao conectar Hub USB + Placa de Áudio"
+    "Correção da afinação e oitava dos Pads contínuos: validação da taxa de amostragem (44.1 kHz -> taxa do hardware) com limpeza do cache PCM antigo e alinhamento da tabela de semitons ao P61x Windows (C = 1.0x)",
+    "Centralização automática de Pitch Bend (8192) ao iniciar, conectar/desconectar controladores USB/BLE MIDI ou zerar o Transpose Global",
+    "Removida a otimização de latência para fones/caixas Bluetooth (modo 96f/USAGE_GAME), mantendo apenas o leitor MIDI Bluetooth (BLE MIDI) e detecção de Hub USB + Placa de Áudio"
   ]
 }

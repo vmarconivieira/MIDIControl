@@ -416,6 +416,7 @@ public final class UsbMidiEnhanced {
                         }
                     }
                     Log.i(TAG, "BLE MIDI connected: " + resolvedName + " (" + mac + ", ports=" + entry.outputPorts.size() + ")");
+                    P61xAudioHelper.resetPitchBendCenter();
                     refreshAndEmit(st, "connected");
                     BleMidiHelper.emitConnectResult(mac, resolvedName, true, false, "BLE MIDI conectado: " + resolvedName);
                 }
@@ -444,6 +445,7 @@ public final class UsbMidiEnhanced {
         if (removed != null) {
             closeEntryQuietly(removed);
             Log.i(TAG, "BLE MIDI disconnected: " + removed.name + " (" + mac + ")");
+            P61xAudioHelper.resetPitchBendCenter();
             refreshAndEmit(st, "disconnected");
             BleMidiHelper.emitConnectResult(mac, removed.name, false, false, "BLE MIDI desconectado: " + removed.name);
         } else {
@@ -684,6 +686,7 @@ public final class UsbMidiEnhanced {
                         }
                     }
                     Log.i(TAG, "MIDI connected: " + name + " (id=" + devId + ", transport=" + transport + ", ports=" + entry.outputPorts.size() + ")");
+                    P61xAudioHelper.resetPitchBendCenter();
                     refreshAndEmit(st, "connected");
                 }
             }, st.mainHandler);
@@ -710,6 +713,7 @@ public final class UsbMidiEnhanced {
         if (removed != null) {
             closeEntryQuietly(removed);
             Log.i(TAG, "MIDI disconnected: " + removed.name + " (id=" + devId + ")");
+            P61xAudioHelper.resetPitchBendCenter();
             refreshAndEmit(st, reason);
             if (bleMac != null) {
                 BleMidiHelper.emitConnectResult(bleMac, removed.name, false, false, "BLE MIDI desconectado: " + removed.name);

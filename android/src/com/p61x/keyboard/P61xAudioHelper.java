@@ -1,8 +1,6 @@
 package com.p61x.keyboard;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceCallback;
 import android.media.AudioDeviceInfo;
@@ -11,13 +9,17 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
+import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public final class P61xAudioHelper {
     private static final String TAG = "P61xAudio";
+
+    // Verified source duration of all 5 bundled pad_layer_0..4.ogg assets: 44100 Hz, 882000 frames (20.000s)
+    public static final int PAD_SRC_SAMPLE_RATE = 44100;
+    public static final int PAD_SRC_FRAMES = 882000;
 
     // Non-destructive Global Transpose state (-12 .. +12 semitones)
     private static final Object TR_LOCK = new Object();
@@ -32,11 +34,10 @@ public final class P61xAudioHelper {
     private static volatile long cachedDspPtr = 0L;
     private static volatile int globalTranspose = 0;
 
-    // Audio route monitoring & BT/USB latency mode
+    // Audio route monitoring (USB Hub + Audio Interface hotplug)
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
     private static volatile Context appCtx;
     private static volatile P61xEngine activeEngine;
-    private static volatile String activeMode = "auto";
     private static volatile String lastRouteType = "";
     private static AudioDeviceCallback deviceCallback;
     private static AudioFocusRequest activeFocusRequest;
@@ -45,7 +46,7 @@ public final class P61xAudioHelper {
     private P61xAudioHelper() {}
 
     // =========================================================================
-    // 1. NON-DESTRUCTIVE GLOBAL TRANSPOSE
+    // 1. NON-DESTRUCTIVE GLOBAL TRANSPOSE & PITCH BEND SAFETY
     // =========================================================================
     public static void setZoneParamsWithGlobalTranspose(
             long ptr, int zone, int zoneTranspose, int keyLow, int keyHigh,
@@ -107,6 +108,9 @@ public final class P61xAudioHelper {
                     }
                 }
             }
+            if (clamped == 0) {
+                resetPitchBendCenter();
+            }
         }
         return clamped;
     }
@@ -115,19 +119,113 @@ public final class P61xAudioHelper {
         return globalTranspose;
     }
 
+    public static void resetPitchBendCenter() {
+        long ptr = cachedDspPtr;
+        if (ptr == 0L) {
+            P61xEngine eng = activeEngine;
+            if (eng != null) {
+                try {
+                    ptr = eng.getDspPtrForPatch();
+                } catch (Throwable ignored) {
+                }
+            }
+        }
+        if (ptr != 0L) {
+            try {
+                NativeDsp.nativePitchBend(ptr, 8192);
+            } catch (Throwable t) {
+                Log.w(TAG, "resetPitchBendCenter failed", t);
+            }
+        }
+    }
+
     // =========================================================================
-    // 2. AUDIO ROUTE MONITORING (USB HUB DAC / BLUETOOTH A2DP & LE AUDIO)
+    // 2. CONTINUOUS PAD SAMPLE-RATE & PITCH INTEGRITY
+    // =========================================================================
+    public static int expectedPadFramesForRate(int targetSampleRate) {
+        int sr = targetSampleRate > 8000 ? targetSampleRate : 48000;
+        return (int) Math.round((double) PAD_SRC_FRAMES * (double) sr / (double) PAD_SRC_SAMPLE_RATE);
+    }
+
+    public static void purgeLegacyPadCache(File padPcmDir) {
+        if (padPcmDir == null || !padPcmDir.isDirectory()) return;
+        try {
+            File[] files = padPcmDir.listFiles();
+            if (files == null) return;
+            for (File f : files) {
+                if (f == null || !f.isFile()) continue;
+                String name = f.getName();
+                if (name.startsWith("pad_layer_") && name.endsWith(".f32") && !name.endsWith("_v2.f32")) {
+                    if (f.delete()) {
+                        Log.i(TAG, "Removed legacy pad PCM cache: " + name);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.w(TAG, "purgeLegacyPadCache failed", t);
+        }
+    }
+
+    public static float[] ensurePadFrameCount(float[] pcm, int decodedFrames, int expectedFrames, int layerIdx, int targetSampleRate) {
+        if (pcm == null || pcm.length < 32 || expectedFrames <= 16) return pcm;
+        int actualFrames = Math.min(decodedFrames, pcm.length / 2);
+        if (actualFrames <= 16) return pcm;
+
+        // Already matches expected 20.000s frame count within ~0.4% (<7 cents)
+        if (Math.abs(actualFrames - expectedFrames) <= 4000) {
+            return pcm;
+        }
+
+        // Guard against Android MediaCodec returning un-resampled 44.1kHz frames (882000)
+        // for a 48kHz engine (960000), which causes a +1.47 semitone (C -> ~D) pitch error.
+        if (actualFrames < 750000 || actualFrames > 2000000) {
+            return pcm;
+        }
+
+        Log.w(TAG, "Pad layer " + layerIdx + " sample-rate mismatch detected (got " + actualFrames
+                + " frames, expected " + expectedFrames + " @" + targetSampleRate + "Hz) — resampling for exact pitch");
+
+        float[] out = new float[expectedFrames * 2];
+        double scale = (double) (actualFrames - 1) / (double) Math.max(1, expectedFrames - 1);
+        int lastSrc = actualFrames - 1;
+        for (int i = 0; i < expectedFrames; i++) {
+            double pos = (double) i * scale;
+            int idx0 = (int) pos;
+            int idx1 = Math.min(lastSrc, idx0 + 1);
+            float frac = (float) (pos - (double) idx0);
+            int s0 = idx0 * 2;
+            int s1 = idx1 * 2;
+            float l0 = pcm[s0];
+            float r0 = pcm[s0 + 1];
+            out[i * 2] = l0 + (pcm[s1] - l0) * frac;
+            out[i * 2 + 1] = r0 + (pcm[s1 + 1] - r0) * frac;
+        }
+        return out;
+    }
+
+    // =========================================================================
+    // 3. CLEAN AUDIO ROUTE MONITORING (USB HUB + AUDIO INTERFACE HOTPLUG)
     // =========================================================================
     public static void startMonitoring(Context ctx, P61xEngine engine) {
         if (ctx != null) appCtx = ctx.getApplicationContext();
-        if (engine != null) activeEngine = engine;
+        if (engine != null) {
+            activeEngine = engine;
+            try {
+                long ptr = engine.getDspPtrForPatch();
+                if (ptr != 0L) {
+                    cachedDspPtr = ptr;
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        resetPitchBendCenter();
         if (appCtx == null) return;
 
         AudioManager am = (AudioManager) appCtx.getSystemService(Context.AUDIO_SERVICE);
         if (am == null) return;
 
         lastRouteType = detectPrimaryRouteType(am);
-        requestOptimalAudioFocus(am, true);
+        requestMediaAudioFocus(am);
 
         if (deviceCallback == null) {
             deviceCallback = new AudioDeviceCallback() {
@@ -198,19 +296,11 @@ public final class P61xAudioHelper {
                 lastRouteType = newRoute;
 
                 if (eng != null && (routeChanged || "removed".equals(reason))) {
-                    int targetBlock = eng.getHwBlockSizeForPatch();
-                    if ("usb".equals(newRoute) && ("auto".equals(activeMode) || "usb_pro".equals(activeMode))) {
-                        targetBlock = 128;
-                        requestOptimalAudioFocus(am, true);
-                    } else if (("bt_a2dp".equals(newRoute) || "ble_audio".equals(newRoute)) && "bt_low_latency".equals(activeMode)) {
-                        targetBlock = 96;
-                        requestOptimalAudioFocus(am, true);
-                        trySetLowLatencyHint(am, true);
-                    }
+                    int targetBlock = clamp(eng.getHwBlockSizeForPatch(), 128, 1024);
                     try {
                         eng.applyAudioBlockSizeForPatch(targetBlock);
                     } catch (Throwable t) {
-                        Log.w(TAG, "Auto audio stream restart on route change failed", t);
+                        Log.w(TAG, "Audio stream restart on route change failed", t);
                     }
                 }
                 notifyRouteStatus();
@@ -224,72 +314,10 @@ public final class P61xAudioHelper {
             return "{\"ok\":false}";
         }
         activeEngine = engine;
-        int safeBlock = clamp(blockSize, 64, 1024);
+        int safeBlock = clamp(blockSize, 128, 1024);
         String res = engine.applyAudioBlockSizeForPatch(safeBlock);
         notifyRouteStatus();
         return res;
-    }
-
-    public static String applyAudioMode(Context ctx, P61xEngine engine, String mode, int customBlockSize) {
-        if (ctx != null) appCtx = ctx.getApplicationContext();
-        if (engine != null) activeEngine = engine;
-        String m = (mode == null || mode.trim().isEmpty()) ? "auto" : mode.trim().toLowerCase();
-        activeMode = m;
-
-        Context c = appCtx;
-        AudioManager am = c != null ? (AudioManager) c.getSystemService(Context.AUDIO_SERVICE) : null;
-
-        int targetBlock = customBlockSize >= 64 ? clamp(customBlockSize, 64, 1024) : 128;
-        boolean lowLatencyHint = true;
-
-        if ("bt_low_latency".equals(m)) {
-            targetBlock = customBlockSize >= 64 ? clamp(customBlockSize, 64, 256) : 96;
-            lowLatencyHint = true;
-            if (am != null) {
-                try {
-                    am.setMode(AudioManager.MODE_NORMAL);
-                    am.setSpeakerphoneOn(false);
-                } catch (Throwable ignored) {
-                }
-                requestOptimalAudioFocus(am, true);
-                trySetLowLatencyHint(am, true);
-            }
-        } else if ("usb_pro".equals(m)) {
-            targetBlock = customBlockSize >= 64 ? clamp(customBlockSize, 64, 512) : 128;
-            lowLatencyHint = true;
-            if (am != null) {
-                try {
-                    am.setMode(AudioManager.MODE_NORMAL);
-                } catch (Throwable ignored) {
-                }
-                requestOptimalAudioFocus(am, true);
-                trySetLowLatencyHint(am, true);
-            }
-        } else if ("safe".equals(m)) {
-            targetBlock = 256;
-            lowLatencyHint = false;
-            if (am != null) {
-                requestOptimalAudioFocus(am, false);
-                trySetLowLatencyHint(am, false);
-            }
-        } else {
-            if (am != null) {
-                requestOptimalAudioFocus(am, lowLatencyHint);
-            }
-        }
-
-        P61xEngine eng = activeEngine;
-        if (eng != null) {
-            try {
-                eng.applyAudioBlockSizeForPatch(targetBlock);
-            } catch (Throwable t) {
-                Log.w(TAG, "applyAudioMode restart failed", t);
-            }
-        }
-
-        String statusJson = getAudioRouteStatusJson(c, eng);
-        notifyRouteStatus();
-        return statusJson;
     }
 
     public static void notifyRouteStatus() {
@@ -344,7 +372,6 @@ public final class P61xAudioHelper {
                 }
             }
 
-            boolean isBt = "bt_a2dp".equals(routeType) || "ble_audio".equals(routeType);
             boolean isUsb = "usb".equals(routeType);
             int blockSize = eng != null ? eng.getHwBlockSizeForPatch() : 256;
             int sampleRate = eng != null ? eng.getHwSampleRateForPatch() : 48000;
@@ -354,10 +381,7 @@ public final class P61xAudioHelper {
             obj.put("routeType", routeType);
             obj.put("routeLabel", routeLabel);
             obj.put("deviceName", deviceName);
-            obj.put("isBluetooth", isBt);
-            obj.put("isBleAudio", "ble_audio".equals(routeType));
             obj.put("isUsbAudio", isUsb);
-            obj.put("mode", activeMode);
             obj.put("blockSize", blockSize);
             obj.put("sampleRate", sampleRate);
             obj.put("latencyMs", Math.round(latMs * 10.0) / 10.0);
@@ -369,27 +393,11 @@ public final class P61xAudioHelper {
         return obj.toString();
     }
 
-    public static void openBluetoothSettings(final Activity activity) {
-        if (activity == null) return;
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Intent i = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity(i);
-                } catch (Throwable t) {
-                    Log.w(TAG, "openBluetoothSettings failed", t);
-                }
-            }
-        });
-    }
-
-    private static void requestOptimalAudioFocus(AudioManager am, boolean gameLowLatency) {
+    private static void requestMediaAudioFocus(AudioManager am) {
         if (am == null || Build.VERSION.SDK_INT < 26) return;
         try {
             AudioAttributes attrs = new AudioAttributes.Builder()
-                    .setUsage(gameLowLatency ? AudioAttributes.USAGE_GAME : AudioAttributes.USAGE_MEDIA)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
             AudioFocusRequest req = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -400,14 +408,6 @@ public final class P61xAudioHelper {
             am.requestAudioFocus(req);
         } catch (Throwable t) {
             Log.w(TAG, "requestAudioFocus failed", t);
-        }
-    }
-
-    private static void trySetLowLatencyHint(AudioManager am, boolean enable) {
-        if (am == null) return;
-        try {
-            am.setParameters(enable ? "audio_low_latency=1" : "audio_low_latency=0");
-        } catch (Throwable ignored) {
         }
     }
 
@@ -445,15 +445,6 @@ public final class P61xAudioHelper {
                 || type == AudioDeviceInfo.TYPE_LINE_DIGITAL) {
             return 40;
         }
-        if (Build.VERSION.SDK_INT >= 31) {
-            if (type == AudioDeviceInfo.TYPE_BLE_HEADSET
-                    || type == AudioDeviceInfo.TYPE_BLE_SPEAKER) {
-                return 35;
-            }
-        }
-        if (type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) {
-            return 30;
-        }
         if (type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER) {
             return 10;
         }
@@ -472,21 +463,12 @@ public final class P61xAudioHelper {
                 || type == AudioDeviceInfo.TYPE_LINE_DIGITAL) {
             return "wired";
         }
-        if (Build.VERSION.SDK_INT >= 31
-                && (type == AudioDeviceInfo.TYPE_BLE_HEADSET || type == AudioDeviceInfo.TYPE_BLE_SPEAKER)) {
-            return "ble_audio";
-        }
-        if (type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) {
-            return "bt_a2dp";
-        }
         return "speaker";
     }
 
     private static String labelForCategory(String cat) {
-        if ("usb".equals(cat)) return "USB Áudio / Placa (Baixa Latência)";
+        if ("usb".equals(cat)) return "USB Áudio / Placa de Áudio";
         if ("wired".equals(cat)) return "Saída Cabeada / Linha";
-        if ("ble_audio".equals(cat)) return "Bluetooth LE Audio (LC3)";
-        if ("bt_a2dp".equals(cat)) return "Bluetooth Estéreo (A2DP)";
         return "Alto-falante Interno";
     }
 
