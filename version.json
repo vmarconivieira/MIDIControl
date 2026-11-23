@@ -1,0 +1,16 @@
+{
+  "versionCode": 2,
+  "versionName": "1.1.0",
+  "tag": "v1.1.0",
+  "repo": "vmarconivieira/MIDIControl",
+  "apkFileName": "P61x_Console_v1.1.0.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.1.0/P61x_Console_v1.1.0.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.1.0",
+  "notes": [
+    "Verificação de versão e atualização direta pelo GitHub integrada ao app",
+    "Sidebar limpa contendo somente o menu principal",
+    "Novo modal de Setlist / Bancos e Timbres ao tocar no nome do timbre no topo",
+    "Detecção USB MIDI reforçada para controladores plugados antes ou durante a execução, com botão Reescanear",
+    "Faders reescritos com aceleração GPU (translate3d + requestAnimationFrame) para deslizamento fluido"
+  ]
+}

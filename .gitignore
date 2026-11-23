@@ -1,0 +1,25 @@
+# Build outputs & scratch files
+build/
+dist/
+out/
+*.apk
+*.idsig
+*.dex
+*.class
+
+# Never commit signing keystores or secrets!
+*.jks
+*.keystore
+*.p12
+*.pfx
+keystore.properties
+local.properties
+.env
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+__pycache__/
+*.pyc
