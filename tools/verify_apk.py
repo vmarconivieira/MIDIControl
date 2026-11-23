@@ -58,6 +58,12 @@ def main():
         assert 'id="setlistModal"' in html, "Missing #setlistModal"
         assert 'id="updateModal"' in html, "Missing #updateModal"
         assert 'id="btnRescanMidi"' in html, "Missing #btnRescanMidi"
+        assert 'id="globalTransposePill"' in html, "Missing #globalTransposePill"
+        assert 'id="btnModeMaster"' in html, "Missing #btnModeMaster"
+        assert 'id="masterFxModalKnobs"' in html, "Missing #masterFxModalKnobs"
+        assert 'id="btnScanBleMidi"' in html, "Missing #btnScanBleMidi"
+        assert 'id="btnModeBtLowLat"' in html, "Missing #btnModeBtLowLat"
+        assert ">SOBRE<" in html, "Missing SOBRE menu item"
         assert "drawer-setlist-box" not in html, "Sidebar still contains drawer-setlist-box!"
         assert "translate3d(" in html, "Faders should use GPU translate3d"
     print(f"[OK] ZIP CRC + structure + UI checks passed ({len(names)} entries)")
@@ -68,6 +74,8 @@ def main():
     assert f"versionName='{expected_name}'" in badging, f"Unexpected versionName in badging:\n{badging}"
     assert "android.permission.INTERNET" in badging, "Missing INTERNET permission"
     assert "android.permission.REQUEST_INSTALL_PACKAGES" in badging, "Missing REQUEST_INSTALL_PACKAGES permission"
+    assert "android.permission.BLUETOOTH_SCAN" in badging, "Missing BLUETOOTH_SCAN permission"
+    assert "android.permission.BLUETOOTH_CONNECT" in badging, "Missing BLUETOOTH_CONNECT permission"
     manifest_tree = run([aapt2, "dump", "xmltree", apk_path, "--file", "AndroidManifest.xml"])
     assert "com.p61x.keyboard.UpdateInstallReceiver" in manifest_tree, "Missing UpdateInstallReceiver in manifest"
     res_dump = run([aapt2, "dump", "resources", apk_path])

@@ -6,6 +6,7 @@ import com.android.tools.smali.dexlib2.builder.BuilderInstruction;
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation;
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c;
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c;
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc;
 import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile;
 import com.android.tools.smali.dexlib2.iface.ClassDef;
 import com.android.tools.smali.dexlib2.iface.Method;
@@ -103,14 +104,9 @@ public class DexPatcher {
         System.out.println("[OK] Moved MainActivity.enterImmersiveMode() from instr #" + enterIdx + " to after setContentView (#" + (newSetContentIdx + 1) + ")");
 
         return new ImmutableMethod(
-                orig.getDefiningClass(),
-                orig.getName(),
-                orig.getParameters(),
-                orig.getReturnType(),
-                orig.getAccessFlags(),
-                orig.getAnnotations(),
-                orig.getHiddenApiRestrictions(),
-                impl
+                orig.getDefiningClass(), orig.getName(), orig.getParameters(),
+                orig.getReturnType(), orig.getAccessFlags(), orig.getAnnotations(),
+                orig.getHiddenApiRestrictions(), impl
         );
     }
 
@@ -155,14 +151,49 @@ public class DexPatcher {
         System.out.println("[OK] Hooked MainActivity$1.onPageFinished -> P61xPatch.onPageFinished(v" + regActivity + ")");
 
         return new ImmutableMethod(
-                orig.getDefiningClass(),
-                orig.getName(),
-                orig.getParameters(),
-                orig.getReturnType(),
-                orig.getAccessFlags(),
-                orig.getAnnotations(),
-                orig.getHiddenApiRestrictions(),
-                impl
+                orig.getDefiningClass(), orig.getName(), orig.getParameters(),
+                orig.getReturnType(), orig.getAccessFlags(), orig.getAnnotations(),
+                orig.getHiddenApiRestrictions(), impl
+        );
+    }
+
+    private static Method redirectNativeSetZoneParams(Method orig, int[] counter) {
+        if (orig.getImplementation() == null) return orig;
+        MutableMethodImplementation impl = new MutableMethodImplementation(orig.getImplementation());
+        List<BuilderInstruction> insns = impl.getInstructions();
+        boolean changed = false;
+
+        for (int i = 0; i < insns.size(); i++) {
+            BuilderInstruction bi = insns.get(i);
+            if (bi instanceof BuilderInstruction3rc) {
+                BuilderInstruction3rc c = (BuilderInstruction3rc) bi;
+                if (c.getReference() instanceof MethodReference) {
+                    MethodReference mr = (MethodReference) c.getReference();
+                    if ("Lcom/p61x/keyboard/NativeDsp;".equals(mr.getDefiningClass())
+                            && "nativeSetZoneParams".equals(mr.getName())) {
+                        ImmutableMethodReference target = new ImmutableMethodReference(
+                                "Lcom/p61x/keyboard/P61xAudioHelper;",
+                                "setZoneParamsWithGlobalTranspose",
+                                mr.getParameterTypes(),
+                                mr.getReturnType()
+                        );
+                        impl.replaceInstruction(i, new BuilderInstruction3rc(
+                                c.getOpcode(),
+                                c.getStartRegister(),
+                                c.getRegisterCount(),
+                                target
+                        ));
+                        counter[0]++;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        if (!changed) return orig;
+        return new ImmutableMethod(
+                orig.getDefiningClass(), orig.getName(), orig.getParameters(),
+                orig.getReturnType(), orig.getAccessFlags(), orig.getAnnotations(),
+                orig.getHiddenApiRestrictions(), impl
         );
     }
 
@@ -171,14 +202,9 @@ public class DexPatcher {
             throw new IllegalStateException("Missing replacement method for " + orig.getDefiningClass() + "." + methodKey(orig));
         }
         return new ImmutableMethod(
-                orig.getDefiningClass(),
-                orig.getName(),
-                orig.getParameters(),
-                orig.getReturnType(),
-                orig.getAccessFlags(),
-                orig.getAnnotations(),
-                orig.getHiddenApiRestrictions(),
-                replacement.getImplementation()
+                orig.getDefiningClass(), orig.getName(), orig.getParameters(),
+                orig.getReturnType(), orig.getAccessFlags(), orig.getAnnotations(),
+                orig.getHiddenApiRestrictions(), replacement.getImplementation()
         );
     }
 
@@ -186,7 +212,9 @@ public class DexPatcher {
         return type.startsWith("Lcom/p61x/keyboard/P61xPatch")
                 || type.startsWith("Lcom/p61x/keyboard/P61xUpdater")
                 || type.equals("Lcom/p61x/keyboard/UpdateInstallReceiver;")
-                || type.startsWith("Lcom/p61x/keyboard/UsbMidiEnhanced");
+                || type.startsWith("Lcom/p61x/keyboard/UsbMidiEnhanced")
+                || type.startsWith("Lcom/p61x/keyboard/P61xAudioHelper")
+                || type.startsWith("Lcom/p61x/keyboard/BleMidiHelper");
     }
 
     public static void main(String[] args) throws Exception {
@@ -222,7 +250,23 @@ public class DexPatcher {
                 "checkGithubUpdate()V",
                 "downloadAndInstallUpdate(Ljava/lang/String;)V",
                 "openExternalUrl(Ljava/lang/String;)V",
-                "rescanMidiDevices()Ljava/lang/String;"
+                "rescanMidiDevices()Ljava/lang/String;",
+                "setGlobalTranspose(I)I",
+                "getGlobalTranspose()I",
+                "startBleMidiScan(Z)V",
+                "stopBleMidiScan()V",
+                "connectBleMidiDevice(Ljava/lang/String;)V",
+                "disconnectBleMidiDevice(Ljava/lang/String;)V",
+                "getAudioRouteStatus()Ljava/lang/String;",
+                "applyAudioMode(Ljava/lang/String;I)Ljava/lang/String;",
+                "openBluetoothSettings()V"
+        );
+
+        List<String> addedEngineVirtualKeys = Arrays.asList(
+                "getHwBlockSizeForPatch()I",
+                "getHwSampleRateForPatch()I",
+                "getLatencyMsForPatch()D",
+                "applyAudioBlockSizeForPatch(I)Ljava/lang/String;"
         );
 
         Set<String> midiReplacedKeys = new HashSet<>(Arrays.asList(
@@ -239,6 +283,7 @@ public class DexPatcher {
         boolean patchedBridge = false;
         boolean patchedEngine = false;
         boolean patchedMidi = false;
+        int[] redirectedZoneParams = new int[] { 0 };
 
         for (ClassDef cls : origDex.getClasses()) {
             String type = cls.getType();
@@ -285,14 +330,16 @@ public class DexPatcher {
                         newVirtual.add(m);
                     }
                 }
-                Method focusMethod = patchMainMethods.get("onWindowFocusChanged(Z)V");
-                Method dispatchMethod = patchMainMethods.get("dispatchPatchEvent(Lorg/json/JSONObject;)V");
-                if (focusMethod == null || dispatchMethod == null) {
-                    throw new IllegalStateException("Missing added MainActivity methods in patch");
+                for (String addedKey : Arrays.asList(
+                        "onWindowFocusChanged(Z)V",
+                        "dispatchPatchEvent(Lorg/json/JSONObject;)V",
+                        "onRequestPermissionsResult(I[Ljava/lang/String;[I)V"
+                )) {
+                    Method am = patchMainMethods.get(addedKey);
+                    if (am == null) throw new IllegalStateException("Missing MainActivity method in patch: " + addedKey);
+                    newVirtual.add(am);
+                    System.out.println("[OK] Added MainActivity." + addedKey);
                 }
-                newVirtual.add(focusMethod);
-                newVirtual.add(dispatchMethod);
-                System.out.println("[OK] Added MainActivity.onWindowFocusChanged(Z)V and dispatchPatchEvent(JSONObject)V");
 
                 if (!patchedOnCreate || !replacedOnResume || !replacedOnDestroy) {
                     throw new IllegalStateException("Missing MainActivity virtual methods");
@@ -315,9 +362,7 @@ public class DexPatcher {
                         newVirtual.add(m);
                     }
                 }
-                if (!hooked) {
-                    throw new IllegalStateException("Missing MainActivity$1.onPageFinished");
-                }
+                if (!hooked) throw new IllegalStateException("Missing MainActivity$1.onPageFinished");
                 outClasses.add(new ImmutableClassDef(
                         cls.getType(), cls.getAccessFlags(), cls.getSuperclass(), cls.getInterfaces(),
                         cls.getSourceFile(), cls.getAnnotations(), cls.getStaticFields(), cls.getInstanceFields(),
@@ -363,16 +408,41 @@ public class DexPatcher {
                         wrappedPads = true;
                         System.out.println("[OK] Wrapped P61xEngine.loadAllContinuousPads()V with Throwable guard");
                     } else {
-                        newDirect.add(m);
+                        newDirect.add(redirectNativeSetZoneParams(m, redirectedZoneParams));
                     }
                 }
-                if (!wrappedPads) {
-                    throw new IllegalStateException("Missing P61xEngine.loadAllContinuousPads()V");
+                if (!wrappedPads) throw new IllegalStateException("Missing P61xEngine.loadAllContinuousPads()V");
+
+                List<Method> newVirtual = new ArrayList<>();
+                boolean replacedAudioCfg = false;
+                for (Method m : cls.getVirtualMethods()) {
+                    String k = methodKey(m);
+                    if ("selectAudioConfig(Ljava/lang/String;I)Ljava/lang/String;".equals(k)) {
+                        newVirtual.add(replaceBodyKeepingSignature(m, patchEngineMethods.get(k)));
+                        replacedAudioCfg = true;
+                        System.out.println("[OK] Upgraded P61xEngine.selectAudioConfig -> P61xAudioHelper");
+                    } else {
+                        newVirtual.add(redirectNativeSetZoneParams(m, redirectedZoneParams));
+                    }
                 }
+                if (!replacedAudioCfg) throw new IllegalStateException("Missing P61xEngine.selectAudioConfig");
+
+                for (String ek : addedEngineVirtualKeys) {
+                    Method em = patchEngineMethods.get(ek);
+                    if (em == null) throw new IllegalStateException("Missing added P61xEngine helper: " + ek);
+                    newVirtual.add(em);
+                    System.out.println("[OK] Added P61xEngine." + ek);
+                }
+
+                if (redirectedZoneParams[0] != 2) {
+                    throw new IllegalStateException("Expected 2 redirected nativeSetZoneParams calls, found " + redirectedZoneParams[0]);
+                }
+                System.out.println("[OK] Redirected " + redirectedZoneParams[0] + " NativeDsp.nativeSetZoneParams calls -> P61xAudioHelper.setZoneParamsWithGlobalTranspose");
+
                 outClasses.add(new ImmutableClassDef(
                         cls.getType(), cls.getAccessFlags(), cls.getSuperclass(), cls.getInterfaces(),
                         cls.getSourceFile(), cls.getAnnotations(), cls.getStaticFields(), cls.getInstanceFields(),
-                        newDirect, cls.getVirtualMethods()
+                        newDirect, newVirtual
                 ));
                 patchedEngine = true;
             } else if ("Lcom/p61x/keyboard/UsbMidiController;".equals(type)) {
@@ -396,9 +466,7 @@ public class DexPatcher {
                     throw new IllegalStateException("Expected " + midiReplacedKeys.size() + " UsbMidiController methods, replaced " + replacedCount);
                 }
                 Method dispatchHook = patchMidiMethods.get("onEnhancedMidiBytes(Ljava/lang/String;[BII)V");
-                if (dispatchHook == null) {
-                    throw new IllegalStateException("Missing UsbMidiController.onEnhancedMidiBytes in patch");
-                }
+                if (dispatchHook == null) throw new IllegalStateException("Missing UsbMidiController.onEnhancedMidiBytes");
                 newVirtual.add(dispatchHook);
                 System.out.println("[OK] Added UsbMidiController.onEnhancedMidiBytes(String,byte[],int,int)V");
 
@@ -414,8 +482,7 @@ public class DexPatcher {
         }
 
         if (!patchedMain || !patchedMain1 || !patchedBridge || !patchedEngine || !patchedMidi) {
-            throw new IllegalStateException("Failed to patch all target classes: main=" + patchedMain
-                    + " main1=" + patchedMain1 + " bridge=" + patchedBridge + " engine=" + patchedEngine + " midi=" + patchedMidi);
+            throw new IllegalStateException("Failed to patch all target classes");
         }
         outClasses.addAll(classesToAdd);
 

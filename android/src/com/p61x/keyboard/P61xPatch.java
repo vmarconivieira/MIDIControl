@@ -85,6 +85,10 @@ public final class P61xPatch {
         } catch (Throwable t) {
             Log.w(TAG, "onPageFinished MIDI sync failed", t);
         }
+        try {
+            P61xAudioHelper.notifyRouteStatus();
+        } catch (Throwable ignored) {
+        }
     }
 
     public static void enterImmersiveModeSafe(Activity activity) {
@@ -115,8 +119,19 @@ public final class P61xPatch {
         }
     }
 
+    public static P61xEngine getReadyEngine() {
+        return readyEngine;
+    }
+
     public static void markEngineReady(P61xEngine engine) {
         readyEngine = engine;
+        try {
+            MainActivity act = getActiveActivity();
+            if (act != null) {
+                P61xAudioHelper.startMonitoring(act, engine);
+            }
+        } catch (Throwable ignored) {
+        }
         try {
             UsbMidiEnhanced.onUiPageReady();
         } catch (Throwable ignored) {
@@ -127,11 +142,23 @@ public final class P61xPatch {
         if (readyEngine == engine) {
             readyEngine = null;
         }
+        try {
+            BleMidiHelper.stopScan();
+        } catch (Throwable ignored) {
+        }
+        try {
+            P61xAudioHelper.stopMonitoring();
+        } catch (Throwable ignored) {
+        }
     }
 
     public static void safeOnResume(final P61xEngine engine) {
         try {
             UsbMidiEnhanced.rescanQuietly("resume");
+        } catch (Throwable ignored) {
+        }
+        try {
+            P61xAudioHelper.notifyRouteStatus();
         } catch (Throwable ignored) {
         }
         if (engine == null || readyEngine != engine) {

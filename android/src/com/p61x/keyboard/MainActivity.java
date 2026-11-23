@@ -65,6 +65,12 @@ public final class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        BleMidiHelper.onPermissionsResult(this, requestCode, permissions, grantResults);
+    }
+
     public final class MobileBridge {
         @JavascriptInterface
         public String getAppVersion() {
@@ -89,6 +95,51 @@ public final class MainActivity extends Activity {
         @JavascriptInterface
         public String rescanMidiDevices() {
             return UsbMidiEnhanced.rescanActiveJson();
+        }
+
+        @JavascriptInterface
+        public int setGlobalTranspose(int semitones) {
+            return P61xAudioHelper.setGlobalTranspose(semitones);
+        }
+
+        @JavascriptInterface
+        public int getGlobalTranspose() {
+            return P61xAudioHelper.getGlobalTranspose();
+        }
+
+        @JavascriptInterface
+        public void startBleMidiScan(boolean includeAllBle) {
+            BleMidiHelper.startScan(MainActivity.this, includeAllBle);
+        }
+
+        @JavascriptInterface
+        public void stopBleMidiScan() {
+            BleMidiHelper.stopScan();
+        }
+
+        @JavascriptInterface
+        public void connectBleMidiDevice(String address) {
+            BleMidiHelper.connectDevice(MainActivity.this, address);
+        }
+
+        @JavascriptInterface
+        public void disconnectBleMidiDevice(String address) {
+            BleMidiHelper.disconnectDevice(address);
+        }
+
+        @JavascriptInterface
+        public String getAudioRouteStatus() {
+            return P61xAudioHelper.getAudioRouteStatusJson(MainActivity.this, P61xPatch.getReadyEngine());
+        }
+
+        @JavascriptInterface
+        public String applyAudioMode(String mode, int customBlockSize) {
+            return P61xAudioHelper.applyAudioMode(MainActivity.this, P61xPatch.getReadyEngine(), mode, customBlockSize);
+        }
+
+        @JavascriptInterface
+        public void openBluetoothSettings() {
+            P61xAudioHelper.openBluetoothSettings(MainActivity.this);
         }
     }
 }

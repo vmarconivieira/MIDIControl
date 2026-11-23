@@ -1,5 +1,6 @@
 package com.p61x.keyboard;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,13 +40,17 @@ public final class UsbMidiEnhanced {
     private static final class DeviceEntry {
         final int id;
         final String name;
+        final String transport; // "usb" or "ble"
+        final String bleAddress;
         final MidiDeviceInfo info;
         final MidiDevice device;
         final List<MidiOutputPort> outputPorts = new ArrayList<>();
 
-        DeviceEntry(int id, String name, MidiDeviceInfo info, MidiDevice device) {
+        DeviceEntry(int id, String name, String transport, String bleAddress, MidiDeviceInfo info, MidiDevice device) {
             this.id = id;
             this.name = name;
+            this.transport = transport;
+            this.bleAddress = bleAddress;
             this.info = info;
             this.device = device;
         }
@@ -58,7 +63,9 @@ public final class UsbMidiEnhanced {
         final UsbMidiController.EventListener listener;
         final Handler mainHandler = new Handler(Looper.getMainLooper());
         final Map<Integer, DeviceEntry> openedDevices = new LinkedHashMap<>();
+        final Map<String, Integer> bleAddrToId = new LinkedHashMap<>();
         final Set<Integer> openingIds = new HashSet<>();
+        final Set<String> bleOpeningAddrs = new HashSet<>();
         final Map<Integer, Integer> retryCounts = new HashMap<>();
 
         MidiManager midiManager;
@@ -142,7 +149,6 @@ public final class UsbMidiEnhanced {
 
         registerUsbReceiver(st);
 
-        // Scan immediately + staged retries so controllers plugged BEFORE launch or slowly enumerating are caught
         scanAndOpenAll(st, "startup");
         scheduleRescanBurst(st, "startup_retry");
     }
@@ -190,7 +196,9 @@ public final class UsbMidiEnhanced {
                 closeEntryQuietly(entry);
             }
             st.openedDevices.clear();
+            st.bleAddrToId.clear();
             st.openingIds.clear();
+            st.bleOpeningAddrs.clear();
             st.retryCounts.clear();
             st.activePortName = VIRTUAL_LABEL;
         }
@@ -218,7 +226,6 @@ public final class UsbMidiEnhanced {
         State st = getState(ctrl);
         if (st == null) return;
         st.selectedPortId = (portId == null || portId.trim().isEmpty()) ? "auto" : portId.trim();
-        // Ensure all currently plugged devices are opened so selecting a specific port works immediately
         scanAndOpenAll(st, "select");
         refreshAndEmit(st, "select");
     }
@@ -282,6 +289,171 @@ public final class UsbMidiEnhanced {
         return out.toString();
     }
 
+    // =========================================================================
+    // BLE MIDI CONNECTION SUPPORT (MidiManager.openBluetoothDevice)
+    // =========================================================================
+    public static Map<String, String> getConnectedBleSnapshot() {
+        Map<String, String> snap = new LinkedHashMap<>();
+        State st = activeState;
+        if (st == null) return snap;
+        synchronized (st.lock) {
+            for (Map.Entry<String, Integer> e : st.bleAddrToId.entrySet()) {
+                DeviceEntry de = st.openedDevices.get(e.getValue());
+                if (de != null) {
+                    snap.put(e.getKey(), de.name);
+                }
+            }
+        }
+        return snap;
+    }
+
+    public static void openBluetoothDevice(final BluetoothDevice btDevice, final String fallbackName) {
+        openBluetoothDeviceInternal(btDevice, fallbackName, 0);
+    }
+
+    private static void openBluetoothDeviceInternal(final BluetoothDevice btDevice, final String fallbackName, final int attempt) {
+        final State st = activeState;
+        if (st == null || !st.started || st.midiManager == null || btDevice == null) {
+            BleMidiHelper.emitConnectResult(btDevice != null ? btDevice.getAddress() : "", fallbackName, false, false,
+                    "Serviço MIDI do Android ainda não está pronto.");
+            return;
+        }
+        final String mac = btDevice.getAddress();
+        if (mac == null || mac.isEmpty()) return;
+        final String niceName = (fallbackName != null && !fallbackName.trim().isEmpty()) ? fallbackName.trim() : ("BLE MIDI " + mac);
+
+        synchronized (st.lock) {
+            if (st.bleAddrToId.containsKey(mac)) {
+                BleMidiHelper.emitConnectResult(mac, niceName, true, false, niceName + " já está conectado via BLE MIDI.");
+                refreshAndEmit(st, "ble_connected");
+                return;
+            }
+            if (st.bleOpeningAddrs.contains(mac) && attempt == 0) {
+                return;
+            }
+            st.bleOpeningAddrs.add(mac);
+        }
+
+        try {
+            st.midiManager.openBluetoothDevice(btDevice, new MidiManager.OnDeviceOpenedListener() {
+                @Override
+                public void onDeviceOpened(MidiDevice device) {
+                    synchronized (st.lock) {
+                        st.bleOpeningAddrs.remove(mac);
+                    }
+                    if (!st.started) {
+                        if (device != null) {
+                            try { device.close(); } catch (Throwable ignored) {}
+                        }
+                        return;
+                    }
+                    if (device == null) {
+                        if (attempt < 1) {
+                            st.mainHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (st.started) {
+                                        openBluetoothDeviceInternal(btDevice, niceName, attempt + 1);
+                                    }
+                                }
+                            }, 900L);
+                            return;
+                        }
+                        BleMidiHelper.emitConnectResult(mac, niceName, false, false,
+                                "Não foi possível abrir BLE MIDI em " + niceName + ". Verifique se o dispositivo suporta MIDI Bluetooth.");
+                        return;
+                    }
+
+                    MidiDeviceInfo info = device.getInfo();
+                    int devId = info != null ? info.getId() : (0x40000000 | (mac.hashCode() & 0x0FFFFFFF));
+                    String resolvedName = (info != null) ? formatDeviceName(info) : niceName;
+                    if (resolvedName.startsWith("USB MIDI #")) {
+                        resolvedName = niceName;
+                    }
+                    if (!resolvedName.toUpperCase().contains("BLE") && !resolvedName.toUpperCase().contains("BT")) {
+                        resolvedName = resolvedName + " (BLE)";
+                    }
+
+                    int portCount = info != null ? Math.max(1, info.getOutputPortCount()) : 1;
+                    DeviceEntry entry = new DeviceEntry(devId, resolvedName, "ble", mac, info, device);
+                    final int finalDevId = devId;
+                    for (int p = 0; p < portCount; p++) {
+                        try {
+                            MidiOutputPort outPort = device.openOutputPort(p);
+                            if (outPort != null) {
+                                final String sourceLabel = portCount > 1 ? (resolvedName + " P" + (p + 1)) : resolvedName;
+                                outPort.connect(new MidiReceiver() {
+                                    @Override
+                                    public void onSend(byte[] msg, int offset, int count, long timestamp) throws IOException {
+                                        if (msg == null || count <= 0) return;
+                                        if (!shouldAcceptDevice(st, finalDevId)) return;
+                                        try {
+                                            st.controller.onEnhancedMidiBytes(sourceLabel, msg, offset, count);
+                                        } catch (Throwable t) {
+                                            Log.w(TAG, "BLE MIDI dispatch error", t);
+                                        }
+                                    }
+                                });
+                                entry.outputPorts.add(outPort);
+                            }
+                        } catch (Throwable t) {
+                            Log.w(TAG, "BLE openOutputPort(" + p + ") failed for " + resolvedName, t);
+                        }
+                    }
+
+                    if (entry.outputPorts.isEmpty()) {
+                        closeEntryQuietly(entry);
+                        BleMidiHelper.emitConnectResult(mac, niceName, false, false,
+                                niceName + " conectou, mas não expôs porta de saída MIDI.");
+                        return;
+                    }
+
+                    synchronized (st.lock) {
+                        DeviceEntry prev = st.openedDevices.put(devId, entry);
+                        st.bleAddrToId.put(mac, devId);
+                        if (prev != null && prev != entry) {
+                            closeEntryQuietly(prev);
+                        }
+                    }
+                    Log.i(TAG, "BLE MIDI connected: " + resolvedName + " (" + mac + ", ports=" + entry.outputPorts.size() + ")");
+                    refreshAndEmit(st, "connected");
+                    BleMidiHelper.emitConnectResult(mac, resolvedName, true, false, "BLE MIDI conectado: " + resolvedName);
+                }
+            }, st.mainHandler);
+        } catch (Throwable t) {
+            synchronized (st.lock) {
+                st.bleOpeningAddrs.remove(mac);
+            }
+            Log.e(TAG, "openBluetoothDevice threw", t);
+            BleMidiHelper.emitConnectResult(mac, niceName, false, false, "Erro ao conectar BLE MIDI: " + t.getMessage());
+        }
+    }
+
+    public static void disconnectBluetoothDevice(String mac) {
+        State st = activeState;
+        if (st == null || mac == null) return;
+        Integer devId;
+        DeviceEntry removed = null;
+        synchronized (st.lock) {
+            st.bleOpeningAddrs.remove(mac);
+            devId = st.bleAddrToId.remove(mac);
+            if (devId != null) {
+                removed = st.openedDevices.remove(devId);
+            }
+        }
+        if (removed != null) {
+            closeEntryQuietly(removed);
+            Log.i(TAG, "BLE MIDI disconnected: " + removed.name + " (" + mac + ")");
+            refreshAndEmit(st, "disconnected");
+            BleMidiHelper.emitConnectResult(mac, removed.name, false, false, "BLE MIDI desconectado: " + removed.name);
+        } else {
+            BleMidiHelper.emitScanState(false, null);
+        }
+    }
+
+    // =========================================================================
+    // USB MIDI CALLBACKS & HOTPLUG
+    // =========================================================================
     private static MidiManager.DeviceCallback createDeviceCallback(final State st) {
         return new MidiManager.DeviceCallback() {
             @Override
@@ -392,12 +564,12 @@ public final class UsbMidiEnhanced {
         if (!st.started || st.midiManager == null) return;
         Map<Integer, MidiDeviceInfo> current = collectAllInputDevices(st.midiManager);
 
-        // 1. Prune devices that are no longer present in MidiManager
         List<Integer> removedIds = new ArrayList<>();
         synchronized (st.lock) {
-            for (Integer openId : st.openedDevices.keySet()) {
-                if (!current.containsKey(openId)) {
-                    removedIds.add(openId);
+            for (Map.Entry<Integer, DeviceEntry> e : st.openedDevices.entrySet()) {
+                // Only prune USB devices from MidiManager scan (BLE devices are managed explicitly or via onDeviceRemoved)
+                if (!"ble".equals(e.getValue().transport) && !current.containsKey(e.getKey())) {
+                    removedIds.add(e.getKey());
                 }
             }
         }
@@ -405,8 +577,13 @@ public final class UsbMidiEnhanced {
             closeDeviceById(st, id, "disconnected");
         }
 
-        // 2. Open any discovered devices not yet opened
         for (MidiDeviceInfo info : current.values()) {
+            // Skip Bluetooth devices here if already opened via BleMidiHelper
+            if (info.getType() == MidiDeviceInfo.TYPE_BLUETOOTH) {
+                synchronized (st.lock) {
+                    if (st.openedDevices.containsKey(info.getId())) continue;
+                }
+            }
             openDeviceIdempotent(st, info);
         }
     }
@@ -416,9 +593,9 @@ public final class UsbMidiEnhanced {
         Map<Integer, MidiDeviceInfo> current = collectAllInputDevices(st.midiManager);
         List<Integer> removedIds = new ArrayList<>();
         synchronized (st.lock) {
-            for (Integer openId : st.openedDevices.keySet()) {
-                if (!current.containsKey(openId)) {
-                    removedIds.add(openId);
+            for (Map.Entry<Integer, DeviceEntry> e : st.openedDevices.entrySet()) {
+                if (!"ble".equals(e.getValue().transport) && !current.containsKey(e.getKey())) {
+                    removedIds.add(e.getKey());
                 }
             }
         }
@@ -438,6 +615,7 @@ public final class UsbMidiEnhanced {
         }
 
         final String name = formatDeviceName(info);
+        final String transport = info.getType() == MidiDeviceInfo.TYPE_BLUETOOTH ? "ble" : "usb";
         try {
             st.midiManager.openDevice(info, new MidiManager.OnDeviceOpenedListener() {
                 @Override
@@ -452,7 +630,6 @@ public final class UsbMidiEnhanced {
                         return;
                     }
                     if (device == null) {
-                        // Common transient failure while Samsung USB host finishes handshaking: retry up to 3x
                         int attempt;
                         synchronized (st.lock) {
                             Integer prev = st.retryCounts.get(devId);
@@ -473,7 +650,7 @@ public final class UsbMidiEnhanced {
                         return;
                     }
 
-                    DeviceEntry entry = new DeviceEntry(devId, name, info, device);
+                    DeviceEntry entry = new DeviceEntry(devId, name, transport, null, info, device);
                     int portCount = Math.max(1, info.getOutputPortCount());
                     for (int p = 0; p < portCount; p++) {
                         try {
@@ -506,7 +683,7 @@ public final class UsbMidiEnhanced {
                             closeEntryQuietly(prev);
                         }
                     }
-                    Log.i(TAG, "USB MIDI connected: " + name + " (id=" + devId + ", ports=" + entry.outputPorts.size() + ")");
+                    Log.i(TAG, "MIDI connected: " + name + " (id=" + devId + ", transport=" + transport + ", ports=" + entry.outputPorts.size() + ")");
                     refreshAndEmit(st, "connected");
                 }
             }, st.mainHandler);
@@ -520,15 +697,23 @@ public final class UsbMidiEnhanced {
 
     private static void closeDeviceById(State st, int devId, String reason) {
         DeviceEntry removed;
+        String bleMac = null;
         synchronized (st.lock) {
             st.openingIds.remove(devId);
             st.retryCounts.remove(devId);
             removed = st.openedDevices.remove(devId);
+            if (removed != null && removed.bleAddress != null) {
+                bleMac = removed.bleAddress;
+                st.bleAddrToId.remove(bleMac);
+            }
         }
         if (removed != null) {
             closeEntryQuietly(removed);
-            Log.i(TAG, "USB MIDI disconnected: " + removed.name + " (id=" + devId + ")");
+            Log.i(TAG, "MIDI disconnected: " + removed.name + " (id=" + devId + ")");
             refreshAndEmit(st, reason);
+            if (bleMac != null) {
+                BleMidiHelper.emitConnectResult(bleMac, removed.name, false, false, "BLE MIDI desconectado: " + removed.name);
+            }
         }
     }
 
@@ -578,8 +763,10 @@ public final class UsbMidiEnhanced {
                     JSONObject o = new JSONObject();
                     o.put("id", String.valueOf(entry.id));
                     o.put("name", entry.name);
+                    o.put("transport", entry.transport);
                     o.put("connected", true);
                     o.put("port_count", entry.outputPorts.size());
+                    if (entry.bleAddress != null) o.put("ble_address", entry.bleAddress);
                     arr.put(o);
                 } catch (Throwable ignored) {
                 }
@@ -592,6 +779,7 @@ public final class UsbMidiEnhanced {
                 JSONObject o = new JSONObject();
                 o.put("id", String.valueOf(info.getId()));
                 o.put("name", formatDeviceName(info));
+                o.put("transport", info.getType() == MidiDeviceInfo.TYPE_BLUETOOTH ? "ble" : "usb");
                 o.put("connected", false);
                 o.put("port_count", info.getOutputPortCount());
                 arr.put(o);

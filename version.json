@@ -1,16 +1,16 @@
 {
-  "versionCode": 2,
-  "versionName": "1.1.0",
-  "tag": "v1.1.0",
+  "versionCode": 3,
+  "versionName": "1.2.0",
+  "tag": "v1.2.0",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.1.0.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.1.0/P61x_Console_v1.1.0.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.1.0",
+  "apkFileName": "P61x_Console_v1.2.0.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.0/P61x_Console_v1.2.0.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.0",
   "notes": [
-    "Verificação de versão e atualização direta pelo GitHub integrada ao app",
-    "Sidebar limpa contendo somente o menu principal",
-    "Novo modal de Setlist / Bancos e Timbres ao tocar no nome do timbre no topo",
-    "Detecção USB MIDI reforçada para controladores plugados antes ou durante a execução, com botão Reescanear",
-    "Faders reescritos com aceleração GPU (translate3d + requestAnimationFrame) para deslizamento fluido"
+    "Transpose Global (-12 a +12 semitons) não-destrutivo no topo, preservando splits e oitavas das zonas",
+    "Controles de FX Master com knobs rotativos LED-ring idênticos aos das zonas (no rack superior e no modal, com zoom e MIDI Learn)",
+    "Menu (!) SOBRE exibindo versão instalada, informações do sistema e verificação/atualização via GitHub",
+    "Suporte nativo a MIDI Bluetooth (BLE MIDI) com scanner, pareamento rápido e integração completa ao motor DSP",
+    "Otimização de latência de áudio para Bluetooth (96 frames + AudioFocus baixa latência) e troca automática ao conectar Hub USB + Placa de Áudio"
   ]
 }

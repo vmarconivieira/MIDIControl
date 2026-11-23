@@ -463,6 +463,25 @@
       flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(9, minmax(60px, 1fr));
       gap: 4px; align-items: center; height: 100%;
     }
+    .knobs-row.master-mode {
+      grid-template-columns: repeat(6, minmax(64px, 1fr)) minmax(92px, 118px);
+      gap: 6px;
+    }
+    .mfx-rack-actions {
+      display: flex; flex-direction: column; justify-content: center; gap: 6px; height: 100%;
+      padding-left: 6px; border-left: 1px solid var(--border-subtle);
+    }
+    .mfx-rack-btn {
+      height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, #212734, #141822); color: var(--text-primary);
+      font-size: 10px; font-weight: 900; letter-spacing: 0.06em; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .mfx-rack-btn.primary {
+      border-color: var(--mt-accent); color: var(--mt-accent-bright);
+      background: linear-gradient(180deg, #2c2416, #17130c);
+    }
+    .mfx-rack-btn:active { transform: scale(0.96); }
 
     .mt-knob-slot {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -492,26 +511,154 @@
       font-size: 9px; font-weight: 800; letter-spacing: 0.05em; color: var(--text-secondary);
       text-transform: uppercase; text-align: center; white-space: nowrap;
     }
+    .mt-knob-val-mini {
+      font-size: 9px; font-weight: 800; color: var(--mt-accent-bright); line-height: 1;
+    }
     .mt-knob-slot.is-active-val .mt-knob-label { color: var(--text-primary); }
 
     .filters-eq-toggle {
-      width: 82px; height: 92px; flex-shrink: 0;
+      width: 78px; height: 96px; flex-shrink: 0;
       background: #171b24; border: 1px solid rgba(255,255,255,0.14);
       border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
     }
     .mode-switch-btn {
       flex: 1; border: none; background: transparent; color: var(--text-secondary);
-      font-size: 11px; font-weight: 800; letter-spacing: 0.06em; cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      font-size: 9.5px; font-weight: 900; letter-spacing: 0.05em; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
       border-bottom: 1px solid var(--border-subtle);
     }
     .mode-switch-btn:last-child { border-bottom: none; }
     .mode-switch-btn .underline-bar {
-      width: 34px; height: 2.5px; border-radius: 2px; background: transparent;
+      width: 30px; height: 2px; border-radius: 2px; background: transparent;
     }
-    .mode-switch-btn.active { color: var(--mt-accent-bright); background: rgba(255,255,255,0.03); }
+    .mode-switch-btn.active { color: var(--mt-accent-bright); background: rgba(255,255,255,0.04); }
     .mode-switch-btn.active .underline-bar {
       background: var(--mt-accent-bright); box-shadow: 0 0 8px var(--mt-accent-glow);
+    }
+
+    /* Master FX Modal rotary knobs grid */
+    .mfx-modal-knobs-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      background: var(--bg-slot); border: 1px solid var(--border-subtle);
+      border-radius: 11px; padding: 10px 8px;
+    }
+    .mfx-modal-knobs-grid .mt-knob-slot {
+      height: auto; padding: 6px 4px; border-radius: 9px;
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Global Transpose Pill (Top Bar) + Quick Modal */
+    .transpose-pill {
+      display: inline-flex; align-items: center; gap: 2px;
+      background: var(--bg-slot); border: 1px solid var(--border-subtle);
+      border-radius: 9px; padding: 2px 3px; height: 34px; flex-shrink: 0;
+    }
+    .transpose-pill.is-transposed {
+      border-color: var(--mt-accent);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+    }
+    .transpose-step-btn {
+      width: 24px; height: 28px; border-radius: 6px; border: none;
+      background: #171b25; color: var(--text-secondary); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 900; position: relative;
+    }
+    .transpose-step-btn:hover, .transpose-step-btn:active {
+      background: var(--mt-accent-soft); color: var(--mt-accent-bright);
+    }
+    .transpose-val-btn {
+      border: none; background: transparent; color: var(--text-secondary);
+      padding: 0 6px; height: 28px; cursor: pointer; font-size: 11px; font-weight: 900;
+      letter-spacing: 0.03em; min-width: 48px; text-align: center;
+    }
+    .transpose-pill.is-transposed .transpose-val-btn {
+      color: var(--mt-accent-bright);
+    }
+    .transpose-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+    }
+    .tr-key-btn {
+      height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+      background: #151923; color: var(--text-secondary); font-size: 11.5px; font-weight: 800;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .tr-key-btn.zero-key { border-color: rgba(255,255,255,0.24); color: var(--text-primary); }
+    .tr-key-btn.active {
+      border-color: var(--mt-accent); background: var(--mt-accent-soft);
+      color: var(--mt-accent-bright); box-shadow: 0 0 10px rgba(245,158,11,0.25);
+    }
+
+    /* BLE MIDI & Audio Route Optimization Cards */
+    .bt-svg-icon {
+      width: 1em; height: 1em; display: inline-block; vertical-align: -0.14em;
+      fill: currentColor; flex-shrink: 0;
+    }
+    .ble-midi-card {
+      background: linear-gradient(180deg, #131927 0%, #0e131d 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 10px;
+      padding: 9px 11px; display: flex; flex-direction: column; gap: 7px;
+    }
+    .ble-dev-list {
+      display: flex; flex-direction: column; gap: 5px; max-height: 130px; overflow-y: auto;
+    }
+    .ble-dev-row, .ble-dev-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 6px 9px; border-radius: 8px; background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    .ble-dev-row.connected, .ble-dev-item.connected {
+      border-color: rgba(34, 197, 94, 0.58); background: rgba(34, 197, 94, 0.10);
+    }
+    .ble-dev-name {
+      font-size: 12px; font-weight: 800; color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ble-dev-meta {
+      font-size: 9.5px; color: var(--text-muted); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .audio-route-card {
+      background: linear-gradient(180deg, #151b27 0%, #0f131c 100%);
+      border: 1px solid var(--border-subtle); border-radius: 10px;
+      padding: 9px 11px; display: flex; align-items: center; gap: 10px;
+    }
+    .audio-route-card.usb, .audio-route-card.is-usb {
+      border-color: rgba(34, 197, 94, 0.62);
+      background: linear-gradient(180deg, #112219 0%, #0d1612 100%);
+    }
+    .audio-route-card.bt, .audio-route-card.is-bt {
+      border-color: rgba(59, 130, 246, 0.62);
+      background: linear-gradient(180deg, #121d31 0%, #0d1421 100%);
+    }
+    .audio-route-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .audio-mode-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    }
+    .audio-mode-btn {
+      padding: 8px 6px; border-radius: 9px; border: 1px solid var(--border-subtle);
+      background: #141923; color: var(--text-secondary); cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center;
+      font-size: 10.5px; font-weight: 800;
+    }
+    .audio-mode-btn small { font-size: 9px; font-weight: 600; color: var(--text-muted); }
+    .audio-mode-btn.active {
+      border-color: var(--mt-accent); background: var(--mt-accent-soft); color: var(--mt-accent-bright);
+    }
+    .audio-bt-tip {
+      background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.28);
+      border-radius: 9px; padding: 8px 10px; font-size: 10.5px; color: #cbd5e1;
+      line-height: 1.4; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .btn-master-fx-strip.active {
+      border-color: var(--mt-accent) !important;
+      color: var(--mt-accent-bright) !important;
+      background: var(--mt-accent-soft) !important;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
     }
 
     /* Centered Interactive Knob Zoom Overlay (mobile tap-to-enlarge + live drag HUD) */
@@ -1219,8 +1366,11 @@
       .icon-btn { width: 32px; height: 30px; }
       .brand-mark { padding: 2px 7px; gap: 5px; }
       .brand-m-badge { font-size: 12px; }
-      .patch-pill { height: 30px; max-width: 295px; }
-      .patch-title-txt { font-size: 11px; max-width: 165px; }
+      .patch-pill { height: 30px; max-width: 245px; }
+      .patch-title-txt { font-size: 11px; max-width: 130px; }
+      .transpose-pill { height: 30px; }
+      .transpose-step-btn { width: 22px; height: 24px; font-size: 11px; }
+      .transpose-val-btn { height: 24px; font-size: 10px; min-width: 42px; padding: 0 4px; }
       .view-tab-btn { padding: 4px 10px; font-size: 10px; }
       .workspace-wrap { padding: 4px 3px 3px; gap: 2px; }
       .side-nav-arrow { width: 20px; font-size: 14px; }
@@ -1230,8 +1380,9 @@
       .mt-knob-cap { width: 28px; height: 28px; }
       .mt-knob-pointer { height: 8px; margin-top: 3px; }
       .mt-knob-label { font-size: 7.5px; }
-      .filters-eq-toggle { width: 66px; height: 70px; }
-      .mode-switch-btn { font-size: 9.5px; }
+      .filters-eq-toggle { width: 64px; height: 74px; }
+      .mode-switch-btn { font-size: 8.5px; gap: 1px; }
+      .mfx-rack-btn { height: 30px; font-size: 9px; }
       .mixer-grid { gap: 5px; grid-template-columns: repeat(4, minmax(92px, 1fr)) 6px repeat(2, minmax(94px, 1fr)); overflow-x: auto; }
       .channel-strip { padding: 5px 6px; gap: 4px; }
       .mixer-footer-bar { height: 36px; padding: 2px 8px; }
@@ -1268,6 +1419,17 @@
       .timbre-visual-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    @media (max-height: 460px) {
+      .nav-drawer { padding: 8px 10px; gap: 6px; }
+      .drawer-title { font-size: 16px; }
+      .drawer-sub { font-size: 9px; }
+      .drawer-version-chip { margin-top: 2px; font-size: 9px; }
+      .drawer-actions { gap: 3px; }
+      .drawer-item-btn { min-height: 28px; padding: 3px 9px; font-size: 10.5px; gap: 8px; border-radius: 7px; }
+      .drawer-item-btn i { font-size: 12px; width: 15px; }
+      .nav-drawer .btn-panic { height: 28px; padding: 0 9px; font-size: 10.5px; border-radius: 7px; }
+    }
+
     @media (max-height: 375px) {
       .knob-hud-overlay { padding: 10px 12px; gap: 6px; }
       .knob-hud-svg-wrap { width: 142px; height: 132px; }
@@ -1302,7 +1464,7 @@
         </div>
       </div>
 
-      <div class="top-center">
+      <div class="top-center" style="gap:6px;">
         <div class="patch-pill">
           <button id="btnPrevPatch" class="patch-nav-btn learnable" data-control-id="prev_patch" data-control-label="Cena Anterior" title="Patch Anterior">
             <span class="midi-badge" data-badge-for="prev_patch"></span>
@@ -1319,6 +1481,16 @@
           <button id="btnNextPatch" class="patch-nav-btn learnable" data-control-id="next_patch" data-control-label="Próxima Cena" title="Próximo Patch">
             <span class="midi-badge" data-badge-for="next_patch"></span>
             <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div id="globalTransposePill" class="transpose-pill" title="Transpose Global (-12 a +12 semitons)">
+          <button id="btnTrDown" class="transpose-step-btn learnable" data-control-id="tr_down" data-control-label="Transpose -1 Semitom" title="Transpose -1">
+            <span class="midi-badge" data-badge-for="tr_down"></span>&minus;
+          </button>
+          <button id="btnOpenTransposeModal" class="transpose-val-btn mono" title="Abrir Seletor de Transpose">TR 0</button>
+          <button id="btnTrUp" class="transpose-step-btn learnable" data-control-id="tr_up" data-control-label="Transpose +1 Semitom" title="Transpose +1">
+            <span class="midi-badge" data-badge-for="tr_up"></span>+
           </button>
         </div>
       </div>
@@ -1341,7 +1513,7 @@
       <div class="view-stage">
         <!-- ================= MIXER VIEW (MT PLAYER) ================= -->
         <section id="viewMixer" class="view-pane active">
-          <!-- Top 9 Rotary Knobs + FILTROS / EQ Toggle -->
+          <!-- Top Rotary Knobs + FILTROS / EQ / MASTER Toggle -->
           <div class="knobs-rack">
             <div class="knobs-focus-meta">
               <span id="focusedZoneBadge" class="knobs-focus-badge mono">ZONA 1</span>
@@ -1360,6 +1532,10 @@
               </button>
               <button id="btnModeEq" class="mode-switch-btn" data-rack-mode="eq">
                 <span>EQ</span>
+                <span class="underline-bar"></span>
+              </button>
+              <button id="btnModeMaster" class="mode-switch-btn" data-rack-mode="master">
+                <span>MASTER</span>
                 <span class="underline-bar"></span>
               </button>
             </div>
@@ -1516,7 +1692,7 @@
                 <span class="midi-badge" data-badge-for="mute_master_synth"></span>ON
               </button>
               <div class="strip-bottom-row single">
-                <button class="btn-strip-util" id="btnOpenMasterFxFromStrip">FX MASTER</button>
+                <button class="btn-strip-util btn-master-fx-strip" id="btnOpenMasterFxFromStrip">FX MASTER</button>
               </div>
             </div>
 
@@ -1764,7 +1940,7 @@
       <div>
         <div class="drawer-title">P61X CONSOLE</div>
         <div class="drawer-sub mono">STAGE RIG WORKSTATION</div>
-        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.1.0</span>
+        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.0</span>
       </div>
       <button id="btnCloseNavDrawer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -1776,14 +1952,14 @@
       <button id="btnDrawerMasterFx" class="drawer-item-btn"><i class="fa-solid fa-wand-magic-sparkles"></i><span>MASTER FX &amp; TAP TEMPO</span></button>
       <button id="btnDrawerAudio" class="drawer-item-btn"><i class="fa-solid fa-volume-high"></i><span>ÁUDIO / ENGINE AAUDIO</span></button>
       <button id="btnDrawerMidi" class="drawer-item-btn">
-        <i class="fa-solid fa-plug"></i><span>MIDI INPUT &amp; PERFIS CC</span>
-        <span id="drawerMidiDot" class="drawer-midi-dot" title="Status USB MIDI"></span>
+        <i class="fa-solid fa-plug"></i><span>MIDI USB / BLE &amp; PERFIS</span>
+        <span id="drawerMidiDot" class="drawer-midi-dot" title="Status MIDI"></span>
       </button>
       <button id="btnDrawerAppearance" class="drawer-item-btn"><i class="fa-solid fa-palette"></i><span>TEMAS &amp; VISUAL</span></button>
       <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL (61 TECLAS)</span></button>
       <button id="btnDrawerUpdates" class="drawer-item-btn">
-        <i class="fa-solid fa-cloud-arrow-down"></i><span>ATUALIZAÇÕES (GITHUB)</span>
-        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.1.0</span>
+        <i class="fa-solid fa-circle-exclamation"></i><span>SOBRE</span>
+        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.0</span>
       </button>
       <button id="btnPanic" class="btn-panic learnable" data-control-id="btn_panic" data-control-label="PANIC (Silenciar Tudo)">
         <span class="midi-badge" data-badge-for="btn_panic"></span>
@@ -1791,6 +1967,38 @@
       </button>
     </div>
   </aside>
+
+  <!-- ==================== GLOBAL TRANSPOSE QUICK MODAL ==================== -->
+  <div id="transposeModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:460px; display:flex; flex-direction:column; gap:11px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-music" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Transpose Global</h3>
+          <div class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Transpõe todas as 4 zonas preservando splits e oitavas</div>
+        </div>
+        <button id="btnCloseTransposeModal" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-slot); border:1px solid var(--border-subtle); border-radius:10px; padding:8px 12px;">
+        <div style="display:flex; gap:6px;">
+          <button id="btnTrModalOctDown" class="btn-tool mono">-12</button>
+          <button id="btnTrModalSemiDown" class="btn-tool mono">-1</button>
+        </div>
+        <div style="text-align:center;">
+          <div id="trModalBigVal" class="mono" style="font-size:20px; font-weight:900; color:var(--mt-accent-bright);">0 st</div>
+          <div id="trModalKeyHint" class="mono" style="font-size:9.5px; color:var(--text-muted);">Tom Original (C → C)</div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button id="btnTrModalSemiUp" class="btn-tool mono">+1</button>
+          <button id="btnTrModalOctUp" class="btn-tool mono">+12</button>
+        </div>
+      </div>
+      <div id="transposeGrid" class="transpose-grid"></div>
+      <div style="display:flex; justify-content:space-between; gap:8px;">
+        <button id="btnTrModalZero" class="btn-tool" style="flex:1; justify-content:center;"><i class="fa-solid fa-rotate-left"></i><span>Zerar (0)</span></button>
+        <button id="btnTrModalDone" class="btn-tool active" style="flex:1; justify-content:center;"><i class="fa-solid fa-check"></i><span>OK</span></button>
+      </div>
+    </div>
+  </div>
 
   <!-- ==================== SETLIST / BANCOS & TIMBRES MODAL ==================== -->
   <div id="setlistModal" class="modal-backdrop">
@@ -1826,31 +2034,31 @@
     </div>
   </div>
 
-  <!-- ==================== GITHUB AUTO-UPDATE MODAL ==================== -->
+  <!-- ==================== (!) SOBRE & ATUALIZAÇÕES MODAL ==================== -->
   <div id="updateModal" class="modal-backdrop">
-    <div class="modal-card" style="max-width:500px; display:flex; flex-direction:column; gap:11px;">
+    <div class="modal-card" style="max-width:520px; display:flex; flex-direction:column; gap:10px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-cloud-arrow-down" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Atualizações via GitHub</h3>
-          <div id="updRepoLabel" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">vmarconivieira/MIDIControl</div>
+          <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-circle-exclamation" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Sobre o P61x Console</h3>
+          <div id="updRepoLabel" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Stage Rig Workstation • vmarconivieira/MIDIControl</div>
         </div>
         <button id="btnCloseUpdateModal" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="upd-ver-grid">
         <div class="upd-ver-box">
-          <span class="upd-ver-label mono">INSTALADA NO APARELHO</span>
-          <span id="updInstalledVer" class="upd-ver-val mono">v1.1.0</span>
-          <span id="updInstalledCode" class="upd-ver-sub mono">Build 2</span>
+          <span class="upd-ver-label mono">VERSÃO INSTALADA</span>
+          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.0</span>
+          <span id="updInstalledCode" class="upd-ver-sub mono">Build 3 • AAudio + USB/BLE MIDI</span>
         </div>
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VIGENTE NO GITHUB</span>
           <span id="updRemoteVer" class="upd-ver-val mono">--</span>
-          <span id="updRemoteSub" class="upd-ver-sub mono">Aguardando verificação</span>
+          <span id="updRemoteSub" class="upd-ver-sub mono">Toque em Buscar Atualizações</span>
         </div>
       </div>
 
-      <div id="updStatusBanner" class="upd-banner">Toque em "Verificar Agora" para consultar o GitHub.</div>
+      <div id="updStatusBanner" class="upd-banner">Toque em "Buscar Atualizações" para verificar se há nova versão no GitHub.</div>
       <div id="updNotesBox" class="upd-notes" style="display:none;"></div>
 
       <div id="updProgressWrap" style="display:none; flex-direction:column; gap:6px;">
@@ -1859,8 +2067,8 @@
       </div>
 
       <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between; align-items:center;">
-        <button id="btnCheckUpdateNow" class="btn-tool btn-spin-icon" style="flex:1; justify-content:center; min-width:130px;">
-          <i class="fa-solid fa-arrows-rotate"></i><span>Verificar Agora</span>
+        <button id="btnCheckUpdateNow" class="btn-tool btn-spin-icon" style="flex:1; justify-content:center; min-width:140px;">
+          <i class="fa-solid fa-arrows-rotate"></i><span>Buscar Atualizações</span>
         </button>
         <button id="btnDownloadUpdate" class="btn-tool active" style="flex:1.2; justify-content:center; min-width:150px; display:none;">
           <i class="fa-solid fa-download"></i><span>Baixar e Atualizar</span>
@@ -1969,34 +2177,26 @@
     </div>
   </div>
 
-  <!-- ==================== MASTER FX MODAL ==================== -->
+  <!-- ==================== MASTER FX MODAL (ROTARY KNOBS IGUAIS ÀS ZONAS) ==================== -->
   <div id="masterFxModal" class="modal-backdrop">
-    <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 style="font-size:15px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Master FX &amp; Tap Tempo</h3>
+    <div class="modal-card" style="max-width:520px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Master FX &amp; Tap Tempo</h3>
+          <div class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Toque em qualquer knob para ampliar ou segure para MIDI Learn</div>
+        </div>
         <button id="btnCloseMasterFx" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div style="display:flex; flex-direction:column; gap:10px;">
-        <div style="background:var(--bg-slot); padding:10px; border-radius:10px; border:1px solid var(--border-subtle);">
-          <div class="mono" style="display:flex; justify-content:space-between; font-size:10.5px; margin-bottom:6px;">
-            <span>BPM DELAY SYNC</span><strong id="fxBpmReadout" style="color:var(--mt-accent-bright)">68 BPM</strong>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <input id="fxBpmSlider" type="range" min="40" max="200" value="68" style="flex:1; accent-color:var(--mt-accent);">
-            <button id="btnTapTempo" class="btn-tool active">TAP TEMPO</button>
-          </div>
-        </div>
-        <div style="background:var(--bg-slot); padding:10px; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:7px;">
-          <div class="mono" style="display:flex; justify-content:space-between; font-size:10.5px;"><span>Reverb Tamanho</span><span id="fxRevRoomVal">84%</span></div>
-          <input id="fxRevRoom" type="range" min="20" max="95" value="84" style="accent-color:var(--mt-accent);">
-          <div class="mono" style="display:flex; justify-content:space-between; font-size:10.5px;"><span>Reverb Retorno</span><span id="fxRevLevelVal">110%</span></div>
-          <input id="fxRevLevel" type="range" min="0" max="200" value="110" style="accent-color:var(--mt-accent);">
-          <div class="mono" style="display:flex; justify-content:space-between; font-size:10.5px;"><span>Delay Feedback</span><span id="fxDlyFbVal">36%</span></div>
-          <input id="fxDlyFb" type="range" min="0" max="80" value="36" style="accent-color:var(--mt-accent);">
-          <div class="mono" style="display:flex; justify-content:space-between; font-size:10.5px;"><span>Delay Retorno</span><span id="fxDlyLevelVal">52%</span></div>
-          <input id="fxDlyLevel" type="range" min="0" max="140" value="52" style="accent-color:var(--mt-accent);">
-        </div>
-        <button id="btnSaveMasterFx" class="btn-tool active" style="justify-content:center; height:36px;">Salvar Master FX</button>
+
+      <div id="masterFxModalKnobs" class="mfx-modal-knobs-grid"></div>
+
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="btnTapTempo" class="btn-tool active" style="flex:1; justify-content:center; height:36px;">
+          <i class="fa-solid fa-bolt"></i><span>TAP TEMPO (<span id="fxBpmReadout" class="mono">120 BPM</span>)</span>
+        </button>
+        <button id="btnSaveMasterFx" class="btn-tool active" style="flex:1; justify-content:center; height:36px;">
+          <i class="fa-solid fa-floppy-disk"></i><span>Salvar Master FX</span>
+        </button>
       </div>
     </div>
   </div>
@@ -2021,30 +2221,52 @@
   <!-- ==================== SETTINGS MODAL ==================== -->
   <div id="settingsModal" class="modal-backdrop">
     <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h3 style="font-size:15px;"><i class="fa-solid fa-gear" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Configurações P61x</h3>
         <button id="btnCloseSettings" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="settings-tabs">
-        <button class="settings-tab-btn active" data-settings-tab="midi">MIDI &amp; Perfis</button>
-        <button class="settings-tab-btn" data-settings-tab="audio">Áudio &amp; FX</button>
+        <button class="settings-tab-btn active" data-settings-tab="midi">MIDI USB / BLE</button>
+        <button class="settings-tab-btn" data-settings-tab="audio">Áudio &amp; Latência</button>
         <button class="settings-tab-btn" data-settings-tab="appearance">Temas</button>
       </div>
 
-      <div id="settingsPaneMidi" style="display:flex; flex-direction:column; gap:10px;">
+      <div id="settingsPaneMidi" style="display:flex; flex-direction:column; gap:9px;">
         <div id="midiLiveCard" class="midi-live-card">
           <span id="midiLiveDot" class="midi-live-dot"></span>
           <div style="flex:1; min-width:0;">
-            <div id="midiLiveTitle" style="font-size:12px; font-weight:800; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Nenhum controlador USB conectado</div>
-            <div id="midiLiveSub" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Plugue via OTG/USB-C ou toque em Reescanear</div>
+            <div id="midiLiveTitle" style="font-size:12px; font-weight:800; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Nenhum controlador conectado</div>
+            <div id="midiLiveSub" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Plugue via Hub USB/OTG ou conecte via BLE MIDI abaixo</div>
           </div>
-          <button id="btnRescanMidi" class="btn-tool active btn-spin-icon" style="height:32px; padding:0 10px; flex-shrink:0;">
-            <i class="fa-solid fa-arrows-rotate"></i><span>Reescanear</span>
+          <button id="btnRescanMidi" class="btn-tool active btn-spin-icon" style="height:30px; padding:0 9px; flex-shrink:0;">
+            <i class="fa-solid fa-arrows-rotate"></i><span>USB</span>
           </button>
         </div>
 
+        <div class="ble-midi-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:7px;">
+              <svg class="bt-svg-icon" style="color:#60a5fa; font-size:15px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg>
+              <span class="mono" style="font-size:10.5px; font-weight:900; color:#93c5fd;">MIDI BLUETOOTH (BLE MIDI)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label style="display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--text-secondary); cursor:pointer;">
+                <input type="checkbox" id="chkBleAll" style="accent-color:#60a5fa;">
+                <span>Todos BLE</span>
+              </label>
+              <button id="btnScanBleMidi" class="btn-tool btn-spin-icon" style="height:28px; padding:0 10px; font-size:10.5px; border-color:rgba(96,165,250,0.55); color:#bfdbfe;">
+                <i class="fa-solid fa-tower-broadcast"></i><span id="btnScanBleLabel">Buscar BLE</span>
+              </button>
+            </div>
+          </div>
+          <div id="bleMidiStatus" class="mono" style="font-size:10px; color:var(--text-muted);">
+            Suporta WIDI Master/Jack, M-VAVE MS1, Yamaha MD-BT01, Roland WM-1, Korg microKEY Air e teclados BLE.
+          </div>
+          <div id="bleMidiList" class="ble-dev-list"></div>
+        </div>
+
         <div>
-          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px;">ENTRADA MIDI HARDWARE (HOTPLUG AUTOMÁTICO)</label>
+          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px;">ENTRADA MIDI ATIVA (USB + BLE HOTPLUG)</label>
           <select id="midiInSelect" class="bank-select"></select>
         </div>
 
@@ -2071,31 +2293,69 @@
         </label>
       </div>
 
-      <div id="settingsPaneAudio" style="display:none; flex-direction:column; gap:10px;">
-        <div>
-          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px;">DISPOSITIVO DE SAÍDA (AAUDIO / ANDROID)</label>
-          <select id="audioOutDeviceSelect" class="bank-select"></select>
+      <div id="settingsPaneAudio" style="display:none; flex-direction:column; gap:9px;">
+        <div id="audioRouteCard" class="audio-route-card">
+          <span id="audioRouteIcon" class="audio-route-icon" style="color:var(--mt-accent-bright);"><i class="fa-solid fa-headphones"></i></span>
+          <div style="flex:1; min-width:0;">
+            <div id="audioRouteTitle" style="font-size:12px; font-weight:800; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detectando saída de áudio...</div>
+            <div id="audioRouteSub" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">AAudio Low-Latency • 48 kHz</div>
+          </div>
+          <span id="audioRouteLatChip" class="patch-code-chip mono">-- ms</span>
         </div>
+
         <div>
-          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px;">BUFFER / LATÊNCIA (44.1 kHz)</label>
-          <select id="audioBlockSizeSelect" class="bank-select">
-            <option value="128">128 frames</option>
-            <option value="256" selected>256 frames (Recomendado)</option>
-            <option value="512">512 frames</option>
-            <option value="1024">1024 frames</option>
-          </select>
+          <label class="mono" style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:5px;">PERFIL DE LATÊNCIA (TROCA AUTOMÁTICA AO PLUGAR HUB USB)</label>
+          <div class="audio-mode-grid">
+            <button id="btnModeBtLowLat" class="audio-mode-btn" data-audio-mode="bt_low_latency">
+              <svg class="bt-svg-icon" style="color:#60a5fa; font-size:14px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg>
+              <span>Bluetooth Otim.</span>
+              <small>96f • Modo Jogo</small>
+            </button>
+            <button id="btnModeUsbPro" class="audio-mode-btn active" data-audio-mode="usb_pro">
+              <i class="fa-solid fa-gauge-high" style="color:#4ade80;"></i>
+              <span>USB / Palco</span>
+              <small>128f • Hub + Placa</small>
+            </button>
+            <button id="btnModeSafe" class="audio-mode-btn" data-audio-mode="safe">
+              <i class="fa-solid fa-wave-square" style="color:var(--mt-accent-bright);"></i>
+              <span>Estável</span>
+              <small>256f • Sem estalos</small>
+            </button>
+          </div>
         </div>
+
+        <div class="audio-bt-tip">
+          <span><strong>Bluetooth no dia a dia:</strong> o modo <em>Bluetooth Otim.</em> reduz o buffer interno do app para ~2ms e solicita baixa latência (<em>USAGE_GAME</em>). Para latência ainda menor no Galaxy M55, ative <strong>Modo Jogo</strong> no fone ou use <strong>LE Audio / aptX</strong>. Ao conectar seu Hub USB + Placa de Áudio, o app entra automaticamente em modo palco (&lt;10ms).</span>
+          <button id="btnOpenBtSettings" class="btn-tool" style="flex-shrink:0; height:30px; font-size:10px; padding:0 9px;" title="Abrir Configurações Bluetooth do Android">
+            <svg class="bt-svg-icon" style="color:#60a5fa; font-size:13px;" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg><span>Config. BT</span>
+          </button>
+        </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <button id="btnApplyAudioCfg" class="btn-tool active" style="justify-content:center;">Aplicar Áudio</button>
-          <button id="btnRestartNuma" class="btn-tool" style="justify-content:center;">Reiniciar Áudio</button>
+          <div>
+            <label class="mono" style="font-size:9.5px; color:var(--text-muted); display:block; margin-bottom:4px;">SAÍDA DETECTADA</label>
+            <select id="audioOutDeviceSelect" class="bank-select"></select>
+          </div>
+          <div>
+            <label class="mono" style="font-size:9.5px; color:var(--text-muted); display:block; margin-bottom:4px;">BUFFER DSP (FRAMES)</label>
+            <select id="audioBlockSizeSelect" class="bank-select">
+              <option value="64">64 frames (Ultra)</option>
+              <option value="96">96 frames (BT Otim.)</option>
+              <option value="128">128 frames (USB / Palco)</option>
+              <option value="256" selected>256 frames (Estável)</option>
+              <option value="512">512 frames</option>
+              <option value="1024">1024 frames</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <button id="btnApplyAudioCfg" class="btn-tool active" style="justify-content:center;">Aplicar Buffer</button>
+          <button id="btnRestartNuma" class="btn-tool" style="justify-content:center;">Reiniciar AAudio</button>
         </div>
         <button id="btnSettingsOpenFx" class="btn-tool" style="justify-content:space-between;">
           <span>Abrir Master FX &amp; Tap Tempo</span><i class="fa-solid fa-chevron-right"></i>
         </button>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <button id="btnOptAudio" class="btn-tool active" style="justify-content:center;">Modo Áudio (Alta Perf.)</button>
-          <button id="btnOptEveryday" class="btn-tool" style="justify-content:center;">Modo Cotidiano</button>
-        </div>
       </div>
 
       <div id="settingsPaneAppearance" style="display:none; flex-direction:column; gap:10px;">
@@ -2512,6 +2772,139 @@
       { key: "rev", label: "REVERB",    min: 0, max: 127, def: 50, bipolar: false, ctrlPrefix: "rev_z" }
     ];
 
+    const MASTER_FX_DEFS = [
+      { key: "mfx_rev_room",  label: "REV TAM.",   min: 20, max: 95,  def: 84,  bipolar: false, ctrlId: "mfx_rev_room",  unit: "%",   isMaster: true },
+      { key: "mfx_rev_damp",  label: "REV DAMP",   min: 0,  max: 100, def: 28,  bipolar: false, ctrlId: "mfx_rev_damp",  unit: "%",   isMaster: true },
+      { key: "mfx_rev_level", label: "REV RET.",   min: 0,  max: 200, def: 110, bipolar: false, ctrlId: "mfx_rev_level", unit: "%",   isMaster: true },
+      { key: "mfx_dly_fb",    label: "DLY FDBK",   min: 0,  max: 80,  def: 36,  bipolar: false, ctrlId: "mfx_dly_fb",    unit: "%",   isMaster: true },
+      { key: "mfx_dly_level", label: "DLY RET.",   min: 0,  max: 140, def: 52,  bipolar: false, ctrlId: "mfx_dly_level", unit: "%",   isMaster: true },
+      { key: "mfx_bpm",       label: "BPM SYNC",   min: 40, max: 200, def: 120, bipolar: false, ctrlId: "mfx_bpm",       unit: " BPM",isMaster: true }
+    ];
+
+    const masterFxState = {
+      revRoom: 84,
+      revDamp: 28,
+      revLevel: 110,
+      dlyFb: 36,
+      dlyLevel: 52,
+      bpm: 120
+    };
+
+    let globalTransposeVal = 0;
+    const NOTE_NAMES_TR = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+
+    function setGlobalTransposeUI(semitones, sendToBackend = true) {
+      const clamped = Math.max(-12, Math.min(12, Math.round(Number(semitones) || 0)));
+      globalTransposeVal = clamped;
+      if (sendToBackend && numaBackend && numaBackend.setGlobalTranspose) {
+        try {
+          const res = numaBackend.setGlobalTranspose(clamped);
+          if (typeof res === "number" && !Number.isNaN(res)) globalTransposeVal = res;
+        } catch (_) {}
+      }
+      const v = globalTransposeVal;
+      const sign = v > 0 ? `+${v}` : String(v);
+      const pill = document.getElementById("globalTransposePill");
+      const btn = document.getElementById("btnOpenTransposeModal");
+      if (pill) pill.classList.toggle("is-transposed", v !== 0);
+      if (btn) btn.textContent = `TR ${sign}`;
+
+      const bigVal = document.getElementById("trModalBigVal");
+      if (bigVal) bigVal.textContent = `${sign} st`;
+      const hint = document.getElementById("trModalKeyHint");
+      if (hint) {
+        const targetKey = NOTE_NAMES_TR[((v % 12) + 12) % 12];
+        hint.textContent = v === 0 ? "Tom Original (C → C)" : `Tocando em C soa ${targetKey} (${sign} semitons)`;
+      }
+      document.querySelectorAll("#transposeGrid .tr-key-btn").forEach(b => {
+        b.classList.toggle("active", parseInt(b.dataset.trVal || "0", 10) === v);
+      });
+      if (sendToBackend) {
+        setStatusMessage(v === 0 ? "Transpose Global zerado (0 st)" : `Transpose Global: ${sign} semitons`);
+      }
+    }
+
+    function buildTransposeGrid() {
+      const grid = document.getElementById("transposeGrid");
+      if (!grid || grid.childElementCount > 0) return;
+      for (let st = -12; st <= 12; st++) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.dataset.trVal = String(st);
+        b.className = `tr-key-btn mono ${st === 0 ? "zero-key" : ""} ${st === globalTransposeVal ? "active" : ""}`;
+        b.textContent = st > 0 ? `+${st}` : String(st);
+        b.addEventListener("click", () => setGlobalTransposeUI(st, true));
+        grid.appendChild(b);
+      }
+    }
+
+    function openTransposeModal() {
+      buildTransposeGrid();
+      setGlobalTransposeUI(globalTransposeVal, false);
+      document.getElementById("transposeModal")?.classList.add("open");
+    }
+
+    function pushMasterFxState(save = false) {
+      const rr = masterFxState.revRoom / 100;
+      const rd = masterFxState.revDamp / 100;
+      const rl = masterFxState.revLevel / 100;
+      const df = masterFxState.dlyFb / 100;
+      const dl = masterFxState.dlyLevel / 100;
+      if (numaBackend && numaBackend.setMasterFx) {
+        numaBackend.setMasterFx(rr, rd, rl, df, dl, !!save);
+      }
+      if (save) {
+        setStatusMessage("Master FX salvo!");
+      }
+    }
+
+    let masterTapTimes = [];
+    function triggerTapTempo() {
+      const now = performance.now();
+      if (masterTapTimes.length && now - masterTapTimes[masterTapTimes.length - 1] > 2000) masterTapTimes = [];
+      masterTapTimes.push(now);
+      if (masterTapTimes.length > 4) masterTapTimes.shift();
+      if (masterTapTimes.length >= 2) {
+        const avg = (masterTapTimes[masterTapTimes.length - 1] - masterTapTimes[0]) / (masterTapTimes.length - 1);
+        const b = Math.max(40, Math.min(200, Math.round(60000 / avg)));
+        applyMasterFxKnobValue("mfx_bpm", b, true);
+      }
+    }
+
+    function getMasterFxParamValue(key) {
+      if (key === "mfx_rev_room") return masterFxState.revRoom;
+      if (key === "mfx_rev_damp") return masterFxState.revDamp;
+      if (key === "mfx_rev_level") return masterFxState.revLevel;
+      if (key === "mfx_dly_fb") return masterFxState.dlyFb;
+      if (key === "mfx_dly_level") return masterFxState.dlyLevel;
+      if (key === "mfx_bpm") return masterFxState.bpm;
+      return 0;
+    }
+
+    function applyMasterFxKnobValue(key, newVal, sendToBackend = true) {
+      const v = Math.round(Number(newVal) || 0);
+      if (key === "mfx_rev_room") masterFxState.revRoom = Math.max(20, Math.min(95, v));
+      else if (key === "mfx_rev_damp") masterFxState.revDamp = Math.max(0, Math.min(100, v));
+      else if (key === "mfx_rev_level") masterFxState.revLevel = Math.max(0, Math.min(200, v));
+      else if (key === "mfx_dly_fb") masterFxState.dlyFb = Math.max(0, Math.min(80, v));
+      else if (key === "mfx_dly_level") masterFxState.dlyLevel = Math.max(0, Math.min(140, v));
+      else if (key === "mfx_bpm") {
+        masterFxState.bpm = Math.max(40, Math.min(200, v));
+        const readout = document.getElementById("fxBpmReadout");
+        if (readout) readout.textContent = `${masterFxState.bpm} BPM`;
+        const patchBpmEl = document.getElementById("patchBpm");
+        if (patchBpmEl) patchBpmEl.textContent = `${masterFxState.bpm} BPM`;
+        if (programs[currentProgramIndex]) programs[currentProgramIndex].bpm = masterFxState.bpm;
+        if (sendToBackend && numaBackend && numaBackend.setBpm) numaBackend.setBpm(masterFxState.bpm);
+      }
+      if (key !== "mfx_bpm" && sendToBackend) {
+        pushMasterFxState(false);
+      }
+      if (topRackMode === "master") renderTopKnobs();
+      renderMasterFxModalKnobs();
+      syncOpenKnobHud();
+    }
+
     function buildKnobArcSegments(svgEl, cx, cy, r, numSegs = 15) {
       svgEl.innerHTML = "";
       for (let i = 0; i < numSegs; i++) {
@@ -2557,6 +2950,7 @@
     }
 
     function getZoneParamValue(zIdx, key) {
+      if (key && key.startsWith("mfx_")) return getMasterFxParamValue(key);
       const p = programs[currentProgramIndex];
       if (!p) return 0;
       if (key === "rev") return (p.rev && p.rev[zIdx] !== undefined) ? p.rev[zIdx] : 50;
@@ -2576,12 +2970,17 @@
     }
 
     function formatKnobHudValue(def, val) {
+      if (def.isMaster) return `${Math.round(val)}${def.unit || ""}`;
       if (def.key.startsWith("eq")) return `${val > 0 ? "+" : ""}${Number(val).toFixed(1)} dB`;
       if (def.key === "pan") return val === 64 ? "CENTRO" : (val < 64 ? `L ${64 - val}` : `R ${val - 64}`);
       return String(Math.round(val));
     }
 
     function applyZoneKnobValue(zIdx, key, newVal, sendToBackend = true) {
+      if (key && key.startsWith("mfx_")) {
+        applyMasterFxKnobValue(key, newVal, sendToBackend);
+        return;
+      }
       const p = programs[currentProgramIndex];
       if (!p) return;
       const ensure = (arrKey, dVal) => {
@@ -2650,7 +3049,7 @@
       const valEl = document.getElementById("knobHudVal");
       const midiBtn = document.getElementById("btnKnobHudMidi");
       if (hudSvg && hudSvg.childElementCount === 0) buildKnobArcSegments(hudSvg, 90, 90, 66, 17);
-      if (titleEl) titleEl.textContent = `${def.label} • ZONA ${z + 1}`;
+      if (titleEl) titleEl.textContent = def.isMaster ? `${def.label} • MASTER FX` : `${def.label} • ZONA ${z + 1}`;
       if (valEl) valEl.textContent = formatKnobHudValue(def, val);
       if (hudSvg && hudPtr) paintKnobVisual(hudSvg, hudPtr, val, def.min, def.max, def.bipolar);
       if (rangeEl) {
@@ -2659,7 +3058,7 @@
         rangeEl.step = String(def.step || 1);
         rangeEl.value = String(val);
       }
-      if (midiBtn) midiBtn.disabled = !def.ctrlPrefix;
+      if (midiBtn) midiBtn.disabled = !(def.ctrlPrefix || def.ctrlId);
     }
 
     function openKnobHud(def, zoneIdx, interactive = true) {
@@ -2694,7 +3093,9 @@
 
     function stepKnobHudDef(deltaIdx) {
       if (!knobHudState.def) return;
-      const defs = topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS;
+      const defs = knobHudState.def.isMaster
+        ? MASTER_FX_DEFS
+        : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS);
       const idx = defs.findIndex(d => d.key === knobHudState.def.key);
       if (idx < 0) return;
       const nextIdx = (idx + deltaIdx + defs.length) % defs.length;
@@ -2758,13 +3159,15 @@
         const def = knobHudState.def;
         if (!def) return;
         applyZoneKnobValue(knobHudState.zone, def.key, def.def, true);
-        setStatusMessage(`Zona ${knobHudState.zone + 1} • ${def.label} restaurado → ${def.def}`);
+        const scope = def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`;
+        setStatusMessage(`${scope} • ${def.label} restaurado → ${formatKnobHudValue(def, def.def)}`);
       });
 
       document.getElementById("btnKnobHudMidi")?.addEventListener("click", () => {
         const def = knobHudState.def;
-        if (!def || !def.ctrlPrefix) return;
-        const ctrlId = `${def.ctrlPrefix}${knobHudState.zone + 1}`;
+        if (!def) return;
+        const ctrlId = def.ctrlId || (def.ctrlPrefix ? `${def.ctrlPrefix}${knobHudState.zone + 1}` : null);
+        if (!ctrlId) return;
         const slot = document.querySelector(`.mt-knob-slot[data-control-id="${ctrlId}"]`);
         closeKnobHud();
         if (slot) openMidiLearnModal(slot);
@@ -2803,7 +3206,8 @@
             const now = Date.now();
             if (now - lastTapTime < 300) {
               applyZoneKnobValue(knobHudState.zone, knobHudState.def.key, knobHudState.def.def, true);
-              setStatusMessage(`Zona ${knobHudState.zone + 1} • ${knobHudState.def.label} restaurado → ${knobHudState.def.def}`);
+              const scope = knobHudState.def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`;
+              setStatusMessage(`${scope} • ${knobHudState.def.label} restaurado → ${formatKnobHudValue(knobHudState.def, knobHudState.def.def)}`);
               lastTapTime = 0;
             } else {
               lastTapTime = now;
@@ -2815,131 +3219,218 @@
       }
     }
 
+    function createRotaryKnobSlot(def, zoneIdx, showMiniVal = false) {
+      const slot = document.createElement("div");
+      slot.className = "mt-knob-slot";
+      const ctrlId = def.ctrlId || (def.ctrlPrefix ? `${def.ctrlPrefix}${zoneIdx + 1}` : null);
+      if (ctrlId) {
+        slot.classList.add("learnable");
+        slot.dataset.controlId = ctrlId;
+        slot.dataset.controlLabel = def.isMaster ? `${def.label} (Master FX)` : `${def.label} (Zona ${zoneIdx + 1})`;
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "mt-knob-svg-wrap";
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 62 62");
+      svg.setAttribute("class", "mt-knob-ring-svg");
+      buildKnobArcSegments(svg, 31, 31, 22, 15);
+
+      const cap = document.createElement("div");
+      cap.className = "mt-knob-cap";
+      const ptr = document.createElement("div");
+      ptr.className = "mt-knob-pointer";
+      cap.appendChild(ptr);
+      wrap.appendChild(svg);
+      wrap.appendChild(cap);
+
+      const lbl = document.createElement("div");
+      lbl.className = "mt-knob-label mono";
+      lbl.textContent = def.label;
+
+      if (ctrlId) {
+        const badge = document.createElement("span");
+        badge.className = "midi-badge";
+        badge.dataset.badgeFor = ctrlId;
+        slot.appendChild(badge);
+      }
+
+      slot.appendChild(wrap);
+      slot.appendChild(lbl);
+
+      let valMini = null;
+      if (showMiniVal) {
+        valMini = document.createElement("div");
+        valMini.className = "mt-knob-val-mini mono";
+        slot.appendChild(valMini);
+      }
+
+      slot._svg = svg;
+      slot._ptr = ptr;
+      slot._def = def;
+      slot._valMini = valMini;
+
+      let dragging = false;
+      let moved = false;
+      let startX = 0;
+      let startY = 0;
+      let startVal = 0;
+
+      slot.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        if (e.target && e.target.classList && e.target.classList.contains("midi-badge")) return;
+        dragging = true;
+        moved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startVal = getZoneParamValue(def.isMaster ? 0 : focusedZone, def.key);
+        slot.setPointerCapture(e.pointerId);
+      });
+
+      slot.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const dy = startY - e.clientY;
+        const dx = e.clientX - startX;
+        if (!moved && (Math.abs(dy) > 5 || Math.abs(dx) > 5)) {
+          moved = true;
+          cancelLongPress();
+          openKnobHud(def, def.isMaster ? 0 : focusedZone, false);
+        }
+        if (!moved) return;
+        const delta = dy + dx * 0.65;
+        const range = def.max - def.min;
+        let raw = startVal + (delta / 140) * range;
+        if (def.step) raw = Math.round(raw / def.step) * def.step;
+        else raw = Math.round(raw);
+        const clamped = Math.max(def.min, Math.min(def.max, raw));
+        applyZoneKnobValue(def.isMaster ? 0 : focusedZone, def.key, clamped, true);
+      });
+
+      const endDrag = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        if (moved) {
+          closeKnobHud();
+        } else if (e.type === "pointerup" && !isLearningActive) {
+          cancelLongPress();
+          openKnobHud(def, def.isMaster ? 0 : focusedZone, true);
+        }
+      };
+      slot.addEventListener("pointerup", endDrag);
+      slot.addEventListener("pointercancel", () => {
+        dragging = false;
+        if (knobHudState.open && !knobHudState.interactive) closeKnobHud();
+      });
+
+      slot.addEventListener("dblclick", () => {
+        applyZoneKnobValue(def.isMaster ? 0 : focusedZone, def.key, def.def, true);
+        const scope = def.isMaster ? "Master FX" : `Zona ${focusedZone + 1}`;
+        setStatusMessage(`${scope} • ${def.label} restaurado → ${formatKnobHudValue(def, def.def)}`);
+      });
+
+      return slot;
+    }
+
+    function renderMasterFxModalKnobs() {
+      const grid = document.getElementById("masterFxModalKnobs");
+      if (!grid) return;
+      wireKnobHudControls();
+      if (grid.childElementCount === 0) {
+        MASTER_FX_DEFS.forEach(def => {
+          grid.appendChild(createRotaryKnobSlot(def, 0, true));
+        });
+        attachMidiLearnTriggers();
+        updateAllBadges();
+      }
+      grid.querySelectorAll(".mt-knob-slot").forEach(slot => {
+        const def = slot._def;
+        const val = getMasterFxParamValue(def.key);
+        paintKnobVisual(slot._svg, slot._ptr, val, def.min, def.max, def.bipolar);
+        if (slot._valMini) slot._valMini.textContent = formatKnobHudValue(def, val);
+      });
+      const readout = document.getElementById("fxBpmReadout");
+      if (readout) readout.textContent = `${masterFxState.bpm} BPM`;
+    }
+
+    function setRackMode(mode) {
+      topRackMode = (mode === "eq" || mode === "master") ? mode : "filtros";
+      document.getElementById("btnModeFiltros")?.classList.toggle("active", topRackMode === "filtros");
+      document.getElementById("btnModeEq")?.classList.toggle("active", topRackMode === "eq");
+      document.getElementById("btnModeMaster")?.classList.toggle("active", topRackMode === "master");
+
+      const isMaster = topRackMode === "master";
+      document.getElementById("btnOpenMasterFxFromStrip")?.classList.toggle("active", isMaster);
+      for (let z = 0; z < 4; z++) {
+        document.getElementById(`stripZone${z}`)?.classList.toggle("is-focused", !isMaster && z === focusedZone);
+        const fxBtn = document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`);
+        if (fxBtn) fxBtn.classList.toggle("active", !isMaster && z === focusedZone);
+      }
+      renderTopKnobs();
+    }
+
     function renderTopKnobs() {
       const row = document.getElementById("topKnobsRow");
-      const defs = topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS;
+      const isMaster = topRackMode === "master";
+      const defs = isMaster ? MASTER_FX_DEFS : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS);
       const z = focusedZone;
       const p = programs[currentProgramIndex];
 
-      document.getElementById("focusedZoneBadge").textContent = `ZONA ${z + 1}`;
-      document.getElementById("focusedZoneTimbre").textContent = (p && p.zone_models && p.zone_models[z]) ? p.zone_models[z] : `Zona ${z + 1}`;
+      row.classList.toggle("master-mode", isMaster);
 
-      if (row.dataset.modeRendered !== topRackMode || parseInt(row.dataset.zoneRendered || "-1") !== z) {
+      const badgeEl = document.getElementById("focusedZoneBadge");
+      const timbreEl = document.getElementById("focusedZoneTimbre");
+      const studioBtn = document.getElementById("btnOpenFocusedStudio");
+      if (isMaster) {
+        if (badgeEl) badgeEl.textContent = "FX MASTER";
+        if (timbreEl) timbreEl.textContent = `${masterFxState.bpm} BPM`;
+        if (studioBtn) studioBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i><span>Painel FX</span>';
+      } else {
+        if (badgeEl) badgeEl.textContent = `ZONA ${z + 1}`;
+        if (timbreEl) timbreEl.textContent = (p && p.zone_models && p.zone_models[z]) ? p.zone_models[z] : `Zona ${z + 1}`;
+        if (studioBtn) studioBtn.innerHTML = '<i class="fa-solid fa-sliders"></i><span>Split / EQ</span>';
+      }
+
+      const renderKey = isMaster ? "master" : `${topRackMode}:${z}`;
+      if (row.dataset.modeRendered !== renderKey) {
         row.innerHTML = "";
-        row.dataset.modeRendered = topRackMode;
-        row.dataset.zoneRendered = String(z);
+        row.dataset.modeRendered = renderKey;
         wireKnobHudControls();
 
         defs.forEach(def => {
-          const slot = document.createElement("div");
-          slot.className = "mt-knob-slot";
-          let ctrlId = def.ctrlPrefix ? `${def.ctrlPrefix}${z + 1}` : null;
-          if (ctrlId) {
-            slot.classList.add("learnable");
-            slot.dataset.controlId = ctrlId;
-            slot.dataset.controlLabel = `${def.label} (Zona ${z + 1})`;
-          }
-
-          const wrap = document.createElement("div");
-          wrap.className = "mt-knob-svg-wrap";
-          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          svg.setAttribute("viewBox", "0 0 62 62");
-          svg.setAttribute("class", "mt-knob-ring-svg");
-          buildKnobArcSegments(svg, 31, 31, 22, 15);
-
-          const cap = document.createElement("div");
-          cap.className = "mt-knob-cap";
-          const ptr = document.createElement("div");
-          ptr.className = "mt-knob-pointer";
-          cap.appendChild(ptr);
-          wrap.appendChild(svg);
-          wrap.appendChild(cap);
-
-          const lbl = document.createElement("div");
-          lbl.className = "mt-knob-label mono";
-          lbl.textContent = def.label;
-
-          if (ctrlId) {
-            const badge = document.createElement("span");
-            badge.className = "midi-badge";
-            badge.dataset.badgeFor = ctrlId;
-            slot.appendChild(badge);
-          }
-
-          slot.appendChild(wrap);
-          slot.appendChild(lbl);
-          slot._svg = svg;
-          slot._ptr = ptr;
-          slot._def = def;
-
-          /* Tap -> Interactive Centered Enlarged Knob | Drag -> Live Centered HUD (2D) */
-          let dragging = false;
-          let moved = false;
-          let startX = 0;
-          let startY = 0;
-          let startVal = 0;
-
-          slot.addEventListener("pointerdown", (e) => {
-            if (e.button !== 0 && e.pointerType === "mouse") return;
-            if (e.target && e.target.classList && e.target.classList.contains("midi-badge")) return;
-            dragging = true;
-            moved = false;
-            startX = e.clientX;
-            startY = e.clientY;
-            startVal = getZoneParamValue(focusedZone, def.key);
-            slot.setPointerCapture(e.pointerId);
-          });
-
-          slot.addEventListener("pointermove", (e) => {
-            if (!dragging) return;
-            const dy = startY - e.clientY;
-            const dx = e.clientX - startX;
-            if (!moved && (Math.abs(dy) > 5 || Math.abs(dx) > 5)) {
-              moved = true;
-              cancelLongPress();
-              openKnobHud(def, focusedZone, false);
-            }
-            if (!moved) return;
-            const delta = dy + dx * 0.65;
-            const range = def.max - def.min;
-            let raw = startVal + (delta / 140) * range;
-            if (def.step) raw = Math.round(raw / def.step) * def.step;
-            else raw = Math.round(raw);
-            const clamped = Math.max(def.min, Math.min(def.max, raw));
-            applyZoneKnobValue(focusedZone, def.key, clamped, true);
-          });
-
-          const endDrag = (e) => {
-            if (!dragging) return;
-            dragging = false;
-            if (moved) {
-              closeKnobHud();
-            } else if (e.type === "pointerup" && !isLearningActive) {
-              cancelLongPress();
-              openKnobHud(def, focusedZone, true);
-            }
-          };
-          slot.addEventListener("pointerup", endDrag);
-          slot.addEventListener("pointercancel", () => {
-            dragging = false;
-            if (knobHudState.open && !knobHudState.interactive) closeKnobHud();
-          });
-
-          slot.addEventListener("dblclick", () => {
-            applyZoneKnobValue(focusedZone, def.key, def.def, true);
-            setStatusMessage(`Zona ${focusedZone + 1} • ${def.label} restaurado → ${def.def}`);
-          });
-
-          row.appendChild(slot);
+          row.appendChild(createRotaryKnobSlot(def, z, isMaster));
         });
+
+        if (isMaster) {
+          const actions = document.createElement("div");
+          actions.className = "mfx-rack-actions";
+          const tapBtn = document.createElement("button");
+          tapBtn.type = "button";
+          tapBtn.id = "btnRackTapTempo";
+          tapBtn.className = "mfx-rack-btn primary";
+          tapBtn.innerHTML = '<i class="fa-solid fa-bolt"></i><span>TAP BPM</span>';
+          tapBtn.addEventListener("click", triggerTapTempo);
+
+          const saveBtn = document.createElement("button");
+          saveBtn.type = "button";
+          saveBtn.id = "btnRackSaveMasterFx";
+          saveBtn.className = "mfx-rack-btn";
+          saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i><span>SALVAR</span>';
+          saveBtn.addEventListener("click", () => pushMasterFxState(true));
+
+          actions.appendChild(tapBtn);
+          actions.appendChild(saveBtn);
+          row.appendChild(actions);
+        }
+
         attachMidiLearnTriggers();
         updateAllBadges();
       }
 
       row.querySelectorAll(".mt-knob-slot").forEach(slot => {
         const def = slot._def;
-        const val = getZoneParamValue(focusedZone, def.key);
+        const val = getZoneParamValue(z, def.key);
         paintKnobVisual(slot._svg, slot._ptr, val, def.min, def.max, def.bipolar);
+        if (slot._valMini) slot._valMini.textContent = formatKnobHudValue(def, val);
       });
     }
 
@@ -3061,9 +3552,10 @@
       document.getElementById("patchCode").textContent = p.code || String(currentProgramIndex + 1).padStart(2, "0");
       document.getElementById("patchName").textContent = p.name || "Patch";
       const patchBpmEl = document.getElementById("patchBpm");
-      if (patchBpmEl) patchBpmEl.textContent = `${p.bpm || 120} BPM`;
-      document.getElementById("fxBpmSlider").value = p.bpm || 120;
-      document.getElementById("fxBpmReadout").textContent = `${p.bpm || 120} BPM`;
+      masterFxState.bpm = p.bpm || 120;
+      if (patchBpmEl) patchBpmEl.textContent = `${masterFxState.bpm} BPM`;
+      const fxBpmR = document.getElementById("fxBpmReadout");
+      if (fxBpmR) fxBpmR.textContent = `${masterFxState.bpm} BPM`;
 
       for (let z = 0; z < 4; z++) {
         const vol = (p.volumes && p.volumes[z] !== undefined) ? p.volumes[z] : 100;
@@ -3095,6 +3587,7 @@
       });
 
       renderTopKnobs();
+      renderMasterFxModalKnobs();
 
       if (sendToHardware && numaBackend && numaBackend.selectBankAndPreset) {
         numaBackend.selectBankAndPreset(currentBankName, currentProgramIndex);
@@ -3104,11 +3597,16 @@
 
     function setFocusedZone(zIdx) {
       focusedZone = Math.max(0, Math.min(3, zIdx));
+      if (topRackMode === "master") {
+        setRackMode("filtros");
+        return;
+      }
       for (let z = 0; z < 4; z++) {
         document.getElementById(`stripZone${z}`).classList.toggle("is-focused", z === focusedZone);
         const fxBtn = document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`);
         if (fxBtn) fxBtn.classList.toggle("active", z === focusedZone);
       }
+      document.getElementById("btnOpenMasterFxFromStrip")?.classList.remove("active");
       renderTopKnobs();
     }
 
@@ -3749,6 +4247,16 @@
       } else if (/^(rev|dly|chorus|pan|tone|cut|res|atk|rel)_z[1-4]$/.test(ctrlId)) {
         const [k, zStr] = ctrlId.split("_z");
         applyZoneKnobValue(parseInt(zStr) - 1, k, val, true);
+      } else if (ctrlId.startsWith("mfx_")) {
+        const def = MASTER_FX_DEFS.find(d => d.key === ctrlId);
+        if (def) {
+          const mapped = Math.round(def.min + (val / 127) * (def.max - def.min));
+          applyMasterFxKnobValue(def.key, mapped, true);
+        }
+      } else if (ctrlId === "tr_down" && canTriggerToggle(ctrlId, value)) {
+        setGlobalTransposeUI(globalTransposeVal - 1, true);
+      } else if (ctrlId === "tr_up" && canTriggerToggle(ctrlId, value)) {
+        setGlobalTransposeUI(globalTransposeVal + 1, true);
       } else if (ctrlId.startsWith("mute_z") && canTriggerToggle(ctrlId, value)) {
         const z = parseInt(ctrlId.replace("mute_z", "")) - 1;
         document.getElementById(`btnOnZ${z}`)?.click();
@@ -3876,10 +4384,16 @@
           updateMidiLiveCard([], activeIn, ev.connected_count || 0);
         }
         if (ev.reason === "connected" && activeIn) {
-          setStatusMessage(`USB MIDI conectado: ${activeIn}`);
+          setStatusMessage(`MIDI conectado: ${activeIn}`);
         } else if (ev.reason === "disconnected") {
-          setStatusMessage("Controlador USB MIDI desconectado");
+          setStatusMessage("Controlador MIDI desconectado");
         }
+      } else if (ev.event === "ble_scan_result") {
+        renderBleMidiList(ev);
+      } else if (ev.event === "ble_connect_result") {
+        handleBleConnectResult(ev);
+      } else if (ev.event === "audio_route_status") {
+        renderAudioRouteUI(ev);
       } else if (ev.event === "update_status") {
         handleUpdateStatusEvent(ev);
       } else if (ev.event === "update_progress") {
@@ -3905,6 +4419,8 @@
 
     let lastMidiPorts = [];
     let lastMidiSelectedId = "auto";
+    let bleMidiScanning = false;
+    let bleConnectingMac = "";
 
     function updateMidiLiveCard(inPorts, activeIn, connectedCountOverride) {
       const card = document.getElementById("midiLiveCard");
@@ -3916,6 +4432,8 @@
       const connectedPorts = (inPorts || []).filter(p => p.connected !== false);
       const count = typeof connectedCountOverride === "number" ? connectedCountOverride : connectedPorts.length;
       const isConnected = count > 0 || (activeIn && !activeIn.toLowerCase().includes("virtual"));
+      const hasBle = connectedPorts.some(p => p.transport === "ble") || (activeIn && activeIn.toUpperCase().includes("(BLE)"));
+      const hasUsb = connectedPorts.some(p => p.transport !== "ble");
 
       if (card) card.classList.toggle("connected", isConnected);
       if (dot) dot.classList.toggle("connected", isConnected);
@@ -3926,13 +4444,14 @@
           const names = connectedPorts.map(p => p.name).filter(Boolean);
           titleEl.textContent = activeIn && !activeIn.toLowerCase().includes("virtual")
             ? activeIn
-            : (names[0] || "Controlador USB MIDI");
+            : (names[0] || (hasBle ? "Controlador BLE MIDI" : "Controlador USB MIDI"));
+          const kind = (hasBle && hasUsb) ? "USB + BLE MIDI" : (hasBle ? "BLE MIDI" : "USB MIDI");
           subEl.textContent = count > 1
-            ? `${count} controladores USB ativos — modo hotplug`
-            : "1 controlador USB MIDI ativo — pronto para tocar";
+            ? `${count} controladores ${kind} ativos — modo hotplug`
+            : `1 controlador ${kind} ativo — pronto para tocar`;
         } else {
-          titleEl.textContent = "Nenhum controlador USB conectado";
-          subEl.textContent = "Plugue via OTG/USB-C (antes ou durante o uso) ou toque em Reescanear";
+          titleEl.textContent = "Nenhum controlador conectado";
+          subEl.textContent = "Plugue via Hub USB/OTG ou conecte via BLE MIDI abaixo";
         }
       }
     }
@@ -3946,7 +4465,7 @@
       if (sel) {
         const targetVal = lastMidiSelectedId || "auto";
         sel.innerHTML =
-          '<option value="auto">Automático — Todos Controladores USB + Virtual</option>' +
+          '<option value="auto">Automático — Todos Controladores USB + BLE + Virtual</option>' +
           '<option value="virtual-p61x">Somente Teclado Virtual (61 Teclas)</option>';
 
         let matched = targetVal === "auto" || targetVal === "virtual-p61x";
@@ -3954,7 +4473,8 @@
           const opt = document.createElement("option");
           opt.value = String(p.id);
           const statusBullet = p.connected === false ? "○" : "●";
-          opt.textContent = `${statusBullet} ${p.name}`;
+          const tag = p.transport === "ble" ? "[BLE] " : "[USB] ";
+          opt.textContent = `${statusBullet} ${tag}${p.name}`;
           if (String(p.id) === targetVal) {
             opt.selected = true;
             matched = true;
@@ -3974,11 +4494,179 @@
     }
 
     /* =========================================================================
-       GITHUB AUTO-UPDATER STATE & UI
+       BLE MIDI SCANNER & AUDIO ROUTE / LATENCY STATUS UI
+       ========================================================================= */
+    function renderBleMidiList(ev) {
+      bleMidiScanning = !!(ev && ev.scanning);
+      const scanBtn = document.getElementById("btnScanBleMidi");
+      const scanLbl = document.getElementById("btnScanBleLabel");
+      if (scanBtn) {
+        scanBtn.classList.toggle("spinning", bleMidiScanning);
+        scanBtn.classList.toggle("active", bleMidiScanning);
+      }
+      if (scanLbl) scanLbl.textContent = bleMidiScanning ? "Parar" : "Buscar BLE";
+
+      const stEl = document.getElementById("bleMidiStatus");
+      if (stEl && ev && ev.message) stEl.textContent = ev.message;
+
+      const listEl = document.getElementById("bleMidiList");
+      if (!listEl) return;
+      const devices = Array.isArray(ev?.devices) ? ev.devices : [];
+      listEl.innerHTML = "";
+
+      devices.forEach(d => {
+        const row = document.createElement("div");
+        row.className = `ble-dev-item${d.connected ? " connected" : ""}`;
+
+        const info = document.createElement("div");
+        info.style.cssText = "flex:1; min-width:0;";
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "ble-dev-name";
+        nameEl.textContent = d.name || d.address || "BLE MIDI";
+
+        const metaEl = document.createElement("div");
+        metaEl.className = "ble-dev-meta mono";
+        const parts = [];
+        if (d.connected) parts.push("CONECTADO");
+        else if (d.hasMidiUuid) parts.push("BLE MIDI");
+        else if (d.bonded) parts.push("Pareado");
+        if (typeof d.rssi === "number" && d.rssi < 0) parts.push(`${d.rssi} dBm`);
+        if (d.address) parts.push(d.address);
+        metaEl.textContent = parts.join(" • ");
+
+        info.appendChild(nameEl);
+        info.appendChild(metaEl);
+
+        const actBtn = document.createElement("button");
+        actBtn.type = "button";
+        actBtn.className = d.connected ? "btn-tool" : "btn-tool active";
+        actBtn.style.cssText = d.connected
+          ? "height:26px; padding:0 9px; font-size:10px; flex-shrink:0; border-color:rgba(239,68,68,0.65); color:#fca5a5; background:rgba(239,68,68,0.16);"
+          : "height:26px; padding:0 9px; font-size:10px; flex-shrink:0;";
+        if (d.connected) {
+          actBtn.textContent = "Desconectar";
+          actBtn.addEventListener("click", () => {
+            if (numaBackend && numaBackend.disconnectBleMidiDevice) {
+              numaBackend.disconnectBleMidiDevice(d.address);
+            }
+          });
+        } else if (bleConnectingMac && bleConnectingMac === d.address) {
+          actBtn.textContent = "Conectando...";
+          actBtn.disabled = true;
+        } else {
+          actBtn.textContent = "Conectar";
+          actBtn.addEventListener("click", () => {
+            bleConnectingMac = d.address;
+            actBtn.textContent = "Conectando...";
+            actBtn.disabled = true;
+            if (numaBackend && numaBackend.connectBleMidiDevice) {
+              numaBackend.connectBleMidiDevice(d.address);
+            }
+          });
+        }
+
+        row.appendChild(info);
+        row.appendChild(actBtn);
+        listEl.appendChild(row);
+      });
+    }
+
+    function handleBleConnectResult(ev) {
+      if (!ev) return;
+      bleConnectingMac = ev.connecting ? (ev.address || "") : "";
+      const stEl = document.getElementById("bleMidiStatus");
+      if (stEl && ev.message) stEl.textContent = ev.message;
+      if (ev.message && !ev.connecting) {
+        setStatusMessage(ev.message);
+      }
+    }
+
+    function renderAudioRouteUI(st) {
+      if (!st) return;
+      const card = document.getElementById("audioRouteCard");
+      const icon = document.getElementById("audioRouteIcon");
+      const title = document.getElementById("audioRouteTitle");
+      const sub = document.getElementById("audioRouteSub");
+      const chip = document.getElementById("audioRouteLatChip");
+
+      const isUsb = !!st.isUsbAudio;
+      const isBt = !!st.isBluetooth;
+      const isWired = st.routeType === "wired";
+
+      if (card) {
+        card.classList.toggle("is-usb", isUsb || isWired);
+        card.classList.toggle("is-bt", isBt && !isUsb);
+      }
+      if (icon) {
+        if (isUsb) {
+          icon.innerHTML = '<i class="fa-solid fa-plug"></i>';
+          icon.style.color = "#4ade80";
+        } else if (isBt) {
+          icon.innerHTML = '<svg class="bt-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.88 16.29 13 18.17v-3.76l1.88 1.88zm-1.88-10.46 1.88 1.88L13 9.59V5.83zm4.71 1.88L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29z"/></svg>';
+          icon.style.color = "#60a5fa";
+        } else if (isWired) {
+          icon.innerHTML = '<i class="fa-solid fa-headphones"></i>';
+          icon.style.color = "#4ade80";
+        } else {
+          icon.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          icon.style.color = "var(--mt-accent-bright)";
+        }
+      }
+      if (title) title.textContent = st.deviceName || st.routeLabel || "Saída do Sistema";
+      const bs = Number(st.blockSize || 256);
+      const sr = Number(st.sampleRate || 48000);
+      if (sub) sub.textContent = `${st.routeLabel || "AAudio"} • ${bs}f @ ${(sr / 1000).toFixed(sr % 1000 === 0 ? 0 : 1)}kHz`;
+
+      const lat = (typeof st.latencyMs === "number" && st.latencyMs > 0) ? st.latencyMs : ((bs / sr) * 1000);
+      if (chip) chip.textContent = isBt ? `${lat.toFixed(1)} ms DSP` : `${lat.toFixed(1)} ms`;
+
+      const bsSel = document.getElementById("audioBlockSizeSelect");
+      if (bsSel && bs > 0) {
+        const hasOpt = Array.from(bsSel.options).some(o => Number(o.value) === bs);
+        if (hasOpt) bsSel.value = String(bs);
+      }
+
+      let activeBtnMode = st.mode || "auto";
+      if (activeBtnMode === "auto") {
+        activeBtnMode = isUsb ? "usb_pro" : (isBt ? "bt_low_latency" : (bs <= 128 ? "usb_pro" : "safe"));
+      }
+      document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.audioMode === activeBtnMode);
+      });
+
+      if (Array.isArray(st.devices) && st.devices.length > 0) {
+        const outSel = document.getElementById("audioOutDeviceSelect");
+        if (outSel) {
+          const prev = outSel.value || "default";
+          outSel.innerHTML = '<option value="default">Padrão Automático (Recomendado)</option>';
+          st.devices.forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = String(d.id || "default");
+            const prefix = d.category === "usb" ? "[USB] " : (d.category === "bt_a2dp" || d.category === "ble_audio" ? "[BT] " : "");
+            opt.textContent = `${prefix}${d.name}`;
+            if (opt.value === prev) opt.selected = true;
+            outSel.appendChild(opt);
+          });
+        }
+      }
+    }
+
+    function refreshAudioRouteUI() {
+      if (numaBackend && numaBackend.getAudioRouteStatus) {
+        try {
+          const res = numaBackend.getAudioRouteStatus();
+          if (res) renderAudioRouteUI(JSON.parse(res));
+        } catch (_) {}
+      }
+    }
+
+    /* =========================================================================
+       (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.1.0",
-      installedVersionCode: 2,
+      installedVersionName: "1.2.0",
+      installedVersionCode: 3,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -3997,14 +4685,14 @@
       const ins = document.getElementById("updInstalledVer");
       if (ins) ins.textContent = vTxt;
       const codeEl = document.getElementById("updInstalledCode");
-      if (codeEl) codeEl.textContent = `Build ${updaterState.installedVersionCode}`;
+      if (codeEl) codeEl.textContent = `Build ${updaterState.installedVersionCode} • AAudio + USB/BLE MIDI`;
       const repoEl = document.getElementById("updRepoLabel");
-      if (repoEl) repoEl.textContent = updaterState.repo;
+      if (repoEl) repoEl.textContent = `Stage Rig Workstation • ${updaterState.repo}`;
       const badge = document.getElementById("drawerUpdateBadge");
       if (badge && !updaterState.hasUpdate) badge.textContent = vTxt;
     }
 
-    function openUpdateModal(autoCheck = true) {
+    function openUpdateModal(autoCheck = false) {
       closeNavDrawer();
       syncInstalledVersionUI();
       document.getElementById("updateModal")?.classList.add("open");
@@ -4109,7 +4797,7 @@
           dlBtn.disabled = false;
         }
         if (updaterState.silentCheck) {
-          setStatusMessage(`Nova versão disponível no GitHub: v${rVer} (Menu → Atualizações)`);
+          setStatusMessage(`Nova versão disponível no GitHub: v${rVer} (Menu → Sobre)`);
         }
       } else {
         if (banner) {
@@ -4147,15 +4835,28 @@
 
     function populateAudioConfig(cfg) {
       const sel = document.getElementById("audioOutDeviceSelect");
-      sel.innerHTML = '<option value="default">Padrão do Sistema</option>';
-      (cfg.devices || []).forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d.id;
-        opt.textContent = d.is_default ? `${d.name} (Padrão)` : d.name;
-        if (cfg.output_device && cfg.output_device === d.id) opt.selected = true;
-        sel.appendChild(opt);
-      });
-      if (cfg.block_size) document.getElementById("audioBlockSizeSelect").value = String(cfg.block_size);
+      if (sel) {
+        sel.innerHTML = '<option value="default">Padrão Automático (Recomendado)</option>';
+        (cfg.devices || []).forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d.id;
+          opt.textContent = d.is_default ? `${d.name} (Padrão)` : d.name;
+          if (cfg.output_device && cfg.output_device === d.id) opt.selected = true;
+          sel.appendChild(opt);
+        });
+      }
+      if (cfg.block_size) {
+        const bsEl = document.getElementById("audioBlockSizeSelect");
+        if (bsEl) bsEl.value = String(cfg.block_size);
+      }
+      if (cfg.master_fx && typeof cfg.master_fx === "object") {
+        const mfx = cfg.master_fx;
+        if (typeof mfx.rev_room === "number") masterFxState.revRoom = Math.max(20, Math.min(95, Math.round(mfx.rev_room * 100)));
+        if (typeof mfx.rev_damp === "number") masterFxState.revDamp = Math.max(0, Math.min(100, Math.round(mfx.rev_damp * 100)));
+        if (typeof mfx.rev_level === "number") masterFxState.revLevel = Math.max(0, Math.min(200, Math.round(mfx.rev_level * 100)));
+        if (typeof mfx.dly_feedback === "number") masterFxState.dlyFb = Math.max(0, Math.min(80, Math.round(mfx.dly_feedback * 100)));
+        if (typeof mfx.dly_level === "number") masterFxState.dlyLevel = Math.max(0, Math.min(140, Math.round(mfx.dly_level * 100)));
+      }
     }
 
     function refreshControllerProfilesUI() {
@@ -4208,6 +4909,7 @@
         buildBankOptions();
         buildSetlistDOM();
         selectProgram(st.current_preset_index || 0, false);
+        renderMasterFxModalKnobs();
         updateAllBadges();
         requestAnimationFrame(syncAllFadersVisual);
       } catch (e) {
@@ -4285,6 +4987,15 @@
         downloadAndInstallUpdate: (url) => wrapCb("downloadAndInstallUpdate", String(url || "")),
         openExternalUrl: (url) => wrapCb("openExternalUrl", String(url || "")),
         rescanMidiDevices: (cb) => wrapCb("rescanMidiDevices", cb),
+        setGlobalTranspose: (st) => wrapCb("setGlobalTranspose", Number(st)),
+        getGlobalTranspose: () => wrapCb("getGlobalTranspose"),
+        startBleMidiScan: (includeAll) => wrapCb("startBleMidiScan", !!includeAll),
+        stopBleMidiScan: () => wrapCb("stopBleMidiScan"),
+        connectBleMidiDevice: (addr) => wrapCb("connectBleMidiDevice", String(addr || "")),
+        disconnectBleMidiDevice: (addr) => wrapCb("disconnectBleMidiDevice", String(addr || "")),
+        getAudioRouteStatus: (cb) => wrapCb("getAudioRouteStatus", cb),
+        applyAudioMode: (mode, bsz, cb) => wrapCb("applyAudioMode", String(mode || "auto"), Number(bsz || 0), cb),
+        openBluetoothSettings: () => wrapCb("openBluetoothSettings"),
       };
     }
 
@@ -4323,6 +5034,13 @@
             if (v.releasesUrl) updaterState.releaseUrl = v.releasesUrl;
             syncInstalledVersionUI();
           }
+        } catch (_) {}
+        try {
+          if (numaBackend.getGlobalTranspose) {
+            const gt = numaBackend.getGlobalTranspose();
+            if (typeof gt === "number" && !Number.isNaN(gt)) setGlobalTransposeUI(gt, false);
+          }
+          refreshAudioRouteUI();
         } catch (_) {}
         setTimeout(() => triggerGithubUpdateCheck(true), 2500);
         return;
@@ -4411,11 +5129,31 @@
       document.getElementById("navDrawer").classList.remove("open");
     }
 
+    function openMasterFxModal() {
+      renderMasterFxModalKnobs();
+      document.getElementById("masterFxModal")?.classList.add("open");
+    }
+
+    function closeSettingsModal() {
+      if (bleMidiScanning) {
+        bleMidiScanning = false;
+        if (numaBackend && numaBackend.stopBleMidiScan) numaBackend.stopBleMidiScan();
+        const scanBtn = document.getElementById("btnScanBleMidi");
+        const scanLbl = document.getElementById("btnScanBleLabel");
+        if (scanBtn) scanBtn.classList.remove("spinning", "active");
+        if (scanLbl) scanLbl.textContent = "Buscar BLE";
+      }
+      document.getElementById("settingsModal")?.classList.remove("open");
+    }
+
     function switchSettingsTab(tabKey) {
       document.querySelectorAll(".settings-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.settingsTab === tabKey));
       document.getElementById("settingsPaneMidi").style.display = tabKey === "midi" ? "flex" : "none";
       document.getElementById("settingsPaneAudio").style.display = tabKey === "audio" ? "flex" : "none";
       document.getElementById("settingsPaneAppearance").style.display = tabKey === "appearance" ? "flex" : "none";
+      if (tabKey === "audio") {
+        refreshAudioRouteUI();
+      }
     }
     function runMidiRescanUI(showToast = true) {
       const btn = document.getElementById("btnRescanMidi");
@@ -4430,7 +5168,7 @@
             if (showToast) {
               const cnt = Number(parsed.connected_count || 0);
               setStatusMessage(cnt > 0
-                ? `USB MIDI detectado: ${parsed.active_port}`
+                ? `MIDI detectado: ${parsed.active_port}`
                 : "Varredura USB MIDI concluída — nenhum controlador conectado");
             }
           }
@@ -4448,6 +5186,8 @@
       document.getElementById("settingsModal").classList.add("open");
       if (tab === "midi") {
         runMidiRescanUI(false);
+      } else if (tab === "audio") {
+        refreshAudioRouteUI();
       }
     }
 
@@ -4487,6 +5227,19 @@
         setStatusMessage("Todos os Drum Pads silenciados");
       });
 
+      /* Global Transpose Controls (Top Bar + Quick Selector Modal) */
+      document.getElementById("btnTrDown")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal - 1, true));
+      document.getElementById("btnTrUp")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal + 1, true));
+      document.getElementById("btnOpenTransposeModal")?.addEventListener("click", openTransposeModal);
+      const closeTrModal = () => document.getElementById("transposeModal")?.classList.remove("open");
+      document.getElementById("btnCloseTransposeModal")?.addEventListener("click", closeTrModal);
+      document.getElementById("btnTrModalDone")?.addEventListener("click", closeTrModal);
+      document.getElementById("btnTrModalOctDown")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal - 12, true));
+      document.getElementById("btnTrModalSemiDown")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal - 1, true));
+      document.getElementById("btnTrModalSemiUp")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal + 1, true));
+      document.getElementById("btnTrModalOctUp")?.addEventListener("click", () => setGlobalTransposeUI(globalTransposeVal + 12, true));
+      document.getElementById("btnTrModalZero")?.addEventListener("click", () => setGlobalTransposeUI(0, true));
+
       /* Drawer Navigation (Clean Menu Only) */
       document.getElementById("btnMenuDrawer").addEventListener("click", openNavDrawer);
       document.getElementById("btnOpenSetlistQuick").addEventListener("click", openSetlistModal);
@@ -4500,7 +5253,7 @@
       });
       document.getElementById("btnDrawerTimbres").addEventListener("click", () => { closeNavDrawer(); openZoneInspector(focusedZone, "timbre"); });
       document.getElementById("btnDrawerImportSf2").addEventListener("click", () => { closeNavDrawer(); document.getElementById("btnImportSf2").click(); });
-      document.getElementById("btnDrawerMasterFx").addEventListener("click", () => { closeNavDrawer(); document.getElementById("masterFxModal").classList.add("open"); });
+      document.getElementById("btnDrawerMasterFx").addEventListener("click", () => { closeNavDrawer(); openMasterFxModal(); });
       document.getElementById("btnDrawerAudio").addEventListener("click", () => openSettingsAt("audio"));
       document.getElementById("btnDrawerMidi").addEventListener("click", () => openSettingsAt("midi"));
       document.getElementById("btnDrawerAppearance").addEventListener("click", () => openSettingsAt("appearance"));
@@ -4508,7 +5261,7 @@
         closeNavDrawer();
         document.getElementById("bottomDock").classList.toggle("open");
       });
-      document.getElementById("btnDrawerUpdates")?.addEventListener("click", () => openUpdateModal(true));
+      document.getElementById("btnDrawerUpdates")?.addEventListener("click", () => openUpdateModal(false));
 
       /* Dedicated Setlist / Timbres Modal (from centered patch pill) */
       document.getElementById("btnCloseSetlistModal")?.addEventListener("click", closeSetlistModal);
@@ -4527,7 +5280,7 @@
         openZoneInspector(focusedZone, "timbre");
       });
 
-      /* GitHub Auto-Update Modal */
+      /* (!) Sobre & GitHub Auto-Update Modal */
       document.getElementById("btnCloseUpdateModal")?.addEventListener("click", closeUpdateModal);
       document.getElementById("updateModal")?.addEventListener("click", (e) => {
         if (e.target && e.target.id === "updateModal") closeUpdateModal();
@@ -4553,23 +5306,32 @@
         }
       });
 
-      /* USB MIDI Rescan Button */
+      /* USB MIDI Rescan & BLE MIDI Scanner */
       document.getElementById("btnRescanMidi")?.addEventListener("click", () => runMidiRescanUI(true));
+      document.getElementById("btnScanBleMidi")?.addEventListener("click", () => {
+        if (bleMidiScanning) {
+          bleMidiScanning = false;
+          if (numaBackend && numaBackend.stopBleMidiScan) numaBackend.stopBleMidiScan();
+          renderBleMidiList({ scanning: false, devices: [], message: "Busca BLE MIDI interrompida." });
+          return;
+        }
+        const includeAll = !!document.getElementById("chkBleAll")?.checked;
+        if (numaBackend && numaBackend.startBleMidiScan) {
+          numaBackend.startBleMidiScan(includeAll);
+        } else {
+          const stEl = document.getElementById("bleMidiStatus");
+          if (stEl) stEl.textContent = "Busca BLE MIDI disponível no APK instalado no Android.";
+        }
+      });
 
-      /* Top FILTROS / EQ Toggle */
-      document.getElementById("btnModeFiltros").addEventListener("click", () => {
-        topRackMode = "filtros";
-        document.getElementById("btnModeFiltros").classList.add("active");
-        document.getElementById("btnModeEq").classList.remove("active");
-        renderTopKnobs();
+      /* Top FILTROS / EQ / MASTER Toggle */
+      document.getElementById("btnModeFiltros")?.addEventListener("click", () => setRackMode("filtros"));
+      document.getElementById("btnModeEq")?.addEventListener("click", () => setRackMode("eq"));
+      document.getElementById("btnModeMaster")?.addEventListener("click", () => setRackMode("master"));
+      document.getElementById("btnOpenFocusedStudio")?.addEventListener("click", () => {
+        if (topRackMode === "master") openMasterFxModal();
+        else openZoneInspector(focusedZone, "studio");
       });
-      document.getElementById("btnModeEq").addEventListener("click", () => {
-        topRackMode = "eq";
-        document.getElementById("btnModeEq").classList.add("active");
-        document.getElementById("btnModeFiltros").classList.remove("active");
-        renderTopKnobs();
-      });
-      document.getElementById("btnOpenFocusedStudio").addEventListener("click", () => openZoneInspector(focusedZone, "studio"));
 
       /* Sculpted Zone 1-4 Faders, ON/Mute, Solo (R), FX Focus, Timbre Picker */
       for (let z = 0; z < 4; z++) {
@@ -4633,9 +5395,15 @@
         if (numaBackend && numaBackend.setPadMasterMute) numaBackend.setPadMasterMute(mastersState.pad.muted);
       });
 
-      document.getElementById("btnMasterSynthHeader").addEventListener("click", () => document.getElementById("masterFxModal").classList.add("open"));
-      document.getElementById("btnOpenMasterFxFromStrip").addEventListener("click", () => document.getElementById("masterFxModal").classList.add("open"));
-      document.getElementById("btnMasterPadHeader").addEventListener("click", () => switchMainView("pads"));
+      document.getElementById("btnMasterSynthHeader")?.addEventListener("click", openMasterFxModal);
+      document.getElementById("btnOpenMasterFxFromStrip")?.addEventListener("click", () => {
+        if (topRackMode === "master") {
+          openMasterFxModal();
+        } else {
+          setRackMode("master");
+        }
+      });
+      document.getElementById("btnMasterPadHeader")?.addEventListener("click", () => switchMainView("pads"));
 
       /* Pad Controls */
       document.getElementById("btnPadsPlayMain").addEventListener("click", togglePadPlayback);
@@ -4759,45 +5527,16 @@
         pushZoneEq();
       });
 
-      /* Master FX Modal */
+      /* Master FX Modal (Rotary LED-Ring Knobs + Tap Tempo + Save) */
       const fxModal = document.getElementById("masterFxModal");
       const patchBpmBtn = document.getElementById("patchBpm");
-      if (patchBpmBtn) patchBpmBtn.addEventListener("click", () => fxModal.classList.add("open"));
-      document.getElementById("btnCloseMasterFx").addEventListener("click", () => fxModal.classList.remove("open"));
-      document.getElementById("fxBpmSlider").addEventListener("input", (e) => {
-        const b = parseInt(e.target.value);
-        document.getElementById("fxBpmReadout").textContent = `${b} BPM`;
-        const patchBpmEl = document.getElementById("patchBpm");
-        if (patchBpmEl) patchBpmEl.textContent = `${b} BPM`;
-        if (programs[currentProgramIndex]) programs[currentProgramIndex].bpm = b;
-        if (numaBackend) numaBackend.setBpm(b);
+      if (patchBpmBtn) patchBpmBtn.addEventListener("click", openMasterFxModal);
+      document.getElementById("btnCloseMasterFx")?.addEventListener("click", () => fxModal.classList.remove("open"));
+      document.getElementById("btnTapTempo")?.addEventListener("click", triggerTapTempo);
+      document.getElementById("btnSaveMasterFx")?.addEventListener("click", () => {
+        pushMasterFxState(true);
+        fxModal.classList.remove("open");
       });
-      let tapTimes = [];
-      document.getElementById("btnTapTempo").addEventListener("click", () => {
-        const now = performance.now();
-        if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > 2000) tapTimes = [];
-        tapTimes.push(now);
-        if (tapTimes.length > 4) tapTimes.shift();
-        if (tapTimes.length >= 2) {
-          const avg = (tapTimes[tapTimes.length - 1] - tapTimes[0]) / (tapTimes.length - 1);
-          const b = Math.max(40, Math.min(200, Math.round(60000 / avg)));
-          document.getElementById("fxBpmSlider").value = b;
-          document.getElementById("fxBpmSlider").dispatchEvent(new Event("input"));
-        }
-      });
-      const pushFx = (save = false) => {
-        const rr = parseInt(document.getElementById("fxRevRoom").value) / 100;
-        const rl = parseInt(document.getElementById("fxRevLevel").value) / 100;
-        const df = parseInt(document.getElementById("fxDlyFb").value) / 100;
-        const dl = parseInt(document.getElementById("fxDlyLevel").value) / 100;
-        document.getElementById("fxRevRoomVal").textContent = `${Math.round(rr * 100)}%`;
-        document.getElementById("fxRevLevelVal").textContent = `${Math.round(rl * 100)}%`;
-        document.getElementById("fxDlyFbVal").textContent = `${Math.round(df * 100)}%`;
-        document.getElementById("fxDlyLevelVal").textContent = `${Math.round(dl * 100)}%`;
-        if (numaBackend) numaBackend.setMasterFx(rr, 0.28, rl, df, dl, save);
-      };
-      ["fxRevRoom","fxRevLevel","fxDlyFb","fxDlyLevel"].forEach(id => document.getElementById(id).addEventListener("input", () => pushFx(false)));
-      document.getElementById("btnSaveMasterFx").addEventListener("click", () => { pushFx(true); fxModal.classList.remove("open"); });
 
       /* Save Preset Modal */
       const saveModal = document.getElementById("savePresetModal");
@@ -4830,14 +5569,14 @@
         if (numaBackend) numaBackend.createNewPreset(document.getElementById("savePresetNameInput").value, currentBankName, onSaveResult);
       });
 
-      /* Settings, Themes, MIDI Profiles & Audio */
-      document.getElementById("btnCloseSettings").addEventListener("click", () => document.getElementById("settingsModal").classList.remove("open"));
+      /* Settings, Themes, MIDI Profiles & Audio Latency Modes */
+      document.getElementById("btnCloseSettings").addEventListener("click", closeSettingsModal);
       document.querySelectorAll(".settings-tab-btn").forEach(btn => {
         btn.addEventListener("click", () => switchSettingsTab(btn.dataset.settingsTab));
       });
       document.getElementById("btnSettingsOpenFx").addEventListener("click", () => {
-        document.getElementById("settingsModal").classList.remove("open");
-        fxModal.classList.add("open");
+        closeSettingsModal();
+        openMasterFxModal();
       });
       document.querySelectorAll(".theme-choice-card").forEach(c => {
         c.addEventListener("click", () => applyTheme(c.dataset.themeChoice, true));
@@ -4888,12 +5627,51 @@
         lastMidiSelectedId = e.target.value;
         if (numaBackend) numaBackend.selectInputPort(e.target.value);
       });
-      document.getElementById("btnApplyAudioCfg").addEventListener("click", () => {
-        if (numaBackend) numaBackend.selectAudioConfig(document.getElementById("audioOutDeviceSelect").value, parseInt(document.getElementById("audioBlockSizeSelect").value), () => {});
+
+      /* Audio Latency Modes (Bluetooth Otim. / USB Palco / Estável) */
+      document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.dataset.audioMode || "usb_pro";
+          const defBlock = mode === "bt_low_latency" ? 96 : (mode === "usb_pro" ? 128 : 256);
+          const labels = {
+            bt_low_latency: "Modo Bluetooth Otimizado (96f • USAGE_GAME)",
+            usb_pro: "Modo USB / Palco (128f • Baixa Latência)",
+            safe: "Modo Estável (256f • Sem estalos)"
+          };
+          if (numaBackend && numaBackend.applyAudioMode) {
+            try {
+              const res = numaBackend.applyAudioMode(mode, defBlock);
+              if (res) renderAudioRouteUI(JSON.parse(res));
+            } catch (_) {}
+          } else {
+            document.querySelectorAll(".audio-mode-btn[data-audio-mode]").forEach(b => b.classList.toggle("active", b === btn));
+            const bsEl = document.getElementById("audioBlockSizeSelect");
+            if (bsEl) bsEl.value = String(defBlock);
+          }
+          setStatusMessage(labels[mode] || "Modo de áudio aplicado");
+        });
       });
-      document.getElementById("btnRestartNuma").addEventListener("click", () => { if (numaBackend) numaBackend.restartAudioEngine(() => {}); });
-      document.getElementById("btnOptAudio").addEventListener("click", () => { if (numaBackend) numaBackend.runStudioOptimizer(1); });
-      document.getElementById("btnOptEveryday").addEventListener("click", () => { if (numaBackend) numaBackend.runStudioOptimizer(2); });
+      document.getElementById("btnOpenBtSettings")?.addEventListener("click", () => {
+        if (numaBackend && numaBackend.openBluetoothSettings) {
+          numaBackend.openBluetoothSettings();
+        } else {
+          setStatusMessage("Atalho Bluetooth disponível no APK Android");
+        }
+      });
+      document.getElementById("btnApplyAudioCfg").addEventListener("click", () => {
+        const dev = document.getElementById("audioOutDeviceSelect").value;
+        const bsz = parseInt(document.getElementById("audioBlockSizeSelect").value, 10) || 128;
+        if (numaBackend && numaBackend.selectAudioConfig) {
+          numaBackend.selectAudioConfig(dev, bsz, () => { refreshAudioRouteUI(); });
+        }
+        setStatusMessage(`Buffer DSP ajustado para ${bsz} frames`);
+      });
+      document.getElementById("btnRestartNuma").addEventListener("click", () => {
+        if (numaBackend && numaBackend.restartAudioEngine) {
+          numaBackend.restartAudioEngine(() => { setTimeout(refreshAudioRouteUI, 350); });
+        }
+        setStatusMessage("Stream AAudio reiniciado");
+      });
 
       /* MIDI Learn Modal Buttons */
       document.getElementById("btnModalClose").addEventListener("click", closeMidiLearnModal);
@@ -4968,6 +5746,7 @@
           closeKnobHud();
           closeNavDrawer();
           closeMidiLearnModal();
+          closeSettingsModal();
           document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open"));
         }
       });
@@ -4985,6 +5764,7 @@
         bd.addEventListener("click", (e) => {
           if (e.target === bd) {
             if (bd.id === "midiLearnModal") closeMidiLearnModal();
+            else if (bd.id === "settingsModal") closeSettingsModal();
             else { keyCaptureTarget = null; bd.classList.remove("open"); }
           }
         });
@@ -4994,7 +5774,10 @@
     window.addEventListener("load", () => {
       initLedLadders();
       wirePointerFaders();
+      buildTransposeGrid();
+      setGlobalTransposeUI(0, false);
       renderTopKnobs();
+      renderMasterFxModalKnobs();
       buildPadKeysGrid();
       renderDrumPadsUI();
       buildVirtualKeyboard();
