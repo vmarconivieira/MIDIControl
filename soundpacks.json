@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "repo": "vmarconivieira/MIDIControl",
   "releaseTag": "soundpacks-v1",
   "coreAssetFiles": [
@@ -31,6 +31,31 @@
         "4 - STRINGS_PADS/5 - SynthPad2"
       ],
       "timbreCount": 4
+    },
+    {
+      "id": "pack_nord_ambient_pad",
+      "name": "Nord Red Ambient Pad",
+      "description": "Pad ambiente estéreo do Worship Immersion (Zona 4)",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 77427014,
+      "sha256": "",
+      "sf2Files": [
+        "Nord_Red_Ambient_Pad.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Nord_Red_Ambient_Pad.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1LVZKdHP39cAZuxn-dwCZF-1gQOReZaOT&export=download&confirm=t",
+          "sizeBytes": 77427014,
+          "sha256": "a37f625ea8c6d48fa5556928c6f40bb5a87cccd5b9f22a375af0315e73331325"
+        }
+      ],
+      "timbreIds": [
+        "Nord Red Ambient Pad.sf2/Red Ambient Pad"
+      ],
+      "timbreCount": 1
     },
     {
       "id": "pack_apiano_extra",
@@ -212,6 +237,369 @@
         "SynthBass Pack.sf2/FM Solid Pluck Bass"
       ],
       "timbreCount": 5
+    },
+    {
+      "id": "pack_ae_worship_pads",
+      "name": "Worship Pads & Strings Extras",
+      "description": "004 Warm Pad Pno, Warm Pad 2, Warm Paddings, Phaser Strings 2, Superstringz, PSR 500",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 153735362,
+      "sha256": "",
+      "sf2Files": [
+        "004_Warm_Pad_Pno.sf2",
+        "WARM_PAD_2.sf2",
+        "Warm_Paddings_PD.sf2",
+        "Phaser_Strings_2_PD.sf2",
+        "Superstringz_PD.sf2",
+        "Strings_PSR_500.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "004_Warm_Pad_Pno.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1g7c4nJsvAGJvAgDJ86ZnKQ-1QVpWiebT&export=download&confirm=t",
+          "sizeBytes": 13108776,
+          "sha256": "10860d32302c77d12fec251cfeb8c4f61be8e9968cd6bb8484a7db1d50746322"
+        },
+        {
+          "sf2File": "WARM_PAD_2.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1q049yD8bkkYOdOsMTbQJaKpF9tx8elf3&export=download&confirm=t",
+          "sizeBytes": 30056870,
+          "sha256": "3706e358f41d6faabc7f4eb9d2dadb9e68176cbe9264cc591823b9f0e9dd8b3f"
+        },
+        {
+          "sf2File": "Warm_Paddings_PD.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1mvTYk9Ivz6PdWe5rUp8ld_Y-irAxtmQ1&export=download&confirm=t",
+          "sizeBytes": 36882098,
+          "sha256": "1f02557ffd578e2ad760561e69f70354becdd3f6e2f658ab2437315f47afa230"
+        },
+        {
+          "sf2File": "Phaser_Strings_2_PD.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=10-GY7zHjNuCKYNQUNX_WwqmnVM_vFUTk&export=download&confirm=t",
+          "sizeBytes": 36363158,
+          "sha256": "a4e8409e484b0e669569f188dd7d2560888e21092bbcd3c1e00d0b3da0b42a73"
+        },
+        {
+          "sf2File": "Superstringz_PD.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=19kbqnXqtCDUGP3ptFL69saZTBUhHXO7P&export=download&confirm=t",
+          "sizeBytes": 36827290,
+          "sha256": "978c4fd04c686ba8eb6dcca744b3a4fe297a76dddd1e137399f6d3f9754b4414"
+        },
+        {
+          "sf2File": "Strings_PSR_500.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1LwxPoR--EiCLsK9vDhu0PQOrRtsQRk6Y&export=download&confirm=t",
+          "sizeBytes": 497170,
+          "sha256": "88a54ab095bfc56d24d4397a2f6c53e8614edc66f4403f97790c08531a1de802"
+        }
+      ],
+      "timbreIds": [
+        "004 Warm Pad Pno.sf2/A004 Warm Pad Pno",
+        "WARM PAD 2.sf2/WARM PAD",
+        "Warm Paddings PD.sf2/Warm Paddings PD",
+        "Phaser Strings 2 PD.sf2/Phaser Strings 2 PD",
+        "Superstringz PD.sf2/Superstringz PD",
+        "Strings PSR 500.sf2/Strings PSR500"
+      ],
+      "timbreCount": 6
+    },
+    {
+      "id": "pack_ae_leads_violino",
+      "name": "Leads Worship & Violino UVI",
+      "description": "Analog Dream Lead, Lead Galileu (LiraKeys), Violino UVI",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 247914252,
+      "sha256": "",
+      "sf2Files": [
+        "Analog_Dream_LD.sf2",
+        "lead_galileu.sf2",
+        "VIOLINO_UVI.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Analog_Dream_LD.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=16v7y-15kbwlBLqKgzkaAgZeyLsCGM-uj&export=download&confirm=t",
+          "sizeBytes": 13174082,
+          "sha256": "b77ac4512eae7f157ee664273330331a1e3dd9e408ac5ee92c7d9682fa1a7b25"
+        },
+        {
+          "sf2File": "lead_galileu.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1Qy-7EzPXAnTehxBgYM9QgrzUNJOwCQMl&export=download&confirm=t",
+          "sizeBytes": 74002122,
+          "sha256": "e01d5dfe6ceda6240ea6fe482843e0a8752fcb8b5f23a6b12c43f54260c01f6a"
+        },
+        {
+          "sf2File": "VIOLINO_UVI.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=11a80ZQ_3svm7aZEat2bArgIReAIjlN9O&export=download&confirm=t",
+          "sizeBytes": 160738048,
+          "sha256": "1b58f3695dbc96c21161e12917780cdded099c0ab4b20724bb70b61a1f724cbf"
+        }
+      ],
+      "timbreIds": [
+        "Analog Dream LD.sf2/Analog Dream LD",
+        "lead galileu.sf2/LeadGalileuLirakeys",
+        "VIOLINO UVI.sf2/VIOLINO UVI"
+      ],
+      "timbreCount": 3
+    },
+    {
+      "id": "pack_ae_nord_grands",
+      "name": "Nord & Steinway Grand Pianos",
+      "description": "Nord Gran Elegance, Grand Lady Steinway, Nord Studio Grand",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 501313570,
+      "sha256": "",
+      "sf2Files": [
+        "E-Nord_Gran_Elegance_1.sf2",
+        "Grand_Lady.sf2",
+        "Nord_Studio_Grand.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "E-Nord_Gran_Elegance_1.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=19SxWGagnHqNQfTaYf0dIeJTINmN8MRlk&export=download&confirm=t",
+          "sizeBytes": 156708198,
+          "sha256": "4b7f689f3659ad79c6cb73936795f307453da0b77a2e0b90d4d94ce129a7b1e2"
+        },
+        {
+          "sf2File": "Grand_Lady.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1LC2Qhz3mKM3Dh8Ay1PRv3RPzPjS0Ari4&export=download&confirm=t",
+          "sizeBytes": 107528704,
+          "sha256": "9fabe343caf63aad688e32e1028418351cc4a31b4bb36a7a693af089300073e9"
+        },
+        {
+          "sf2File": "Nord_Studio_Grand.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1USx5JnrlbWg7Wg2lusfDkkKFe7aWkjE_&export=download&confirm=t",
+          "sizeBytes": 237076668,
+          "sha256": "1519db04cbfabbef9a1c12a31ff1e55044442677fc9f06d08f39aef14fb9d683"
+        }
+      ],
+      "timbreIds": [
+        "E- Nord Gran Elegance 1.sf2/Elegant S",
+        "Grand Lady.sf2/GRAND LADY",
+        "Nord Studio Grand.sf2/NordStudioGrand"
+      ],
+      "timbreCount": 3
+    },
+    {
+      "id": "pack_ae_uprights",
+      "name": "Nord & JF Black Uprights",
+      "description": "Nord Black Upright, JF Black Upright Full",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 428455984,
+      "sha256": "",
+      "sf2Files": [
+        "Nord_Black_Upright.sf2",
+        "JF_Black_Upright_full.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Nord_Black_Upright.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1ADbiqqTxF-J2mF4J23Bdf5oJ1ej79Gs4&export=download&confirm=t",
+          "sizeBytes": 216883142,
+          "sha256": "bc3a2810fa9556eb53cccf90cbf77e5c3ae120ae9aa08cd31a6f5f9e4c90777c"
+        },
+        {
+          "sf2File": "JF_Black_Upright_full.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1TqbtJW9IfgxtBJClhWhyOxYl2I0KItwr&export=download&confirm=t",
+          "sizeBytes": 211572842,
+          "sha256": "4b5a4a110c999835994dba7645ea28beb0e15963c237377fa132e4acd1ad45b7"
+        }
+      ],
+      "timbreIds": [
+        "Nord Black Upright.sf2/Black Upright",
+        "JF Black Upright full.sf2/BlackUpright"
+      ],
+      "timbreCount": 2
+    },
+    {
+      "id": "pack_ae_rhodes_ballade",
+      "name": "Ballade E-Piano & Rhodes Affair KA",
+      "description": "Ballade E-Piano (Rhodes 80s), Rhodes Affair KA",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 496469964,
+      "sha256": "",
+      "sf2Files": [
+        "Ballade_E_Piano.sf2",
+        "RHODES_AFFAIR_KA.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Ballade_E_Piano.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1aYdrGKVXRn8vH2o9XFHv9sSmuJ0gtLVF&export=download&confirm=t",
+          "sizeBytes": 260420044,
+          "sha256": "01203fb0314852662125bcc9c8fe23f42d64d66b0512a7f2000e061d4a24a0c3"
+        },
+        {
+          "sf2File": "RHODES_AFFAIR_KA.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1jmD9DXz8S9BShRUigGC-SgkjTZyriH3j&export=download&confirm=t",
+          "sizeBytes": 236049920,
+          "sha256": "907efa5286221963cab4d53ff2c53d065427ffcd3c40e721b831532a0daef68a"
+        }
+      ],
+      "timbreIds": [
+        "Ballade E Piano.sf2/Ballade E Piano",
+        "RHODES AFFAIR - KA.sf2/RHODES AFFAIR - KA"
+      ],
+      "timbreCount": 2
+    },
+    {
+      "id": "pack_ae_tchamba",
+      "name": "Piano e Cordas Tchamba",
+      "description": "Virtual Grand, Felling Steinway, Violins Harmonics/Legato, Violas, Strings & Cello",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 792746174,
+      "sha256": "",
+      "sf2Files": [
+        "Piano_e_Cordas_Tchamba.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Piano_e_Cordas_Tchamba.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1mAtRpUYFYyc4l5undPafVExWjeU58RD9&export=download&confirm=t",
+          "sizeBytes": 792746174,
+          "sha256": "d2c045321d0843cfbc33bc25980453a4e363f50f1975aa6994ca1753da77bac9"
+        }
+      ],
+      "timbreIds": [
+        "Piano e Cordas Tchamba.sf2/Virtual Grand Piano",
+        "Piano e Cordas Tchamba.sf2/FELLING - Steinway",
+        "Piano e Cordas Tchamba.sf2/Vlns Harmonics",
+        "Piano e Cordas Tchamba.sf2/Vlns II Full leg LP",
+        "Piano e Cordas Tchamba.sf2/Vlas Full Esp Sus",
+        "Piano e Cordas Tchamba.sf2/F SVL Sus Vib Soft",
+        "Piano e Cordas Tchamba.sf2/F SVC Leg Vib",
+        "Piano e Cordas Tchamba.sf2/F 18V Exp",
+        "Piano e Cordas Tchamba.sf2/Cello FC Leg LPG Sp"
+      ],
+      "timbreCount": 9
+    },
+    {
+      "id": "pack_ae_white_grand",
+      "name": "Nord White Grand Full 24C",
+      "description": "Piano de cauda Nord White Grand Full 24 camadas",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 830932522,
+      "sha256": "",
+      "sf2Files": [
+        "Nord_White_Grand_Full_24C.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Nord_White_Grand_Full_24C.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1Q7X8iti3VIguW_i6fP_h0Otqe5te4bhu&export=download&confirm=t",
+          "sizeBytes": 830932522,
+          "sha256": "d894b4df5ffd03fafda1298be5fb8cb0ee21fce84b50e27ac90db2e55c006eba"
+        }
+      ],
+      "timbreIds": [
+        "Nord White Grand Full 24C.sf2/White Grand Full 24"
+      ],
+      "timbreCount": 1
+    },
+    {
+      "id": "pack_ae_worship_igrejas",
+      "name": "Banco Worship Igrejas",
+      "description": "Nord Piano, Grand Lady D, Elegant S, Nord Rhodes, Galaxy DX, Pad Base, ShinyPad, AutoPad, LoFiPad, OrganPad",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 922977744,
+      "sha256": "",
+      "sf2Files": [
+        "Worship_Igrejas.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Worship_Igrejas.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=13YnyyiGQPKjGw_7kADkqhW5-UKvFGvKA&export=download&confirm=t",
+          "sizeBytes": 922977744,
+          "sha256": "1c310115a65b3924404ec3ef7f86849d13673b97c3525f3d727ab9fcb8c68535"
+        }
+      ],
+      "timbreIds": [
+        "Worship Igrejas.sf2/NORD Piano",
+        "Worship Igrejas.sf2/NORD Grand Lady D",
+        "Worship Igrejas.sf2/Elegant S",
+        "Worship Igrejas.sf2/NORD - Rhodes",
+        "Worship Igrejas.sf2/Galaxy DX",
+        "Worship Igrejas.sf2/PAD BASE",
+        "Worship Igrejas.sf2/PAD - ShinyPad",
+        "Worship Igrejas.sf2/PAD - AutoPad",
+        "Worship Igrejas.sf2/PAD - LoFiPad",
+        "Worship Igrejas.sf2/PAD - OrganPAD"
+      ],
+      "timbreCount": 10
+    },
+    {
+      "id": "pack_ae_nord_eps",
+      "name": "Pack Nord EPs (Ballad / Silver / EP8)",
+      "description": "Nord Ballad EP1, Nord Ballad EP2, Nord EP Silver, Nord EP8",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 1005141092,
+      "sha256": "",
+      "sf2Files": [
+        "Pack_Nord_EPs.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Pack_Nord_EPs.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=1iWDlqYHh7O9vQGWA3FtzyNX4utRDcTqO&export=download&confirm=t",
+          "sizeBytes": 1005141092,
+          "sha256": "ec054970db4ea90b8f30b4e50b2617c965393a7c3532b84cd9f4c77db51532ac"
+        }
+      ],
+      "timbreIds": [
+        "Pack Nord EPs.sf2/Ballad EP1",
+        "Pack Nord EPs.sf2/Ballad EP2",
+        "Pack Nord EPs.sf2/EPSilver",
+        "Pack Nord EPs.sf2/EP8"
+      ],
+      "timbreCount": 4
+    },
+    {
+      "id": "pack_ae_nord_stage3",
+      "name": "Banco Nord Stage 3 (6 Grands)",
+      "description": "Grand Imperial, White Grand, Italian Grand, Silver Grand, Grand Lady D, Royal Grand 3D",
+      "bundled": false,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 1685913698,
+      "sha256": "",
+      "sf2Files": [
+        "Nord_Stage_3.sf2"
+      ],
+      "directFiles": [
+        {
+          "sf2File": "Nord_Stage_3.sf2",
+          "downloadUrl": "https://drive.usercontent.google.com/download?id=15SZG_kmLP_uzaD01HjLWM9EbnqJUwySs&export=download&confirm=t",
+          "sizeBytes": 1685913698,
+          "sha256": "b4277cbf24698d493bb8740ce5601843ba4b668e388c5639583a853f55f482ff"
+        }
+      ],
+      "timbreIds": [
+        "Nord Stage 3.sf2/Grand Imperial - No",
+        "Nord Stage 3.sf2/White Grand - Nord",
+        "Nord Stage 3.sf2/Italian Grand - Nor",
+        "Nord Stage 3.sf2/Silver Grand - Nord",
+        "Nord Stage 3.sf2/Grand Lady D - Nord",
+        "Nord Stage 3.sf2/Royal Grand 3D - No"
+      ],
+      "timbreCount": 6
     }
   ]
 }

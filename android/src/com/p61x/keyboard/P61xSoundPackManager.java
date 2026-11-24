@@ -1,15 +1,18 @@
 package com.p61x.keyboard;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,18 +25,81 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Optional timbre packs. The APK ships only the essential pack; the others are
- * downloaded from the "soundpacks-v1" GitHub release into files/sf2_decoded/,
- * which Android keeps across app updates.
+ * Optional timbre packs. The APK ships only the essential pack; additional packs are
+ * downloaded either from the "soundpacks-v1" GitHub release (.zip) or directly (.sf2)
+ * into files/sf2_decoded/, which Android preserves across app updates.
  */
 public final class P61xSoundPackManager {
     private static final String TAG = "P61xSoundPacks";
     private static final String USER_AGENT = "P61xConsole-Android";
+    private static final String PREFS = "p61x_soundpacks_prefs";
+    private static final String KEY_MIGRATED_WORSHIP_NORD_PAD = "migrated_worship_nord_pad_v1";
     private static final ExecutorService EXEC = Executors.newSingleThreadExecutor();
     private static final Set<String> ACTIVE = ConcurrentHashMap.newKeySet();
     private static volatile JSONObject manifest;
 
     private P61xSoundPackManager() {}
+
+    /**
+     * Ensures that if the user already has a persisted config/standalone_presets.json from
+     * an older version, Preset #01 (Worship Immersion) Zona 4 is updated once to Nord Red Ambient Pad.
+     */
+    public static void migrateSavedPresetsIfNeeded(Context ctx) {
+        if (ctx == null) return;
+        try {
+            SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+            if (sp.getBoolean(KEY_MIGRATED_WORSHIP_NORD_PAD, false)) return;
+            sp.edit().putBoolean(KEY_MIGRATED_WORSHIP_NORD_PAD, true).commit();
+
+            File cfgFile = new File(new File(ctx.getFilesDir(), "config"), "standalone_presets.json");
+            if (!cfgFile.isFile()) return;
+
+            InputStream in = new FileInputStream(cfgFile);
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = in.read(buf)) > 0) bo.write(buf, 0, n);
+            in.close();
+
+            JSONObject banks = new JSONObject(new String(bo.toByteArray(), StandardCharsets.UTF_8));
+            JSONArray liveRig = banks.optJSONArray("0 - Live Rig");
+            if (liveRig == null || liveRig.length() == 0) return;
+
+            boolean changed = false;
+            for (int i = 0; i < liveRig.length(); i++) {
+                JSONObject p = liveRig.optJSONObject(i);
+                if (p != null && "Worship Immersion".equals(p.optString("name"))) {
+                    JSONArray libs = p.optJSONArray("libs");
+                    JSONArray models = p.optJSONArray("zone_models");
+                    JSONArray names = p.optJSONArray("zone_names");
+                    if (libs != null && libs.length() >= 4) {
+                        libs.put(3, "Nord Red Ambient Pad.sf2/Red Ambient Pad");
+                        changed = true;
+                    }
+                    if (models != null && models.length() >= 4) {
+                        models.put(3, "Nord Red Ambient Pad");
+                        changed = true;
+                    }
+                    if (names != null && names.length() >= 4) {
+                        names.put(3, "Nord Ambient Pad");
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                File tmp = new File(cfgFile.getParentFile(), "standalone_presets.json.tmp");
+                OutputStream out = new FileOutputStream(tmp);
+                out.write(banks.toString().getBytes(StandardCharsets.UTF_8));
+                out.flush();
+                out.close();
+                if (cfgFile.exists()) cfgFile.delete();
+                tmp.renameTo(cfgFile);
+            }
+        } catch (Throwable t) {
+            Log.w(TAG, "migrateSavedPresetsIfNeeded failed", t);
+        }
+    }
 
     private static synchronized JSONObject loadManifest(Context ctx) {
         if (manifest != null) return manifest;
@@ -177,7 +243,12 @@ public final class P61xSoundPackManager {
             public void run() {
                 File zipTmp = new File(app.getCacheDir(), packId + ".zip.part");
                 try {
-                    String url = pack.optString("downloadUrl");
+                    JSONArray directFiles = pack.optJSONArray("directFiles");
+                    String url = pack.optString("downloadUrl", "");
+                    if (directFiles != null && directFiles.length() > 0 && url.isEmpty()) {
+                        downloadDirectFiles(app, packId, pack, directFiles);
+                        return;
+                    }
                     if (!url.startsWith("https://")) throw new Exception("URL inválida");
                     long expected = pack.optLong("sizeBytes", 0);
                     String expectedSha = pack.optString("sha256", "");
@@ -230,6 +301,103 @@ public final class P61xSoundPackManager {
                 }
             }
         });
+    }
+
+    private static void downloadDirectFiles(Context ctx, String packId, JSONObject pack, JSONArray directFiles) throws Exception {
+        File dir = sf2Dir(ctx);
+        long totalPackBytes = pack.optLong("sizeBytes", 0);
+        if (totalPackBytes <= 0) {
+            for (int i = 0; i < directFiles.length(); i++) {
+                JSONObject df = directFiles.optJSONObject(i);
+                if (df != null) totalPackBytes += df.optLong("sizeBytes", 0);
+            }
+        }
+        long donePackBytes = 0;
+        byte[] buf = new byte[65536];
+
+        for (int i = 0; i < directFiles.length(); i++) {
+            JSONObject df = directFiles.getJSONObject(i);
+            String sf2Name = df.optString("sf2File", "");
+            String fileUrl = df.optString("downloadUrl", "");
+            long expectedSize = df.optLong("sizeBytes", 0);
+            String expectedSha = df.optString("sha256", "");
+            if (sf2Name.isEmpty() || !fileUrl.startsWith("https://")) {
+                throw new Exception("Arquivo inválido no pacote");
+            }
+
+            File dest = new File(dir, sf2Name);
+            if (dest.isFile() && expectedSize > 1024 && dest.length() == expectedSize) {
+                donePackBytes += expectedSize;
+                int pct = totalPackBytes > 0 ? (int) Math.min(99, donePackBytes * 100L / totalPackBytes) : 0;
+                emit(packId, "downloading", pct, donePackBytes, totalPackBytes, "Baixando");
+                continue;
+            }
+
+            File tmp = new File(dir, sf2Name + ".tmp");
+            HttpURLConnection conn = open(fileUrl);
+            try {
+                if (conn.getResponseCode() != 200) {
+                    throw new Exception("HTTP " + conn.getResponseCode());
+                }
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                InputStream in = new BufferedInputStream(conn.getInputStream(), 65536);
+                OutputStream out = new FileOutputStream(tmp);
+                byte[] head = new byte[12];
+                int headLen = 0;
+                long fileDone = 0;
+                long lastEmit = 0;
+                try {
+                    int n;
+                    while ((n = in.read(buf)) > 0) {
+                        if (headLen < 12) {
+                            int c = Math.min(12 - headLen, n);
+                            System.arraycopy(buf, 0, head, headLen, c);
+                            headLen += c;
+                        }
+                        out.write(buf, 0, n);
+                        md.update(buf, 0, n);
+                        fileDone += n;
+                        long now = System.currentTimeMillis();
+                        if (now - lastEmit >= 200) {
+                            lastEmit = now;
+                            long curTotal = donePackBytes + fileDone;
+                            int pct = totalPackBytes > 0 ? (int) Math.min(99, curTotal * 100L / totalPackBytes) : 0;
+                            emit(packId, "downloading", pct, curTotal, totalPackBytes, "Baixando");
+                        }
+                    }
+                    out.flush();
+                } finally {
+                    try { out.close(); } catch (Throwable ignored) {}
+                    try { in.close(); } catch (Throwable ignored) {}
+                }
+
+                if (headLen < 12 || head[0] != 'R' || head[1] != 'I' || head[2] != 'F' || head[3] != 'F'
+                        || head[8] != 's' || head[9] != 'f' || head[10] != 'b' || head[11] != 'k') {
+                    tmp.delete();
+                    throw new Exception("SoundFont inválido: " + sf2Name);
+                }
+
+                if (!expectedSha.isEmpty()) {
+                    StringBuilder sb = new StringBuilder();
+                    for (byte b : md.digest()) sb.append(String.format("%02x", b));
+                    if (!sb.toString().equalsIgnoreCase(expectedSha)) {
+                        tmp.delete();
+                        throw new Exception("Arquivo corrompido (checksum)");
+                    }
+                }
+
+                if (dest.exists()) dest.delete();
+                if (!tmp.renameTo(dest)) {
+                    tmp.delete();
+                    throw new Exception("Não foi possível gravar " + sf2Name);
+                }
+                donePackBytes += fileDone;
+            } finally {
+                conn.disconnect();
+            }
+        }
+
+        emit(packId, "installed", 100, donePackBytes, totalPackBytes > 0 ? totalPackBytes : donePackBytes, "Instalado");
     }
 
     private static void extract(Context ctx, File zip, JSONObject pack) throws Exception {

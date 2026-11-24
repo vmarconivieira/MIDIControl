@@ -129,10 +129,13 @@ base_apk, res_apk, patched_dex, ui_html, out_apk, root_dir = sys.argv[1:7]
 manifest_path = os.path.join(root_dir, "soundpacks.json")
 with open(manifest_path, "rb") as f:
     manifest_bytes = f.read()
+catalog_path = os.path.join(root_dir, "android", "mobile_catalog.json")
+with open(catalog_path, "rb") as f:
+    catalog_bytes = f.read()
 CORE_ASSETS = set("assets/" + a for a in json.loads(manifest_bytes)["coreAssetFiles"])
 thumb_dir = os.path.join(root_dir, "android", "soundimages")
 SKIP_PREFIXES = ("META-INF/", "res/")
-SKIP_EXACT = {"AndroidManifest.xml", "resources.arsc", "classes.dex", "assets/ui/index.html"}
+SKIP_EXACT = {"AndroidManifest.xml", "resources.arsc", "classes.dex", "assets/ui/index.html", "assets/mobile_catalog.json"}
 
 with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
     # 1. Copy compiled manifest, resources.arsc (STORED), and res/* from aapt2 output
@@ -181,7 +184,12 @@ with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
                 zi.compress_type = info.compress_type
             zout.writestr(zi, data)
 
-    # 5. Sound pack manifest and optimized thumbnails
+    # 5. Updated mobile_catalog.json, soundpacks.json, and optimized thumbnails
+    zi_cat = zipfile.ZipInfo("assets/mobile_catalog.json")
+    zi_cat.date_time = (2026, 1, 1, 0, 0, 0)
+    zi_cat.compress_type = zipfile.ZIP_DEFLATED
+    zout.writestr(zi_cat, catalog_bytes)
+
     zi_m = zipfile.ZipInfo("assets/soundpacks.json")
     zi_m.date_time = (2026, 1, 1, 0, 0, 0)
     zi_m.compress_type = zipfile.ZIP_DEFLATED

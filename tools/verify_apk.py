@@ -86,11 +86,17 @@ def main():
         for bad in ("\U0001F3B5", "\U0001F3B9", "STAGE RIG WORKSTATION", "Arraste no knob ou na barra"):
             assert bad not in html, f"Removed UI text/emoji still present: {bad!r}"
         sp = json.loads(zf.read("assets/soundpacks.json").decode("utf-8"))
+        assert len(sp["packs"]) == 18, f"Expected 18 sound packs, got {len(sp['packs'])}"
         for core in sp["coreAssetFiles"]:
             assert "assets/" + core in names, f"Missing core soundbank in APK: {core}"
         bundled = [n for n in names if n.startswith("assets/soundbank/")]
         assert len(bundled) == len(sp["coreAssetFiles"]), f"Lite APK must bundle only core timbres, found {len(bundled)}"
-    print(f"[OK] ZIP CRC + structure + UI checks passed ({len(names)} entries)")
+        cat = json.loads(zf.read("assets/mobile_catalog.json").decode("utf-8"))
+        assert len(cat["timbre_catalog"]) == 98, f"Expected 98 timbres in mobile_catalog.json, got {len(cat['timbre_catalog'])}"
+        w0 = cat["banks"]["0 - Live Rig"][0]
+        assert w0["name"] == "Worship Immersion", f"Expected Preset 0 to be Worship Immersion, got {w0['name']}"
+        assert w0["libs"][3] == "Nord Red Ambient Pad.sf2/Red Ambient Pad", f"Unexpected Zona 4 timbre in Worship Immersion: {w0['libs'][3]}"
+    print(f"[OK] ZIP CRC + structure + UI + 98-timbre catalog checks passed ({len(names)} entries)")
 
     # 2. Manifest & resource IDs
     badging = run([aapt2, "dump", "badging", apk_path])

@@ -18,6 +18,7 @@ public final class MainActivity extends Activity {
     private void lambda$onCreate$0() {
         P61xPatch.registerActivity(this);
         try {
+            P61xSoundPackManager.migrateSavedPresetsIfNeeded(this);
             P61xEngine eng = this.engine;
             if (eng != null) {
                 eng.initialize();
