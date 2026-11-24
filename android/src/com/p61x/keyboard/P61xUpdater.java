@@ -1,13 +1,16 @@
 package com.p61x.keyboard;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import java.io.BufferedReader;
@@ -216,6 +219,39 @@ public final class P61xUpdater {
         });
     }
 
+    // ---- Relaunch after self-update -------------------------------------------------
+    private static final String PREFS = "p61x_updater_prefs";
+    private static final String KEY_PENDING = "pending_relaunch_ts";
+    private static final long RELAUNCH_WINDOW_MS = 10L * 60L * 1000L;
+
+    public static void markPendingRelaunch(Context ctx) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+                .putLong(KEY_PENDING, System.currentTimeMillis()).commit();
+    }
+
+    public static void clearPendingRelaunch(Context ctx) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().remove(KEY_PENDING).commit();
+    }
+
+    /** True once per update: the flag is consumed so the app is never launched twice. */
+    public static synchronized boolean consumePendingRelaunch(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        long ts = sp.getLong(KEY_PENDING, 0L);
+        if (ts == 0L) return false;
+        sp.edit().remove(KEY_PENDING).commit();
+        return System.currentTimeMillis() - ts < RELAUNCH_WINDOW_MS;
+    }
+
+    public static void launchMainActivity(Context ctx) {
+        try {
+            Intent i = new Intent(ctx, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            ctx.startActivity(i);
+        } catch (Throwable t) {
+            Log.w(TAG, "Unable to relaunch app", t);
+        }
+    }
+
     public static void downloadAndInstallUpdateAsync(final Activity activity, final String apkUrl) {
         if (activity == null) return;
         if (apkUrl == null || !apkUrl.startsWith("https://")) {
@@ -224,7 +260,7 @@ public final class P61xUpdater {
         }
         final Context appCtx = activity.getApplicationContext();
 
-        // Check Android 8+ unknown app sources permission before downloading 346 MB
+        // Check Android 8+ unknown app sources permission before downloading
         if (Build.VERSION.SDK_INT >= 26) {
             try {
                 if (!appCtx.getPackageManager().canRequestPackageInstalls()) {
@@ -273,6 +309,12 @@ public final class P61xUpdater {
                     PackageInstaller.SessionParams params =
                             new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
                     params.setAppPackageName(appCtx.getPackageName());
+                    if (Build.VERSION.SDK_INT >= 34) {
+                        try {
+                            params.setRequestUpdateOwnership(true);
+                        } catch (Throwable ignored) {
+                        }
+                    }
                     if (totalBytes > 0) {
                         params.setSize(totalBytes);
                     }
@@ -308,13 +350,23 @@ public final class P61xUpdater {
                     emitProgress("committing", 100, downloaded, totalBytes > 0 ? totalBytes : downloaded,
                             "Preparando instalador do Android...");
 
-                    Intent receiverIntent = new Intent(appCtx, UpdateInstallReceiver.class);
-                    receiverIntent.setAction("com.p61x.keyboard.ACTION_INSTALL_COMMIT");
+                    Intent activityIntent = new Intent(appCtx, UpdateInstallActivity.class);
+                    activityIntent.setAction("com.p61x.keyboard.ACTION_INSTALL_COMMIT");
+                    activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     int piFlags = PendingIntent.FLAG_UPDATE_CURRENT;
                     if (Build.VERSION.SDK_INT >= 31) {
                         piFlags |= PendingIntent.FLAG_MUTABLE;
                     }
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(appCtx, sessionId, receiverIntent, piFlags);
+                    Bundle balOptions = null;
+                    if (Build.VERSION.SDK_INT >= 34) {
+                        balOptions = ActivityOptions.makeBasic()
+                                .setPendingIntentBackgroundActivityStartMode(
+                                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
+                                .toBundle();
+                    }
+                    PendingIntent pendingIntent = PendingIntent.getActivity(
+                            appCtx, sessionId, activityIntent, piFlags, balOptions);
+                    markPendingRelaunch(appCtx);
                     session.commit(pendingIntent.getIntentSender());
                     session.close();
                     session = null;
@@ -331,6 +383,7 @@ public final class P61xUpdater {
                         }
                     }
                     String msg = t.getMessage() != null ? t.getMessage() : t.getClass().getSimpleName();
+                    clearPendingRelaunch(appCtx);
                     emitProgress("error", 0, 0, 0, "Falha ao baixar atualização: " + msg);
                 } finally {
                     if (conn != null) {

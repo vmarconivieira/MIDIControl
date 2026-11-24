@@ -1101,6 +1101,54 @@
     .layer-knob-stage .mt-knob-label { display: none; }
     .layer-knob-stage .mt-knob-val-mini { font-size: 11px; margin-top: 1px; }
 
+
+    /* Pads layers: knobs / faders mode */
+    .pads-top-segmented { grid-template-columns: minmax(0, 1.3fr) auto auto auto; }
+    #padsLayersModeToggle { display: none; }
+    #padsLayersModeToggle.visible { display: flex; }
+    .pad-faders-grid { display: none; flex: 1; min-height: 0; min-width: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; }
+    #padsSubLayers[data-mode="faders"] .pad-layers-strip { display: none; }
+    #padsSubLayers[data-mode="faders"] .pad-faders-grid { display: grid; }
+    .pad-fader-strip { --lc: var(--mt-accent); }
+    .pad-fader-head {
+      height: 26px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      border-radius: 7px; border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, #272d3a 0%, #171b24 100%);
+      color: var(--lc); font-size: 10px; font-weight: 900; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .pad-fader-strip .fader-stage { min-height: 70px; }
+    .pad-fader-strip .mt-fader-cap::after { background: var(--lc); box-shadow: 0 0 7px var(--lc); }
+    .pad-fader-strip .fader-bezel.is-dragging { border-color: var(--lc); }
+    .pad-fader-strip .btn-strip-on { height: 26px; }
+    .pad-fader-strip.is-muted .pad-fader-head { opacity: 0.55; }
+
+    /* Sound packs */
+    .sp-list { display: flex; flex-direction: column; gap: 7px; overflow-y: auto; min-height: 0; padding-right: 2px; }
+    .sp-row {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center;
+      background: var(--bg-slot); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 9px 11px;
+    }
+    .sp-row.focus { border-color: var(--mt-accent); box-shadow: 0 0 12px var(--mt-accent-glow); }
+    .sp-name { font-size: 12.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; }
+    .sp-desc { font-size: 10.5px; color: var(--text-muted); grid-column: 1; }
+    .sp-tag {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.06em; padding: 1px 6px; border-radius: 5px;
+      border: 1px solid var(--border-strong); color: var(--text-secondary);
+    }
+    .sp-tag.on { border-color: #22c55e; color: #22c55e; }
+    .sp-action { grid-row: 1 / span 2; grid-column: 2; min-width: 88px; justify-content: center; }
+    .sp-bar { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: #05070b; overflow: hidden; display: none; }
+    .sp-bar.show { display: block; }
+    .sp-bar > div { height: 100%; width: 0; background: var(--mt-accent); transition: width .15s linear; }
+    .sp-msg { grid-column: 1 / -1; font-size: 10px; color: var(--text-secondary); display: none; }
+    .sp-msg.show { display: block; }
+    .timbre-vis-card.locked .timbre-vis-img { filter: grayscale(0.85) brightness(0.55); }
+    .timbre-vis-dl {
+      position: absolute; top: 7px; left: 7px; z-index: 3; font-size: 10px; font-weight: 800;
+      background: rgba(0,0,0,0.72); border: 1px solid var(--mt-accent); color: var(--mt-accent-bright);
+      border-radius: 999px; padding: 2px 8px; display: inline-flex; gap: 5px; align-items: center;
+    }
+
     /* DEDICATED 4 LARGE DRUM PADS VIEW (#viewDrums) */
     .drums-top-bar {
       height: 36px; flex-shrink: 0;
@@ -1479,7 +1527,10 @@
       .drawer-title { font-size: 16px; }
       .drawer-sub { font-size: 9px; }
       .drawer-version-chip { margin-top: 2px; font-size: 9px; }
-      .drawer-actions { gap: 3px; }
+      .nav-drawer { width: 430px; max-width: 94vw; }
+      .drawer-actions { gap: 4px; display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+      .drawer-actions .btn-panic { grid-column: 1 / -1; }
+      .drawer-item-btn span:not(.drawer-pill-badge):not(.drawer-midi-dot) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .drawer-item-btn { min-height: 28px; padding: 3px 9px; font-size: 10.5px; gap: 8px; border-radius: 7px; }
       .drawer-item-btn i { font-size: 12px; width: 15px; }
       .nav-drawer .btn-panic { height: 28px; padding: 0 9px; font-size: 10.5px; border-radius: 7px; }
@@ -1792,6 +1843,10 @@
                 <button class="oct-btn" data-pad-oct="1">+1</button>
               </div>
             </div>
+            <div id="padsLayersModeToggle" class="pads-sub-tabs">
+              <button id="btnPadsModeKnobs" class="pads-sub-btn active" type="button"><i class="fa-solid fa-compact-disc"></i><span>KNOBS</span></button>
+              <button id="btnPadsModeFaders" class="pads-sub-btn" type="button"><i class="fa-solid fa-grip-lines-vertical"></i><span>FADERS</span></button>
+            </div>
             <div class="pads-sub-tabs">
               <button id="btnPadsSubKeys" class="pads-sub-btn active" data-pads-sub="keys">
                 <i class="fa-solid fa-table-cells"></i><span>12 TONS</span>
@@ -1823,8 +1878,8 @@
           </div>
 
           <!-- Sub-view B: 5 Pad Layers + Independent Pad Master (spacious 3x2 rotary knob grid) -->
-          <div id="padsSubLayers" class="pads-sub-pane">
-            <div class="pad-layers-strip">
+          <div id="padsSubLayers" class="pads-sub-pane" data-mode="knobs">
+            <div id="padLayersKnobsGrid" class="pad-layers-strip">
               <div class="layer-mini-card" data-pad-layer="0">
                 <div class="layer-mini-head">
                   <span style="color:var(--p1-color)">WARM PAD</span>
@@ -1898,6 +1953,7 @@
                 <div class="layer-knob-stage" id="padsViewMasterKnobHost"></div>
               </div>
             </div>
+            <div id="padLayersFadersGrid" class="pad-faders-grid"></div>
           </div>
         </section>
 
@@ -1906,8 +1962,7 @@
           <div class="drums-top-bar">
             <div class="drums-top-title mono">
               <i class="fa-solid fa-drum" style="color:var(--mt-accent-bright);"></i>
-              <span>4 DRUM PADS • SAMPLES ESTÉREO</span>
-              <span class="drums-top-sub">ONE-SHOT &amp; LOOP • IMPORTAR WAV/MP3</span>
+              <span>DRUM PADS</span>
             </div>
             <button id="btnStopAllDrums" class="btn-stop-all-drums" title="Parar todos os Drum Pads">
               <i class="fa-solid fa-stop"></i><span>PARAR TODOS</span>
@@ -1926,7 +1981,7 @@
     <div id="bottomDock" class="bottom-dock">
       <div class="piano-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px;">
-          <span class="mono" style="color:var(--text-secondary);">TECLADO VIRTUAL 61 TECLAS (Clique / PC A-K) • <strong id="kbdOctaveLabel" style="color:var(--mt-accent-bright)">C2–C7</strong></span>
+          <span class="mono" style="color:var(--text-secondary);">TECLADO VIRTUAL • <strong id="kbdOctaveLabel" style="color:var(--mt-accent-bright)">C2–C7</strong></span>
           <div style="display:flex; gap:5px; align-items:center;">
             <button id="btnKbdOctDown" class="btn-tool" style="height:22px; padding:0 8px;">-1 Oct</button>
             <button id="btnKbdOctUp" class="btn-tool" style="height:22px; padding:0 8px;">+1 Oct</button>
@@ -1945,7 +2000,6 @@
       <button id="btnKnobHudPrev" class="knob-hud-nav" title="Knob Anterior"><i class="fa-solid fa-chevron-left"></i></button>
       <div class="knob-hud-title-wrap">
         <div id="knobHudTitle" class="knob-hud-title mono">RELEASE • ZONA 1</div>
-        <div class="knob-hud-hint">Arraste no knob ou na barra</div>
       </div>
       <button id="btnKnobHudNext" class="knob-hud-nav" title="Próximo Knob"><i class="fa-solid fa-chevron-right"></i></button>
       <button id="btnKnobHudClose" class="knob-hud-close" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
@@ -1975,31 +2029,31 @@
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
       <div>
         <div class="drawer-title">P61X CONSOLE</div>
-        <div class="drawer-sub mono">STAGE RIG WORKSTATION</div>
-        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.2</span>
+        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.3.0</span>
       </div>
       <button id="btnCloseNavDrawer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <div class="drawer-actions">
-      <button id="btnDrawerSavePreset" class="drawer-item-btn"><i class="fa-solid fa-floppy-disk"></i><span>SALVAR / NOVO PROJETO</span></button>
-      <button id="btnDrawerTimbres" class="drawer-item-btn"><i class="fa-solid fa-music"></i><span>CATÁLOGO VISUAL DE TIMBRES</span></button>
-      <button id="btnDrawerImportSf2" class="drawer-item-btn"><i class="fa-solid fa-file-arrow-up"></i><span>IMPORTAR SOUNDFONT (.SF2)</span></button>
-      <button id="btnDrawerMasterFx" class="drawer-item-btn"><i class="fa-solid fa-wand-magic-sparkles"></i><span>MASTER FX &amp; TAP TEMPO</span></button>
-      <button id="btnDrawerAudio" class="drawer-item-btn"><i class="fa-solid fa-volume-high"></i><span>ÁUDIO / ENGINE AAUDIO</span></button>
+      <button id="btnDrawerSavePreset" class="drawer-item-btn"><i class="fa-solid fa-floppy-disk"></i><span>SALVAR</span></button>
+      <button id="btnDrawerTimbres" class="drawer-item-btn"><i class="fa-solid fa-music"></i><span>TIMBRES</span></button>
+      <button id="btnDrawerSoundPacks" class="drawer-item-btn"><i class="fa-solid fa-box-archive"></i><span>PACOTES DE TIMBRES</span><span id="drawerPacksBadge" class="drawer-pill-badge mono">--</span></button>
+      <button id="btnDrawerImportSf2" class="drawer-item-btn"><i class="fa-solid fa-file-arrow-up"></i><span>IMPORTAR SF2</span></button>
+      <button id="btnDrawerMasterFx" class="drawer-item-btn"><i class="fa-solid fa-wand-magic-sparkles"></i><span>MASTER FX</span></button>
+      <button id="btnDrawerAudio" class="drawer-item-btn"><i class="fa-solid fa-volume-high"></i><span>ÁUDIO</span></button>
       <button id="btnDrawerMidi" class="drawer-item-btn">
-        <i class="fa-solid fa-plug"></i><span>MIDI USB / BLE &amp; PERFIS</span>
+        <i class="fa-solid fa-plug"></i><span>MIDI</span>
         <span id="drawerMidiDot" class="drawer-midi-dot" title="Status MIDI"></span>
       </button>
-      <button id="btnDrawerAppearance" class="drawer-item-btn"><i class="fa-solid fa-palette"></i><span>TEMAS &amp; VISUAL</span></button>
-      <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL (61 TECLAS)</span></button>
+      <button id="btnDrawerAppearance" class="drawer-item-btn"><i class="fa-solid fa-palette"></i><span>TEMAS</span></button>
+      <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL</span></button>
       <button id="btnDrawerUpdates" class="drawer-item-btn">
         <i class="fa-solid fa-circle-exclamation"></i><span>SOBRE</span>
-        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.2</span>
+        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.3.0</span>
       </button>
       <button id="btnPanic" class="btn-panic learnable" data-control-id="btn_panic" data-control-label="PANIC (Silenciar Tudo)">
         <span class="midi-badge" data-badge-for="btn_panic"></span>
-        <i class="fa-solid fa-triangle-exclamation"></i><span id="panicBtnLabel">PANIC (SILENCIAR TUDO)</span>
+        <i class="fa-solid fa-triangle-exclamation"></i><span id="panicBtnLabel">PANIC</span>
       </button>
     </div>
   </aside>
@@ -2010,7 +2064,6 @@
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-music" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Transpose Global</h3>
-          <div class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Transpõe todas as 4 zonas preservando splits e oitavas</div>
         </div>
         <button id="btnCloseTransposeModal" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -2076,7 +2129,7 @@
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-circle-exclamation" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Sobre o P61x Console</h3>
-          <div id="updRepoLabel" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Stage Rig Workstation • vmarconivieira/MIDIControl</div>
+          <div id="updRepoLabel" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">vmarconivieira/MIDIControl</div>
         </div>
         <button id="btnCloseUpdateModal" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -2084,17 +2137,17 @@
       <div class="upd-ver-grid">
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VERSÃO INSTALADA</span>
-          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.2</span>
-          <span id="updInstalledCode" class="upd-ver-sub mono">Build 5 • AAudio + USB/BLE MIDI</span>
+          <span id="updInstalledVer" class="upd-ver-val mono">v1.3.0</span>
+          <span id="updInstalledCode" class="upd-ver-sub mono">Build 6</span>
         </div>
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VIGENTE NO GITHUB</span>
           <span id="updRemoteVer" class="upd-ver-val mono">--</span>
-          <span id="updRemoteSub" class="upd-ver-sub mono">Toque em Buscar Atualizações</span>
+          <span id="updRemoteSub" class="upd-ver-sub mono">--</span>
         </div>
       </div>
 
-      <div id="updStatusBanner" class="upd-banner">Toque em "Buscar Atualizações" para verificar se há nova versão no GitHub.</div>
+      <div id="updStatusBanner" class="upd-banner">Toque em Buscar Atualizações.</div>
       <div id="updNotesBox" class="upd-notes" style="display:none;"></div>
 
       <div id="updProgressWrap" style="display:none; flex-direction:column; gap:6px;">
@@ -2125,13 +2178,16 @@
           <button class="zone-tab-btn" data-tab-zone="1">ZONA 2</button>
           <button class="zone-tab-btn" data-tab-zone="2">ZONA 3</button>
           <button class="zone-tab-btn" data-tab-zone="3">ZONA 4</button>
-          <button id="subtabTimbreBtn" class="zone-tab-btn active" style="margin-left:8px;">🎵 TIMBRES (<span id="timbreCountChip">57</span>)</button>
-          <button id="subtabStudioBtn" class="zone-tab-btn">🎹 SPLIT, OITAVA &amp; EQ</button>
+          <button id="subtabTimbreBtn" class="zone-tab-btn active" style="margin-left:8px;"><i class="fa-solid fa-music"></i> TIMBRES (<span id="timbreCountChip">57</span>)</button>
+          <button id="subtabStudioBtn" class="zone-tab-btn"><i class="fa-solid fa-sliders"></i> SPLIT, OITAVA &amp; EQ</button>
         </div>
 
         <div class="browser-action-row">
           <button id="btnImportSf2" class="browser-pill-btn">
             <i class="fa-solid fa-arrow-up-from-bracket"></i><span>IMPORTAR .SF2</span>
+          </button>
+          <button id="btnOpenSoundPacks" class="browser-pill-btn">
+            <i class="fa-solid fa-box-archive"></i><span>PACOTES</span>
           </button>
           <button id="btnFilterFavorites" class="browser-pill-btn">
             <i class="fa-solid fa-star"></i><span>FAVORITOS</span>
@@ -2213,13 +2269,26 @@
     </div>
   </div>
 
+  <!-- ==================== SOUND PACKS MODAL ==================== -->
+  <div id="soundPacksModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:560px; max-height:92vh; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-box-archive" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Pacotes de Timbres</h3>
+          <div id="soundPacksSummary" class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">--</div>
+        </div>
+        <button id="btnCloseSoundPacks" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="soundPacksList" class="sp-list"></div>
+    </div>
+  </div>
+
   <!-- ==================== MASTER FX MODAL (ROTARY KNOBS IGUAIS ÀS ZONAS) ==================== -->
   <div id="masterFxModal" class="modal-backdrop">
     <div class="modal-card" style="max-width:520px; display:flex; flex-direction:column; gap:10px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <h3 style="font-size:15px; margin:0;"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--mt-accent-bright); margin-right:8px;"></i>Master FX &amp; Tap Tempo</h3>
-          <div class="mono" style="font-size:10px; color:var(--text-muted); margin-top:2px;">Toque em qualquer knob para ampliar ou segure para MIDI Learn</div>
         </div>
         <button id="btnCloseMasterFx" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -2533,6 +2602,78 @@
       document.getElementById("padsSubLayers")?.classList.toggle("active", activePadsSubView === "layers");
       document.getElementById("btnPadsSubKeys")?.classList.toggle("active", activePadsSubView === "keys");
       document.getElementById("btnPadsSubLayers")?.classList.toggle("active", activePadsSubView === "layers");
+      document.getElementById("padsLayersModeToggle")?.classList.toggle("visible", activePadsSubView === "layers");
+      if (activePadsSubView === "layers") requestAnimationFrame(syncAllFadersVisual);
+    }
+
+    function setPadsLayersMode(mode, persist = true) {
+      const m = mode === "faders" ? "faders" : "knobs";
+      document.getElementById("padsSubLayers")?.setAttribute("data-mode", m);
+      document.getElementById("btnPadsModeKnobs")?.classList.toggle("active", m === "knobs");
+      document.getElementById("btnPadsModeFaders")?.classList.toggle("active", m === "faders");
+      if (persist) { try { localStorage.setItem("p61x_pad_layers_mode", m); } catch (e) {} }
+      requestAnimationFrame(syncAllFadersVisual);
+    }
+
+    const PAD_FADER_DEFS = [
+      { name: "WARM PAD",    color: "var(--p1-color)", ctrl: "vol_pad1", label: "Volume Warm Pad", vu: "pad_0" },
+      { name: "CELLO PAD",   color: "var(--p2-color)", ctrl: "vol_pad2", label: "Volume Cello Pad", vu: "pad_1" },
+      { name: "FLUTE PAD",   color: "var(--p3-color)", ctrl: "vol_pad3", label: "Volume Flute Pad", vu: "pad_2" },
+      { name: "AMBIENT PAD", color: "var(--p4-color)", ctrl: "vol_pad4", label: "Volume Ambient Pad", vu: "pad_3" },
+      { name: "SHIMMER PAD", color: "var(--p5-color)", ctrl: "vol_pad5", label: "Volume Shimmer Pad", vu: "pad_4" },
+      { name: "PADS MASTER", color: "var(--master-pad-color)", ctrl: "vol_master_pad", label: "Volume Master Pad Contínuo", vu: "pad_master", master: true }
+    ];
+
+    function buildPadFaders() {
+      const host = document.getElementById("padLayersFadersGrid");
+      if (!host || host.childElementCount > 0) return;
+      PAD_FADER_DEFS.forEach((d, i) => {
+        const sid = d.master ? "PadViewMaster" : `PadLayer${i}`;
+        const strip = document.createElement("div");
+        strip.className = "channel-strip pad-fader-strip";
+        strip.id = `strip${sid}`;
+        strip.style.setProperty("--lc", d.color);
+        strip.innerHTML = `
+          <div class="pad-fader-head">${d.name}</div>
+          <div class="fader-stage">
+            <div class="fader-bezel learnable" data-control-id="${d.ctrl}" data-control-label="${d.label}">
+              <span class="midi-badge" data-badge-for="${d.ctrl}"></span>
+              <div class="fader-slot-wrap">
+                <div class="fader-center-groove"></div>
+                <input id="fader${sid}" class="fader-range-hidden" type="range" min="0" max="127" value="100" orient="vertical">
+                <div class="mt-fader-cap"></div>
+              </div>
+              <div class="led-ladder" data-vu-right="${d.vu}"></div>
+            </div>
+          </div>
+          <div class="fader-val-badge mono" id="faderVal${sid}">100</div>
+          <button class="btn-strip-on is-on" id="btnOn${sid}" type="button">ON</button>`;
+        host.appendChild(strip);
+
+        const sl = strip.querySelector(".fader-range-hidden");
+        const onBtn = strip.querySelector(".btn-strip-on");
+        if (d.master) {
+          sl.addEventListener("input", () => {
+            mastersState.pad.volume = parseInt(sl.value, 10);
+            syncMastersUI();
+            syncOpenKnobHud();
+            if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+          });
+          onBtn.addEventListener("click", () => document.getElementById("btnOnMasterPad")?.click());
+        } else {
+          sl.addEventListener("input", () => {
+            padState.volumes[i] = parseInt(sl.value, 10);
+            syncPadUIFromState(padState);
+            syncOpenKnobHud();
+            if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(i, padState.volumes[i]);
+          });
+          onBtn.addEventListener("click", () => {
+            padState.mutes[i] = !padState.mutes[i];
+            if (numaBackend && numaBackend.setPadLayerMute) numaBackend.setPadLayerMute(i, padState.mutes[i]);
+            syncPadUIFromState(padState);
+          });
+        }
+      });
     }
 
     function switchMainView(viewName) {
@@ -3644,6 +3785,10 @@
       if (patchBpmEl) patchBpmEl.textContent = `${masterFxState.bpm} BPM`;
       const fxBpmR = document.getElementById("fxBpmReadout");
       if (fxBpmR) fxBpmR.textContent = `${masterFxState.bpm} BPM`;
+      if (soundPacksState.known && Array.isArray(p.libs)) {
+        const missing = p.libs.filter(l => l && !soundPacksState.installedLibIds.has(l)).length;
+        if (missing > 0) setStatusMessage(`${missing} timbre(s) deste patch não instalado(s). Menu, Pacotes de Timbres.`);
+      }
 
       for (let z = 0; z < 4; z++) {
         const vol = (p.volumes && p.volumes[z] !== undefined) ? p.volumes[z] : 100;
@@ -3735,6 +3880,16 @@
       syncFaderVisual(mpSl);
       document.getElementById("btnOnMasterPad").classList.toggle("is-on", !p.muted);
       document.getElementById("stripMasterPad").classList.toggle("is-muted", p.muted);
+
+      const pvSl = document.getElementById("faderPadViewMaster");
+      if (pvSl) {
+        pvSl.value = p.volume;
+        const pvf = document.getElementById("faderValPadViewMaster");
+        if (pvf) pvf.textContent = p.volume;
+        syncFaderVisual(pvSl);
+        document.getElementById("btnOnPadViewMaster")?.classList.toggle("is-on", !p.muted);
+        document.getElementById("stripPadViewMaster")?.classList.toggle("is-muted", p.muted);
+      }
 
       const pvVal = document.getElementById("padsViewMasterVal");
       if (pvVal) pvVal.textContent = p.volume;
@@ -3832,6 +3987,15 @@
         const slot = document.querySelector(`#padLayerKnobHost${i} .mt-knob-slot`);
         if (slot && slot._def) {
           paintKnobVisual(slot._svg, slot._ptr, val, slot._def.min, slot._def.max, slot._def.bipolar, slot._def.color || null);
+        }
+        const fSl = document.getElementById(`faderPadLayer${i}`);
+        if (fSl) {
+          fSl.value = val;
+          const fv = document.getElementById(`faderValPadLayer${i}`);
+          if (fv) fv.textContent = val;
+          syncFaderVisual(fSl);
+          document.getElementById(`btnOnPadLayer${i}`)?.classList.toggle("is-on", !padState.mutes[i]);
+          document.getElementById(`stripPadLayer${i}`)?.classList.toggle("is-muted", !!padState.mutes[i]);
         }
       }
     }
@@ -4047,7 +4211,9 @@
         const isFav = favoriteTimbres.has(t.lib_id);
 
         const card = document.createElement("div");
-        card.className = `timbre-vis-card ${isActive ? "active" : ""}`;
+        const locked = soundPacksState.known && !soundPacksState.installedLibIds.has(t.lib_id);
+        const packOf = locked ? soundPacksState.libToPack[t.lib_id] : null;
+        card.className = `timbre-vis-card ${isActive ? "active" : ""} ${locked ? "locked" : ""}`;
         const imgHtml = t.image_path
           ? `<img class="timbre-vis-img" src="${t.image_path}" alt="${t.model_name}">`
           : `<div class="timbre-vis-img" style="background:linear-gradient(135deg,#1d2538,#090c12);"></div>`;
@@ -4055,6 +4221,7 @@
         card.innerHTML = `
           ${imgHtml}
           <div class="timbre-vis-grad"></div>
+          ${locked ? `<div class="timbre-vis-dl"><i class="fa-solid fa-download"></i>${packOf && packOf.sizeBytes ? Math.round(packOf.sizeBytes / 1048576) + " MB" : ""}</div>` : ""}
           <div class="timbre-vis-check"><i class="fa-solid fa-check"></i></div>
           <button class="timbre-vis-star ${isFav ? "fav" : ""}" title="Favorito">
             <i class="fa-${isFav ? "solid" : "regular"} fa-star"></i>
@@ -4081,7 +4248,14 @@
           }
         });
 
-        card.addEventListener("click", () => applyZoneTimbreFromPicker(t.lib_id));
+        card.addEventListener("click", () => {
+          if (locked) {
+            soundPacksState.pendingTimbre = { libId: t.lib_id, zone: activeInspectorZone };
+            openSoundPacksModal(packOf ? packOf.id : "");
+          } else {
+            applyZoneTimbreFromPicker(t.lib_id);
+          }
+        });
         grid.appendChild(card);
       });
     }
@@ -4489,6 +4663,9 @@
         if (typeof ev.synth_master_vu === "number") {
           updateLedLadder("synth_master", ev.synth_master_vu, mastersState.synth.muted);
         }
+        if (Array.isArray(ev.pad_vu)) {
+          ev.pad_vu.forEach((lvl, idx) => updateLedLadder(`pad_${idx}`, lvl, padState.mutes[idx]));
+        }
         if (typeof ev.pad_master_vu === "number") {
           updateLedLadder("pad_master", ev.pad_master_vu, mastersState.pad.muted);
         }
@@ -4521,6 +4698,10 @@
         handleBleConnectResult(ev);
       } else if (ev.event === "audio_route_status") {
         renderAudioRouteUI(ev);
+      } else if (ev.event === "soundpack_progress") {
+        handleSoundPackProgress(ev);
+      } else if (ev.event === "soundpack_status") {
+        applySoundPacksStatus(ev);
       } else if (ev.event === "update_status") {
         handleUpdateStatusEvent(ev);
       } else if (ev.event === "update_progress") {
@@ -4775,12 +4956,202 @@
       }
     }
 
+
+    /* =========================================================================
+       SOUND PACKS (optional timbre downloads)
+       ========================================================================= */
+    const soundPacksState = {
+      known: false, packs: [], installedLibIds: new Set(), libToPack: {},
+      totalTimbres: 0, installedTimbres: 0, installedBytes: 0,
+      progress: {}, focusPack: "", pendingTimbre: null, mock: false
+    };
+
+    function isStandaloneBrowser() {
+      return !numaBackend && !window.AndroidNumaBridge && typeof QWebChannel === "undefined";
+    }
+
+    function fmtMb(bytes) { return bytes > 0 ? `${Math.round(bytes / 1048576)} MB` : ""; }
+
+    function applySoundPacksStatus(st) {
+      if (!st || st.ok === false) return;
+      soundPacksState.known = true;
+      soundPacksState.packs = Array.isArray(st.packs) ? st.packs : [];
+      soundPacksState.installedLibIds = new Set(st.installedLibIds || []);
+      soundPacksState.totalTimbres = st.totalTimbres || 0;
+      soundPacksState.installedTimbres = st.installedTimbres || 0;
+      soundPacksState.installedBytes = st.installedBytes || 0;
+      soundPacksState.libToPack = {};
+      soundPacksState.packs.forEach(pk => (pk.timbreIds || []).forEach(id => { soundPacksState.libToPack[id] = pk; }));
+      const badge = document.getElementById("drawerPacksBadge");
+      if (badge) badge.textContent = `${soundPacksState.installedTimbres}/${soundPacksState.totalTimbres}`;
+      renderSoundPacksUI();
+      if (document.getElementById("zoneInspectorModal")?.classList.contains("open")) renderTimbreGrid();
+
+      const pt = soundPacksState.pendingTimbre;
+      if (pt && soundPacksState.installedLibIds.has(pt.libId)) {
+        soundPacksState.pendingTimbre = null;
+        const prevZone = activeInspectorZone;
+        activeInspectorZone = pt.zone;
+        applyZoneTimbreFromPicker(pt.libId);
+        activeInspectorZone = prevZone;
+      }
+    }
+
+    function mockSoundPacksStatus() {
+      if (!soundPacksState.mock) {
+        soundPacksState.mock = true;
+        soundPacksState.mockInstalled = new Set(["core"]);
+        soundPacksState.mockDefs = [
+          { id: "core", name: "Essencial (Embutido)", description: "Model D 1983, EP-Mark I, SynthPad2, PURE B3", bundled: true, timbreCount: 4, sizeBytes: 0, timbreIds: [] },
+          { id: "pack_apiano_extra", name: "Pianos Acústicos", description: "The Upright, CP E-Grand", bundled: false, timbreCount: 2, sizeBytes: 22322226, timbreIds: [] },
+          { id: "pack_epiano_extra", name: "Pianos Elétricos & FM", description: "EP-Mark II, Wurly 200/255, FM-EP 1-4", bundled: false, timbreCount: 7, sizeBytes: 38371000, timbreIds: [] },
+          { id: "pack_strings_pads", name: "Cordas, Corais & Pads", description: "Strings, Cellos, SynthPad1, VoicePad, SynChoir", bundled: false, timbreCount: 6, sizeBytes: 39660000, timbreIds: [] },
+          { id: "pack_keys_mallets", name: "Teclas & Mallets", description: "Vibrafone, Marimba, Clav e outros", bundled: false, timbreCount: 8, sizeBytes: 42500000, timbreIds: [] },
+          { id: "pack_organs", name: "Órgãos", description: "19 órgãos", bundled: false, timbreCount: 19, sizeBytes: 35280000, timbreIds: [] },
+          { id: "pack_bells_bass", name: "Bells & Baixos", description: "Fantasia Bells e baixos", bundled: false, timbreCount: 5, sizeBytes: 66900000, timbreIds: [] }
+        ];
+      }
+      const packs = soundPacksState.mockDefs.map(d => Object.assign({}, d, {
+        installed: soundPacksState.mockInstalled.has(d.id),
+        downloading: !!soundPacksState.progress[d.id] && soundPacksState.progress[d.id].status === "downloading"
+      }));
+      const inst = packs.filter(p => p.installed).reduce((a, p) => a + p.timbreCount, 0);
+      const tot = packs.reduce((a, p) => a + p.timbreCount, 0);
+      return { ok: true, totalTimbres: tot, installedTimbres: inst, installedBytes: packs.filter(p => p.installed && !p.bundled).reduce((a, p) => a + p.sizeBytes, 0), packs, installedLibIds: [] };
+    }
+
+    function refreshSoundPacksStatus() {
+      if (numaBackend && numaBackend.getSoundPacksStatus) {
+        try {
+          const res = numaBackend.getSoundPacksStatus();
+          if (res) applySoundPacksStatus(JSON.parse(res));
+        } catch (_) {}
+      } else if (isStandaloneBrowser()) {
+        applySoundPacksStatus(mockSoundPacksStatus());
+      }
+    }
+
+    function renderSoundPacksUI() {
+      const list = document.getElementById("soundPacksList");
+      const sum = document.getElementById("soundPacksSummary");
+      if (!list) return;
+      if (sum) {
+        const used = soundPacksState.installedBytes > 0 ? ` • ${fmtMb(soundPacksState.installedBytes)} baixados` : "";
+        sum.textContent = `${soundPacksState.installedTimbres} de ${soundPacksState.totalTimbres} timbres instalados${used}`;
+      }
+      list.innerHTML = "";
+      soundPacksState.packs.forEach(pk => {
+        const pr = soundPacksState.progress[pk.id];
+        const busy = pk.downloading || (pr && (pr.status === "downloading" || pr.status === "extracting"));
+        const row = document.createElement("div");
+        row.className = `sp-row ${soundPacksState.focusPack === pk.id ? "focus" : ""}`;
+        row.dataset.pack = pk.id;
+        const size = pk.bundled ? "" : ` • ${fmtMb(pk.sizeBytes)}`;
+        const tag = pk.bundled ? `<span class="sp-tag on">EMBUTIDO</span>` : (pk.installed ? `<span class="sp-tag on">INSTALADO</span>` : "");
+        let btn = "";
+        if (!pk.bundled) {
+          if (busy) btn = `<button class="btn-tool sp-action" disabled><i class="fa-solid fa-spinner fa-spin"></i><span>${pr && pr.pct != null ? pr.pct + "%" : ""}</span></button>`;
+          else if (pk.installed) btn = `<button class="btn-tool sp-action" data-sp-remove="${pk.id}"><i class="fa-solid fa-trash"></i><span>Remover</span></button>`;
+          else btn = `<button class="btn-tool active sp-action" data-sp-get="${pk.id}"><i class="fa-solid fa-download"></i><span>Baixar</span></button>`;
+        }
+        const pct = pr && pr.pct != null ? pr.pct : 0;
+        const msg = pr && pr.status === "error" ? pr.message : (pr && pr.status === "downloading" && pr.totalMb ? `${pr.downloadedMb} / ${pr.totalMb} MB` : (pr && pr.status === "extracting" ? "Instalando..." : ""));
+        row.innerHTML = `
+          <div class="sp-name">${pk.name} ${tag}</div>
+          ${btn}
+          <div class="sp-desc">${pk.timbreCount} timbres${size} • ${pk.description || ""}</div>
+          <div class="sp-bar ${busy ? "show" : ""}"><div style="width:${pct}%"></div></div>
+          <div class="sp-msg ${msg ? "show" : ""}">${msg || ""}</div>`;
+        list.appendChild(row);
+      });
+      list.querySelectorAll("[data-sp-get]").forEach(b => b.addEventListener("click", () => downloadSoundPack(b.dataset.spGet)));
+      list.querySelectorAll("[data-sp-remove]").forEach(b => b.addEventListener("click", () => removeSoundPack(b.dataset.spRemove)));
+    }
+
+    function downloadSoundPack(id) {
+      soundPacksState.progress[id] = { status: "downloading", pct: 0 };
+      renderSoundPacksUI();
+      if (numaBackend && numaBackend.downloadSoundPack) {
+        numaBackend.downloadSoundPack(id);
+      } else if (isStandaloneBrowser()) {
+        let pct = 0;
+        const total = (soundPacksState.mockDefs.find(d => d.id === id) || {}).sizeBytes || 30000000;
+        const t = setInterval(() => {
+          pct += 9;
+          if (pct >= 100) {
+            clearInterval(t);
+            soundPacksState.mockInstalled.add(id);
+            handleSoundPackProgress({ packId: id, status: "installed", pct: 100 });
+            applySoundPacksStatus(mockSoundPacksStatus());
+            return;
+          }
+          handleSoundPackProgress({ packId: id, status: "downloading", pct, downloadedMb: Math.round(total * pct / 10485760) / 10, totalMb: Math.round(total / 104857.6) / 10 });
+        }, 280);
+      }
+    }
+
+    function removeSoundPack(id) {
+      if (numaBackend && numaBackend.removeSoundPack) {
+        try { const r = numaBackend.removeSoundPack(id); if (r) applySoundPacksStatus(JSON.parse(r)); } catch (_) {}
+      } else if (isStandaloneBrowser() && soundPacksState.mockInstalled) {
+        soundPacksState.mockInstalled.delete(id);
+        applySoundPacksStatus(mockSoundPacksStatus());
+      }
+    }
+
+    function handleSoundPackProgress(ev) {
+      if (!ev || !ev.packId) return;
+      if (ev.status === "installed") delete soundPacksState.progress[ev.packId];
+      else soundPacksState.progress[ev.packId] = ev;
+      if (ev.status === "error") soundPacksState.pendingTimbre = null;
+      if (ev.status === "downloading" || ev.status === "extracting") {
+        const row = document.querySelector(`.sp-row[data-pack="${ev.packId}"]`);
+        const bar = row && row.querySelector(".sp-bar > div");
+        if (bar) {
+          bar.parentElement.classList.add("show");
+          bar.style.width = `${ev.pct || 0}%`;
+          const m = row.querySelector(".sp-msg");
+          if (m) { m.textContent = ev.status === "extracting" ? "Instalando..." : `${ev.downloadedMb} / ${ev.totalMb} MB`; m.classList.add("show"); }
+          const lab = row.querySelector(".sp-action span");
+          if (lab) lab.textContent = `${ev.pct || 0}%`;
+          if (lab) return;
+        }
+      }
+      renderSoundPacksUI();
+    }
+
+    function openSoundPacksModal(focusPackId) {
+      closeNavDrawer();
+      soundPacksState.focusPack = focusPackId || "";
+      refreshSoundPacksStatus();
+      renderSoundPacksUI();
+      document.getElementById("soundPacksModal")?.classList.add("open");
+      if (focusPackId) {
+        requestAnimationFrame(() => document.querySelector(`.sp-row[data-pack="${focusPackId}"]`)?.scrollIntoView({ block: "center" }));
+      }
+    }
+
+    function initSoundPacks() {
+      document.getElementById("btnDrawerSoundPacks")?.addEventListener("click", () => openSoundPacksModal(""));
+      document.getElementById("btnOpenSoundPacks")?.addEventListener("click", () => openSoundPacksModal(""));
+      document.getElementById("btnCloseSoundPacks")?.addEventListener("click", () => {
+        soundPacksState.pendingTimbre = null;
+        document.getElementById("soundPacksModal")?.classList.remove("open");
+      });
+      document.getElementById("btnPadsModeKnobs")?.addEventListener("click", () => setPadsLayersMode("knobs"));
+      document.getElementById("btnPadsModeFaders")?.addEventListener("click", () => setPadsLayersMode("faders"));
+      let saved = "knobs";
+      try { saved = localStorage.getItem("p61x_pad_layers_mode") || "knobs"; } catch (e) {}
+      setPadsLayersMode(saved, false);
+      refreshSoundPacksStatus();
+    }
+
     /* =========================================================================
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.2.2",
-      installedVersionCode: 5,
+      installedVersionName: "1.3.0",
+      installedVersionCode: 6,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -4799,9 +5170,9 @@
       const ins = document.getElementById("updInstalledVer");
       if (ins) ins.textContent = vTxt;
       const codeEl = document.getElementById("updInstalledCode");
-      if (codeEl) codeEl.textContent = `Build ${updaterState.installedVersionCode} • AAudio + USB/BLE MIDI`;
+      if (codeEl) codeEl.textContent = `Build ${updaterState.installedVersionCode}`;
       const repoEl = document.getElementById("updRepoLabel");
-      if (repoEl) repoEl.textContent = `Stage Rig Workstation • ${updaterState.repo}`;
+      if (repoEl) repoEl.textContent = updaterState.repo;
       const badge = document.getElementById("drawerUpdateBadge");
       if (badge && !updaterState.hasUpdate) badge.textContent = vTxt;
     }
@@ -4827,7 +5198,7 @@
       const banner = document.getElementById("updStatusBanner");
       if (!silent && banner) {
         banner.className = "upd-banner";
-        banner.textContent = "Consultando versão vigente no GitHub...";
+        banner.textContent = "Verificando...";
       }
       if (numaBackend && numaBackend.checkGithubUpdate) {
         numaBackend.checkGithubUpdate();
@@ -4904,19 +5275,19 @@
       if (updaterState.hasUpdate) {
         if (banner) {
           banner.className = "upd-banner available";
-          banner.textContent = `Versão diferente detectada no GitHub (v${rVer}). Você pode atualizar agora!`;
+          banner.textContent = `Nova versão disponível: v${rVer}.`;
         }
         if (dlBtn) {
           dlBtn.style.display = updaterState.apkUrl ? "inline-flex" : "none";
           dlBtn.disabled = false;
         }
         if (updaterState.silentCheck) {
-          setStatusMessage(`Nova versão disponível no GitHub: v${rVer} (Menu → Sobre)`);
+          setStatusMessage(`Nova versão disponível: v${rVer} (Menu, Sobre)`);
         }
       } else {
         if (banner) {
           banner.className = "upd-banner ok";
-          banner.textContent = `Aplicativo atualizado! Versão vigente no GitHub: v${rVer}.`;
+          banner.textContent = `Versão atual (v${rVer}).`;
         }
         if (dlBtn) dlBtn.style.display = "none";
       }
@@ -5108,6 +5479,9 @@
         connectBleMidiDevice: (addr) => wrapCb("connectBleMidiDevice", String(addr || "")),
         disconnectBleMidiDevice: (addr) => wrapCb("disconnectBleMidiDevice", String(addr || "")),
         getAudioRouteStatus: (cb) => wrapCb("getAudioRouteStatus", cb),
+        getSoundPacksStatus: (cb) => wrapCb("getSoundPacksStatus", cb),
+        downloadSoundPack: (id) => wrapCb("downloadSoundPack", String(id || "")),
+        removeSoundPack: (id, cb) => wrapCb("removeSoundPack", String(id || ""), cb),
       };
     }
 
@@ -5843,6 +6217,7 @@
     }
 
     window.addEventListener("load", () => {
+      buildPadFaders();
       initLedLadders();
       wirePointerFaders();
       buildTransposeGrid();
@@ -5860,6 +6235,7 @@
       updateAllBadges();
       syncInstalledVersionUI();
       initNativeBridge();
+      initSoundPacks();
       requestAnimationFrame(syncAllFadersVisual);
     });
   </script>

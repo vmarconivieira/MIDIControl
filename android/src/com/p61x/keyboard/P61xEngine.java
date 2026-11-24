@@ -47,11 +47,11 @@ public final class P61xEngine {
                 long ptr = this.dspPtr;
                 if (ptr == 0L) return;
 
-                File cacheFile = new File(this.padPcmDir, "pad_layer_" + i + "_" + sr + "_v2.f32");
+                File cacheFile = new File(this.padPcmDir, "pad_layer_" + i + "_" + sr + "_v3.f32");
                 float[] pcm = readCachedFloatPcm(cacheFile);
                 if (pcm != null) {
                     int cachedFrames = pcm.length / 2;
-                    if (Math.abs(cachedFrames - expectedFrames) > 4000) {
+                    if (Math.abs(cachedFrames - expectedFrames) > 256) {
                         pcm = null;
                     }
                 }

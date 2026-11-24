@@ -34,6 +34,8 @@ public class DexVerifier {
                 "Lcom/p61x/keyboard/P61xPatch;",
                 "Lcom/p61x/keyboard/P61xUpdater;",
                 "Lcom/p61x/keyboard/UpdateInstallReceiver;",
+                "Lcom/p61x/keyboard/UpdateInstallActivity;",
+                "Lcom/p61x/keyboard/P61xSoundPackManager;",
                 "Lcom/p61x/keyboard/UsbMidiEnhanced;",
                 "Lcom/p61x/keyboard/P61xAudioHelper;",
                 "Lcom/p61x/keyboard/BleMidiHelper;"
@@ -44,15 +46,15 @@ public class DexVerifier {
         }
         System.out.println("[OK] All " + origMap.size() + " original classes + new helper classes present; total=" + patchedMap.size());
 
-        // 3. Verify all 63 @JavascriptInterface runtime annotations on MainActivity$MobileBridge (51 orig + 12 new)
+        // 3. Verify all 66 @JavascriptInterface runtime annotations on MainActivity$MobileBridge (51 orig + 15 new)
         ClassDef origBridge = origMap.get("Lcom/p61x/keyboard/MainActivity$MobileBridge;");
         ClassDef patchedBridge = patchedMap.get("Lcom/p61x/keyboard/MainActivity$MobileBridge;");
         int origJs = countJsInterface(origBridge);
         int patchedJs = countJsInterface(patchedBridge);
-        if (origJs != 51 || patchedJs != 63) {
-            throw new AssertionError("@JavascriptInterface mismatch: orig=" + origJs + " patched=" + patchedJs + " (expected 51 -> 63)");
+        if (origJs != 51 || patchedJs != 66) {
+            throw new AssertionError("@JavascriptInterface mismatch: orig=" + origJs + " patched=" + patchedJs + " (expected 51 -> 66)");
         }
-        System.out.println("[OK] MainActivity$MobileBridge has all " + patchedJs + " RUNTIME @JavascriptInterface annotations (51 orig + 12 new)");
+        System.out.println("[OK] MainActivity$MobileBridge has all " + patchedJs + " RUNTIME @JavascriptInterface annotations (51 orig + 15 new)");
 
         // 4. Verify untouched classes match fields/methods/annotations identically
         Set<String> modified = new HashSet<>(Arrays.asList(
@@ -80,7 +82,7 @@ public class DexVerifier {
         // 5. Verify exact method deltas on patched classes
         assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/MainActivity;", 3);
         assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/MainActivity$1;", 0);
-        assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/MainActivity$MobileBridge;", 12);
+        assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/MainActivity$MobileBridge;", 15);
         assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/P61xEngine;", 7);
         assertDelta(origMap, patchedMap, "Lcom/p61x/keyboard/UsbMidiController;", 1);
         System.out.println("[OK] Exact expected method count deltas across all 5 patched classes");

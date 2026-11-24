@@ -1,14 +1,16 @@
 {
-  "versionCode": 5,
-  "versionName": "1.2.2",
-  "tag": "v1.2.2",
+  "versionCode": 6,
+  "versionName": "1.3.0",
+  "tag": "v1.3.0",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.2.2.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.2/P61x_Console_v1.2.2.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.2",
+  "apkFileName": "P61x_Console_v1.3.0.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.0/P61x_Console_v1.3.0.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.0",
   "notes": [
-    "Faders horizontais de Pads (5 Camadas, Pads Master rápido) e Drum Pads substituídos por knobs rotativos com anel LED, zoom centralizado ao tocar e MIDI Learn",
-    "Notas dos 12 Pads centralizadas com a relativa menor logo abaixo em tom suave e semitransparente",
-    "Faders verticais das Zonas e Masters refinados com trilho escuro mais fino atrás do botão deslizante e medidor de sinal (VU) somente do lado direito"
+    "APK leve: timbres extras agora são baixados dentro do app (Pacotes de Timbres) e preservados nas atualizações",
+    "Pads 5 Camadas: alternância entre knobs e faders no estilo do Mixer",
+    "O app reabre sozinho após instalar uma atualização",
+    "Afinação dos pads revisada com tolerância mais estrita e reset do pitch bend ao trocar a saída de áudio",
+    "Textos da interface simplificados"
   ]
 }

@@ -15,11 +15,40 @@ permissions:
   contents: write
 
 jobs:
-  build-apk:
+  soundpacks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Publish sound packs release (only if missing)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view soundpacks-v1 >/dev/null 2>&1; then
+            echo "Release soundpacks-v1 ja existe; nada a fazer."
+            exit 0
+          fi
+          python3 -m pip install --quiet Pillow
+          mkdir -p build
+          cat base_pack/base_template.apk.part_* > build/base_template.apk
+          python3 scripts/build_soundpacks.py
+          gh release create soundpacks-v1 dist/soundpacks/pack_*.zip soundpacks.json \
+            --title "P61x Console Sound Packs v1" \
+            --notes "Pacotes opcionais de timbres para download dentro do aplicativo." \
+            --latest=false
+
+  build-apk:
+    needs: soundpacks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use published sound packs manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release download soundpacks-v1 -p soundpacks.json --clobber
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4

@@ -43,6 +43,7 @@ def main():
             "resources.arsc",
             "classes.dex",
             "assets/ui/index.html",
+            "assets/soundpacks.json",
             "lib/arm64-v8a/libstagerig_dsp.so",
             "lib/arm64-v8a/libfluidsynth.so",
             "lib/arm64-v8a/liboboe.so",
@@ -76,6 +77,16 @@ def main():
         assert ">SOBRE<" in html, "Missing SOBRE menu item"
         assert "drawer-setlist-box" not in html, "Sidebar still contains drawer-setlist-box!"
         assert "translate3d(" in html, "Faders should use GPU translate3d"
+        assert 'id="soundPacksModal"' in html, "Missing #soundPacksModal"
+        assert 'id="padLayersFadersGrid"' in html, "Missing Pads faders grid"
+        assert 'id="btnPadsModeFaders"' in html, "Missing Pads FADERS toggle"
+        for bad in ("\U0001F3B5", "\U0001F3B9", "STAGE RIG WORKSTATION", "Arraste no knob ou na barra"):
+            assert bad not in html, f"Removed UI text/emoji still present: {bad!r}"
+        sp = json.loads(zf.read("assets/soundpacks.json").decode("utf-8"))
+        for core in sp["coreAssetFiles"]:
+            assert "assets/" + core in names, f"Missing core soundbank in APK: {core}"
+        bundled = [n for n in names if n.startswith("assets/soundbank/")]
+        assert len(bundled) == len(sp["coreAssetFiles"]), f"Lite APK must bundle only core timbres, found {len(bundled)}"
     print(f"[OK] ZIP CRC + structure + UI checks passed ({len(names)} entries)")
 
     # 2. Manifest & resource IDs
@@ -88,6 +99,8 @@ def main():
     assert "android.permission.BLUETOOTH_CONNECT" in badging, "Missing BLUETOOTH_CONNECT permission"
     manifest_tree = run([aapt2, "dump", "xmltree", apk_path, "--file", "AndroidManifest.xml"])
     assert "com.p61x.keyboard.UpdateInstallReceiver" in manifest_tree, "Missing UpdateInstallReceiver in manifest"
+    assert "com.p61x.keyboard.UpdateInstallActivity" in manifest_tree, "Missing UpdateInstallActivity in manifest"
+    assert "android.intent.action.MY_PACKAGE_REPLACED" in manifest_tree, "Missing MY_PACKAGE_REPLACED receiver filter"
     res_dump = run([aapt2, "dump", "resources", apk_path])
     assert "0x7f010000 mipmap/ic_launcher" in res_dump, "mipmap/ic_launcher ID mismatch"
     assert "0x7f020000 style/Theme.P61xStage" in res_dump, "style/Theme.P61xStage ID mismatch"
@@ -105,6 +118,7 @@ def main():
     print("[OK] apksigner verify passed (v1=true, v2=true, v3=true)")
 
     size_mb = os.path.getsize(apk_path) / (1024 * 1024)
+    assert size_mb < 100, f"APK too large for Lite build: {size_mb:.1f} MB"
     print(f"[SUCCESS] APK verified cleanly: {apk_path} ({size_mb:.1f} MB)")
 
 

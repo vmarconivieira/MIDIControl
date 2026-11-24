@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "repo": "vmarconivieira/MIDIControl",
+  "releaseTag": "soundpacks-v1",
+  "coreAssetFiles": [
+    "soundbank/1_-_EP-Mark_I.numares",
+    "soundbank/1_-_Model_D_1983.numares",
+    "soundbank/1_-_PURE_B3.numares",
+    "soundbank/5_-_SynthPad2.numares"
+  ],
+  "packs": [
+    {
+      "id": "core",
+      "name": "Essencial (Embutido)",
+      "description": "Model D 1983, EP-Mark I, SynthPad2, PURE B3",
+      "bundled": true,
+      "zipFile": "",
+      "downloadUrl": "",
+      "sizeBytes": 0,
+      "sha256": "",
+      "sf2Files": [
+        "1_-_EP-Mark_I.sf2",
+        "1_-_Model_D_1983.sf2",
+        "1_-_PURE_B3.sf2",
+        "5_-_SynthPad2.sf2"
+      ],
+      "timbreIds": [
+        "2 - E_PIANO/1 - EP-Mark I",
+        "1 - A_PIANO/1 - Model D 1983",
+        "5 - ORGANS/1 - PURE B3",
+        "4 - STRINGS_PADS/5 - SynthPad2"
+      ],
+      "timbreCount": 4
+    },
+    {
+      "id": "pack_apiano_extra",
+      "name": "Pianos Acústicos",
+      "description": "The Upright, CP E-Grand",
+      "bundled": false,
+      "zipFile": "pack_apiano_extra.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_apiano_extra.zip",
+      "sizeBytes": 22322226,
+      "sha256": "5861f0929be2672a6b9e272a8bc8e56ded346cef1da646c8e99146e418654821",
+      "sf2Files": [
+        "3_-_The_Upright.sf2",
+        "4_-_CP_E-Grand.sf2"
+      ],
+      "timbreIds": [
+        "1 - A_PIANO/3 - The Upright",
+        "1 - A_PIANO/4 - CP E-Grand"
+      ],
+      "timbreCount": 2
+    },
+    {
+      "id": "pack_epiano_extra",
+      "name": "Pianos Elétricos & FM",
+      "description": "EP-Mark II, Wurly 200/255, FM-EP 1–4",
+      "bundled": false,
+      "zipFile": "pack_epiano_extra.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_epiano_extra.zip",
+      "sizeBytes": 38369258,
+      "sha256": "2112cffdeaa7d23729757309c20996fc36e620eb188a48a09e68459841752d61",
+      "sf2Files": [
+        "2_-_EP-Mark_II.sf2",
+        "3_-_Wurly_200.sf2",
+        "4_-_Wurly_255.sf2",
+        "5_-_FM-EP1.sf2",
+        "6_-_FM-EP2.sf2",
+        "7_-_FM-EP3.sf2",
+        "8_-_FM-EP4.sf2"
+      ],
+      "timbreIds": [
+        "2 - E_PIANO/2 - EP-Mark II",
+        "2 - E_PIANO/3 - Wurly 200",
+        "2 - E_PIANO/4 - Wurly 255",
+        "2 - E_PIANO/5 - FM-EP1",
+        "2 - E_PIANO/6 - FM-EP2",
+        "2 - E_PIANO/7 - FM-EP3",
+        "2 - E_PIANO/8 - FM-EP4"
+      ],
+      "timbreCount": 7
+    },
+    {
+      "id": "pack_strings_pads",
+      "name": "Cordas, Corais & Pads",
+      "description": "Strings Ensemble/Section, Cellos, SynthPad1, VoicePad, SynChoir",
+      "bundled": false,
+      "zipFile": "pack_strings_pads.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_strings_pads.zip",
+      "sizeBytes": 39659280,
+      "sha256": "92b1fae2c47874e334668b16e31f4b0e598450764c70b3f520b5d22bef8540c1",
+      "sf2Files": [
+        "1_-_StringsEnsemble.sf2",
+        "2_-_StringsSection.sf2",
+        "3_-_Cellos.sf2",
+        "4_-_SynthPad1.sf2",
+        "6_-_VoicePad.sf2",
+        "7_-_SynChoir.sf2"
+      ],
+      "timbreIds": [
+        "4 - STRINGS_PADS/1 - StringsEnsemble",
+        "4 - STRINGS_PADS/2 - StringsSection",
+        "4 - STRINGS_PADS/3 - Cellos",
+        "4 - STRINGS_PADS/4 - SynthPad1",
+        "4 - STRINGS_PADS/6 - VoicePad",
+        "4 - STRINGS_PADS/7 - SynChoir"
+      ],
+      "timbreCount": 6
+    },
+    {
+      "id": "pack_keys_mallets",
+      "name": "Keys, Mallets & Acordeons",
+      "description": "Clavinet, Harpsi, Vibes, Marimba, Celesta, Cassotto, MasteFisa, Musette",
+      "bundled": false,
+      "zipFile": "pack_keys_mallets.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_keys_mallets.zip",
+      "sizeBytes": 42500960,
+      "sha256": "53311e5fbba05466ce92bf56be7ff9edfc5926ba67757e14c23bd091e51279e3",
+      "sf2Files": [
+        "1_-_Clavinet.sf2",
+        "2_-_Harpsi.sf2",
+        "3_-_Vibes.sf2",
+        "4_-_Marimba.sf2",
+        "5_-_Celesta.sf2",
+        "6_-_Cassotto.sf2",
+        "7_-_MasteFisa.sf2",
+        "8_-_Musette.sf2"
+      ],
+      "timbreIds": [
+        "3 - KEYS_MALLETS/1 - Clavinet",
+        "3 - KEYS_MALLETS/2 - Harpsi",
+        "3 - KEYS_MALLETS/3 - Vibes",
+        "3 - KEYS_MALLETS/4 - Marimba",
+        "3 - KEYS_MALLETS/5 - Celesta",
+        "3 - KEYS_MALLETS/6 - Cassotto",
+        "3 - KEYS_MALLETS/7 - MasteFisa",
+        "3 - KEYS_MALLETS/8 - Musette"
+      ],
+      "timbreCount": 8
+    },
+    {
+      "id": "pack_organs",
+      "name": "Órgãos B3, Pipe & FM",
+      "description": "19 órgãos adicionais (Jazz/Rock/Funk B3, Pipe Diapason, Full Organ)",
+      "bundled": false,
+      "zipFile": "pack_organs.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_organs.zip",
+      "sizeBytes": 35281761,
+      "sha256": "2d6f220e4d9b37457482e125ede8c02d0a277a1d98008464d0014f653a5d3c5a",
+      "sf2Files": [
+        "2_-_SCAN_B3.sf2",
+        "3_-_JAZZ_B3.sf2",
+        "4_-_ROCK_B3.sf2",
+        "5_-_FUNK_B3.sf2",
+        "6_-_SCAN_PERC_B3.sf2",
+        "7_-_POP_MID_SET.sf2",
+        "8_-_MID_VIB_SET.sf2",
+        "9_-_FULL_SET_B3.sf2",
+        "10_-_FULL_VIB_SET.sf2",
+        "11_-_SILK_SETTING.sf2",
+        "12_-_EL_ORGAN_1.sf2",
+        "13_-_EL_ORGAN_2.sf2",
+        "14_-_VINT_PERC_1.sf2",
+        "15_-_VINT_PERC_2.sf2",
+        "16_-_FM_ORGAN_1.sf2",
+        "17_-_FM_ORGAN_2.sf2",
+        "18-_PIPE_DIAPASON.sf2",
+        "19_-_PIPE_PLENUM.sf2",
+        "20_-_FULL_ORGAN.sf2"
+      ],
+      "timbreIds": [
+        "5 - ORGANS/2 - SCAN B3",
+        "5 - ORGANS/3 - JAZZ B3",
+        "5 - ORGANS/4 - ROCK B3",
+        "5 - ORGANS/5 - FUNK B3",
+        "5 - ORGANS/6 - SCAN PERC B3",
+        "5 - ORGANS/7 - POP MID SET",
+        "5 - ORGANS/8 - MID VIB SET",
+        "5 - ORGANS/9 - FULL SET B3",
+        "5 - ORGANS/10 - FULL VIB SET",
+        "5 - ORGANS/11 - SILK SETTING",
+        "5 - ORGANS/12 - EL ORGAN 1",
+        "5 - ORGANS/13 - EL ORGAN 2",
+        "5 - ORGANS/14 - VINT PERC 1",
+        "5 - ORGANS/15 - VINT PERC 2",
+        "5 - ORGANS/16 - FM ORGAN 1",
+        "5 - ORGANS/17 - FM ORGAN 2",
+        "5 - ORGANS/18- PIPE DIAPASON",
+        "5 - ORGANS/19 - PIPE PLENUM",
+        "5 - ORGANS/20 - FULL ORGAN"
+      ],
+      "timbreCount": 19
+    },
+    {
+      "id": "pack_bells_bass",
+      "name": "Fantasia Bells & Synth Bass",
+      "description": "Fantasia Bells, Sub Moog, Juno 80s, Reese, FM Solid Pluck",
+      "bundled": false,
+      "zipFile": "pack_bells_bass.zip",
+      "downloadUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/soundpacks-v1/pack_bells_bass.zip",
+      "sizeBytes": 66907824,
+      "sha256": "d9459e2e8b9b07a43fb8432b1ac056cd2b3080eabd38ee9cfd17fa2136ec6d3b",
+      "sf2Files": [
+        "Fantasia_Bells.sf2",
+        "SynthBass_Pack.sf2"
+      ],
+      "timbreIds": [
+        "Fantasia Bells.sf2/FantasiaBells - TIMB",
+        "SynthBass Pack.sf2/Sub Moog Analog Bass",
+        "SynthBass Pack.sf2/Juno 80s Punch Bass",
+        "SynthBass Pack.sf2/Reese Detuned Bass",
+        "SynthBass Pack.sf2/FM Solid Pluck Bass"
+      ],
+      "timbreCount": 5
+    }
+  ]
+}

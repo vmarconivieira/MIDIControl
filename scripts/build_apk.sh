@@ -122,10 +122,15 @@ echo "[STEP] Repacking APK with patched DEX, Manifest, resources, and UI..."
 UNALIGNED_APK="$BUILD_DIR/unaligned.apk"
 ALIGNED_APK="$BUILD_DIR/aligned.apk"
 
-python3 - "$BASE_APK" "$BUILD_DIR/res_stage/res_linked.apk" "$BUILD_DIR/classes_patched.dex" "$ROOT_DIR/ui/index.html" "$UNALIGNED_APK" << 'PY'
-import sys, zipfile
+python3 - "$BASE_APK" "$BUILD_DIR/res_stage/res_linked.apk" "$BUILD_DIR/classes_patched.dex" "$ROOT_DIR/ui/index.html" "$UNALIGNED_APK" "$ROOT_DIR" << 'PY'
+import sys, zipfile, os, json
 
-base_apk, res_apk, patched_dex, ui_html, out_apk = sys.argv[1:6]
+base_apk, res_apk, patched_dex, ui_html, out_apk, root_dir = sys.argv[1:7]
+manifest_path = os.path.join(root_dir, "soundpacks.json")
+with open(manifest_path, "rb") as f:
+    manifest_bytes = f.read()
+CORE_ASSETS = set("assets/" + a for a in json.loads(manifest_bytes)["coreAssetFiles"])
+thumb_dir = os.path.join(root_dir, "android", "soundimages")
 SKIP_PREFIXES = ("META-INF/", "res/")
 SKIP_EXACT = {"AndroidManifest.xml", "resources.arsc", "classes.dex", "assets/ui/index.html"}
 
@@ -162,6 +167,11 @@ with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
             fn = info.filename
             if fn in SKIP_EXACT or fn.startswith(SKIP_PREFIXES):
                 continue
+            # Lite build: only the essential timbres and optimized thumbnails ship in the APK
+            if fn.startswith("assets/soundbank/") and fn not in CORE_ASSETS:
+                continue
+            if fn.startswith("assets/soundimages/"):
+                continue
             data = zbase.read(fn)
             zi = zipfile.ZipInfo(fn)
             zi.date_time = info.date_time
@@ -170,6 +180,20 @@ with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
             else:
                 zi.compress_type = info.compress_type
             zout.writestr(zi, data)
+
+    # 5. Sound pack manifest and optimized thumbnails
+    zi_m = zipfile.ZipInfo("assets/soundpacks.json")
+    zi_m.date_time = (2026, 1, 1, 0, 0, 0)
+    zi_m.compress_type = zipfile.ZIP_DEFLATED
+    zout.writestr(zi_m, manifest_bytes)
+    for name in sorted(os.listdir(thumb_dir)):
+        if not name.lower().endswith(".png"):
+            continue
+        zi_t = zipfile.ZipInfo("assets/soundimages/" + name)
+        zi_t.date_time = (2026, 1, 1, 0, 0, 0)
+        zi_t.compress_type = zipfile.ZIP_STORED
+        with open(os.path.join(thumb_dir, name), "rb") as f:
+            zout.writestr(zi_t, f.read())
 
 print("[OK] Packed unaligned APK:", out_apk)
 PY

@@ -155,7 +155,7 @@ public final class P61xAudioHelper {
             for (File f : files) {
                 if (f == null || !f.isFile()) continue;
                 String name = f.getName();
-                if (name.startsWith("pad_layer_") && name.endsWith(".f32") && !name.endsWith("_v2.f32")) {
+                if (name.startsWith("pad_layer_") && name.endsWith(".f32") && !name.endsWith("_v3.f32")) {
                     if (f.delete()) {
                         Log.i(TAG, "Removed legacy pad PCM cache: " + name);
                     }
@@ -171,8 +171,8 @@ public final class P61xAudioHelper {
         int actualFrames = Math.min(decodedFrames, pcm.length / 2);
         if (actualFrames <= 16) return pcm;
 
-        // Already matches expected 20.000s frame count within ~0.4% (<7 cents)
-        if (Math.abs(actualFrames - expectedFrames) <= 4000) {
+        // Already matches expected 20.000s frame count within 256 frames (<0.5 cent)
+        if (Math.abs(actualFrames - expectedFrames) <= 256) {
             return pcm;
         }
 
@@ -299,6 +299,7 @@ public final class P61xAudioHelper {
                     int targetBlock = clamp(eng.getHwBlockSizeForPatch(), 128, 1024);
                     try {
                         eng.applyAudioBlockSizeForPatch(targetBlock);
+                        resetPitchBendCenter();
                     } catch (Throwable t) {
                         Log.w(TAG, "Audio stream restart on route change failed", t);
                     }
@@ -316,6 +317,7 @@ public final class P61xAudioHelper {
         activeEngine = engine;
         int safeBlock = clamp(blockSize, 128, 1024);
         String res = engine.applyAudioBlockSizeForPatch(safeBlock);
+        resetPitchBendCenter();
         notifyRouteStatus();
         return res;
     }

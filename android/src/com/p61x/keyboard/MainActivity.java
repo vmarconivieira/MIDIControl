@@ -128,6 +128,21 @@ public final class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String getSoundPacksStatus() {
+            return P61xSoundPackManager.getStatusJson(MainActivity.this);
+        }
+
+        @JavascriptInterface
+        public void downloadSoundPack(String packId) {
+            P61xSoundPackManager.downloadPackAsync(MainActivity.this, packId);
+        }
+
+        @JavascriptInterface
+        public String removeSoundPack(String packId) {
+            return P61xSoundPackManager.removePack(MainActivity.this, packId);
+        }
+
+        @JavascriptInterface
         public String getAudioRouteStatus() {
             return P61xAudioHelper.getAudioRouteStatusJson(MainActivity.this, P61xPatch.getReadyEngine());
         }

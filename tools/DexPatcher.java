@@ -212,6 +212,8 @@ public class DexPatcher {
         return type.startsWith("Lcom/p61x/keyboard/P61xPatch")
                 || type.startsWith("Lcom/p61x/keyboard/P61xUpdater")
                 || type.equals("Lcom/p61x/keyboard/UpdateInstallReceiver;")
+                || type.equals("Lcom/p61x/keyboard/UpdateInstallActivity;")
+                || type.startsWith("Lcom/p61x/keyboard/P61xSoundPackManager")
                 || type.startsWith("Lcom/p61x/keyboard/UsbMidiEnhanced")
                 || type.startsWith("Lcom/p61x/keyboard/P61xAudioHelper")
                 || type.startsWith("Lcom/p61x/keyboard/BleMidiHelper");
@@ -257,7 +259,10 @@ public class DexPatcher {
                 "stopBleMidiScan()V",
                 "connectBleMidiDevice(Ljava/lang/String;)V",
                 "disconnectBleMidiDevice(Ljava/lang/String;)V",
-                "getAudioRouteStatus()Ljava/lang/String;"
+                "getAudioRouteStatus()Ljava/lang/String;",
+                "getSoundPacksStatus()Ljava/lang/String;",
+                "downloadSoundPack(Ljava/lang/String;)V",
+                "removeSoundPack(Ljava/lang/String;)Ljava/lang/String;"
         );
 
         List<String> addedEngineVirtualKeys = Arrays.asList(
