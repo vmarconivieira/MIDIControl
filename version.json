@@ -1,16 +1,15 @@
 {
-  "versionCode": 6,
-  "versionName": "1.3.0",
-  "tag": "v1.3.0",
+  "versionCode": 7,
+  "versionName": "1.3.1",
+  "tag": "v1.3.1",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.0.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.0/P61x_Console_v1.3.0.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.0",
+  "apkFileName": "P61x_Console_v1.3.1.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.1/P61x_Console_v1.3.1.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.1",
   "notes": [
-    "APK leve: timbres extras agora são baixados dentro do app (Pacotes de Timbres) e preservados nas atualizações",
-    "Pads 5 Camadas: alternância entre knobs e faders no estilo do Mixer",
-    "O app reabre sozinho após instalar uma atualização",
-    "Afinação dos pads revisada com tolerância mais estrita e reset do pitch bend ao trocar a saída de áudio",
-    "Textos da interface simplificados"
+    "Mixer em tela cheia: faders ocupam toda a altura útil sem a barra superior de knobs",
+    "Botão FX de cada zona abre o modal com os 9 knobs de Filtros/FX, EQ de 5 bandas em knobs e Split/Oitava",
+    "Botão FX MASTER abre diretamente o modal de Master FX",
+    "Setas laterais removidas para dar mais largura aos 6 canais do Mixer"
   ]
 }

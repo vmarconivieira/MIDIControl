@@ -410,18 +410,12 @@
     }
 
     /* =========================================================================
-       3. WORKSPACE & < / > CAROUSEL VIEW SWITCHER
+       3. WORKSPACE
        ========================================================================= */
     .workspace-wrap {
       flex: 1; min-height: 0; position: relative; display: flex; align-items: stretch;
-      padding: 6px 6px 4px; gap: 4px;
+      padding: 6px 8px 6px; gap: 0;
     }
-    .side-nav-arrow {
-      width: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-      border: none; background: transparent; color: var(--text-muted); cursor: pointer;
-      font-size: 18px; border-radius: 8px; transition: color .15s, background .15s;
-    }
-    .side-nav-arrow:hover { color: var(--mt-accent-bright); background: rgba(255,255,255,0.04); }
 
     .view-stage {
       flex: 1; min-width: 0; min-height: 0; position: relative; display: flex; flex-direction: column;
@@ -432,57 +426,8 @@
     .view-pane.active { display: flex; }
 
     /* =========================================================================
-       4. TOP 9 ROTARY KNOBS BAR + FILTROS / EQ TOGGLE
+       4. ROTARY LED-RING KNOBS (ZONE FX / EQ / MASTER FX / PADS / DRUMS)
        ========================================================================= */
-    .knobs-rack {
-      flex-shrink: 0; height: 112px;
-      background: linear-gradient(180deg, #12161f 0%, #0b0e14 100%);
-      border: 1px solid var(--border-subtle); border-radius: 12px;
-      padding: 6px 10px; display: flex; align-items: center; gap: 8px;
-    }
-    .knobs-focus-meta {
-      width: 96px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center;
-      gap: 4px; border-right: 1px solid var(--border-subtle); padding-right: 8px; height: 100%;
-    }
-    .knobs-focus-badge {
-      font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
-      color: var(--mt-accent-bright); text-transform: uppercase;
-    }
-    .knobs-focus-timbre {
-      font-size: 11px; font-weight: 700; color: var(--text-primary);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .knobs-focus-studio-btn {
-      height: 24px; border-radius: 6px; border: 1px solid var(--border-subtle);
-      background: #1a202c; color: var(--text-secondary); font-size: 9.5px; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-    }
-    .knobs-focus-studio-btn:hover { border-color: var(--mt-accent); color: var(--text-primary); }
-
-    .knobs-row {
-      flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(9, minmax(60px, 1fr));
-      gap: 4px; align-items: center; height: 100%;
-    }
-    .knobs-row.master-mode {
-      grid-template-columns: repeat(6, minmax(64px, 1fr)) minmax(92px, 118px);
-      gap: 6px;
-    }
-    .mfx-rack-actions {
-      display: flex; flex-direction: column; justify-content: center; gap: 6px; height: 100%;
-      padding-left: 6px; border-left: 1px solid var(--border-subtle);
-    }
-    .mfx-rack-btn {
-      height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(180deg, #212734, #141822); color: var(--text-primary);
-      font-size: 10px; font-weight: 900; letter-spacing: 0.06em; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-    }
-    .mfx-rack-btn.primary {
-      border-color: var(--mt-accent); color: var(--mt-accent-bright);
-      background: linear-gradient(180deg, #2c2416, #17130c);
-    }
-    .mfx-rack-btn:active { transform: scale(0.96); }
-
     .mt-knob-slot {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 3px; cursor: ns-resize; position: relative; height: 100%;
@@ -516,24 +461,78 @@
     }
     .mt-knob-slot.is-active-val .mt-knob-label { color: var(--text-primary); }
 
-    .filters-eq-toggle {
-      width: 78px; height: 96px; flex-shrink: 0;
-      background: #171b24; border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 10px; overflow: hidden; display: flex; flex-direction: column;
+    /* Zone FX Modal 5x2 rotary knobs grid */
+    .zone-fx-pane {
+      flex: 1; min-height: 0; display: none; flex-direction: column; gap: 8px; overflow-y: auto; padding: 2px 0;
     }
-    .mode-switch-btn {
-      flex: 1; border: none; background: transparent; color: var(--text-secondary);
-      font-size: 9.5px; font-weight: 900; letter-spacing: 0.05em; cursor: pointer;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-      border-bottom: 1px solid var(--border-subtle);
+    .zone-fx-knobs-grid {
+      flex: 1; min-height: 0;
+      display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;
+      background: var(--bg-slot); border: 1px solid var(--border-subtle);
+      border-radius: 12px; padding: 10px;
+      align-content: stretch;
     }
-    .mode-switch-btn:last-child { border-bottom: none; }
-    .mode-switch-btn .underline-bar {
-      width: 30px; height: 2px; border-radius: 2px; background: transparent;
+    .zone-fx-knobs-grid .mt-knob-slot {
+      height: auto; min-height: 100px; padding: 8px 4px; border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.06);
+      gap: 4px;
     }
-    .mode-switch-btn.active { color: var(--mt-accent-bright); background: rgba(255,255,255,0.04); }
-    .mode-switch-btn.active .underline-bar {
-      background: var(--mt-accent-bright); box-shadow: 0 0 8px var(--mt-accent-glow);
+    .zone-fx-knobs-grid .mt-knob-svg-wrap,
+    .zone-fx-knobs-grid .mt-knob-ring-svg { width: 64px; height: 64px; }
+    .zone-fx-knobs-grid .mt-knob-cap { width: 40px; height: 40px; }
+    .zone-fx-knobs-grid .mt-knob-pointer { height: 11px; margin-top: 4px; }
+    .zone-fx-knobs-grid .mt-knob-label { font-size: 9.5px; }
+    .zone-fx-knobs-grid .mt-knob-val-mini { font-size: 10px; }
+    .zone-fx-actions-tile {
+      border-radius: 10px; padding: 8px;
+      background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.12);
+      display: flex; flex-direction: column; justify-content: center; gap: 7px;
+    }
+    .zone-fx-tile-btn {
+      flex: 1; min-height: 36px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, #212734, #141822);
+      color: var(--text-primary); font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .zone-fx-tile-btn:hover { border-color: var(--mt-accent); color: var(--mt-accent-bright); }
+    .zone-fx-tile-btn:active { transform: scale(0.97); }
+    .zone-fx-tile-btn.primary {
+      border-color: rgba(245,158,11,0.45); color: var(--mt-accent-bright);
+      background: linear-gradient(180deg, #272115, #15120c);
+    }
+
+    /* Zone 5-Band EQ rotary knobs grid (inside SPLIT & EQ subtab) */
+    .zone-eq-knobs-grid {
+      flex: 1; min-height: 0;
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+      background: rgba(0,0,0,0.22); border: 1px solid var(--border-subtle);
+      border-radius: 10px; padding: 8px;
+      align-content: center;
+    }
+    .zone-eq-knobs-grid .mt-knob-slot {
+      height: auto; padding: 6px 4px; border-radius: 9px;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+      gap: 3px;
+    }
+    .zone-eq-knobs-grid .mt-knob-svg-wrap,
+    .zone-eq-knobs-grid .mt-knob-ring-svg { width: 56px; height: 56px; }
+    .zone-eq-knobs-grid .mt-knob-cap { width: 34px; height: 34px; }
+    .zone-eq-knobs-grid .mt-knob-pointer { height: 9px; margin-top: 3.5px; }
+    .zone-eq-knobs-grid .mt-knob-label { font-size: 9px; }
+    .zone-eq-knobs-grid .mt-knob-val-mini { font-size: 9.5px; }
+    .zone-eq-reset-cell {
+      display: flex; align-items: center; justify-content: center; padding: 6px;
+      border-radius: 9px; border: 1px dashed rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.015);
+    }
+    .inspector-zone-meta-chip {
+      display: none; align-items: center; gap: 6px; height: 30px; padding: 0 11px;
+      border-radius: 8px; border: 1px solid rgba(245,158,11,0.38);
+      background: rgba(245,158,11,0.1); color: var(--mt-accent-bright);
+      font-size: 11px; font-weight: 800; max-width: 240px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     /* Master FX Modal rotary knobs grid */
@@ -754,7 +753,7 @@
     .channel-strip {
       background: linear-gradient(180deg, #11151e 0%, #090b10 100%);
       border: 1px solid var(--border-subtle); border-radius: 12px;
-      padding: 8px 9px; display: flex; flex-direction: column; align-items: stretch; gap: 7px;
+      padding: 7px 8px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
       min-height: 0; position: relative; transition: border-color .15s, opacity .15s;
     }
     .channel-strip.is-focused {
@@ -764,7 +763,7 @@
     .channel-strip.is-muted .fader-bezel { opacity: 0.58; }
 
     .strip-head-btn {
-      height: 30px; border-radius: 7px; padding: 0 8px;
+      height: 28px; border-radius: 7px; padding: 0 8px;
       background: linear-gradient(180deg, #272d3a 0%, #171b24 100%);
       border: 1px solid rgba(255,255,255,0.14);
       color: var(--text-primary); cursor: pointer;
@@ -785,19 +784,23 @@
       font-size: 9px; color: var(--text-muted); padding: 0 2px;
     }
     .zone-pill-tag { font-weight: 800; color: var(--text-secondary); letter-spacing: 0.04em; }
+    .zone-split-link {
+      cursor: pointer; padding: 1px 4px; border-radius: 4px; transition: color .12s, background .12s;
+    }
+    .zone-split-link:hover { color: var(--mt-accent-bright); background: rgba(245,158,11,0.12); }
 
     /* Sculpted Beveled Fader Housing + Right-Side LED Dot Ladder */
     .fader-stage {
-      flex: 1; min-height: 112px; display: flex; align-items: stretch; justify-content: center;
-      position: relative; padding: 2px 4px;
+      flex: 1; min-height: 150px; display: flex; align-items: stretch; justify-content: center;
+      position: relative; padding: 2px 3px;
     }
     .fader-bezel {
-      width: 72px; max-width: 100%; height: 100%;
+      width: 78px; max-width: 100%; height: 100%;
       background: linear-gradient(180deg, #282e3a 0%, #161a22 50%, #222732 100%);
-      border-radius: 8px; padding: 7px 6px 7px 8px;
+      border-radius: 8px; padding: 7px 7px 7px 9px;
       border: 1px solid rgba(255,255,255,0.13);
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.6);
-      display: flex; align-items: stretch; justify-content: space-between; gap: 4px;
+      display: flex; align-items: stretch; justify-content: space-between; gap: 5px;
       position: relative; touch-action: none; user-select: none; -webkit-user-select: none;
       cursor: ns-resize; transition: border-color .12s;
     }
@@ -1463,20 +1466,41 @@
       .transpose-step-btn { width: 22px; height: 24px; font-size: 11px; }
       .transpose-val-btn { height: 24px; font-size: 10px; min-width: 42px; padding: 0 4px; }
       .view-tab-btn { padding: 4px 10px; font-size: 10px; }
-      .workspace-wrap { padding: 4px 3px 3px; gap: 2px; }
-      .side-nav-arrow { width: 20px; font-size: 14px; }
-      .knobs-rack { height: 82px; padding: 4px 6px; gap: 4px; }
-      .knobs-focus-meta { width: 76px; padding-right: 5px; }
-      .mt-knob-svg-wrap, .mt-knob-ring-svg { width: 44px; height: 44px; }
-      .mt-knob-cap { width: 28px; height: 28px; }
+      .workspace-wrap { padding: 4px 6px 5px; gap: 0; }
+      .mt-knob-svg-wrap, .mt-knob-ring-svg { width: 46px; height: 46px; }
+      .mt-knob-cap { width: 29px; height: 29px; }
       .mt-knob-pointer { height: 8px; margin-top: 3px; }
       .mt-knob-label { font-size: 7.5px; }
-      .filters-eq-toggle { width: 64px; height: 74px; }
-      .mode-switch-btn { font-size: 8.5px; gap: 1px; }
-      .mfx-rack-btn { height: 30px; font-size: 9px; }
-      .mixer-grid { gap: 5px; grid-template-columns: repeat(4, minmax(92px, 1fr)) 6px repeat(2, minmax(94px, 1fr)); overflow-x: auto; }
+      .mixer-grid { gap: 6px; grid-template-columns: repeat(4, minmax(92px, 1fr)) 6px repeat(2, minmax(94px, 1fr)); overflow-x: auto; }
       .channel-strip { padding: 5px 6px; gap: 4px; }
-      .mixer-footer-bar { height: 36px; padding: 2px 8px; }
+      .strip-head-btn { height: 26px; font-size: 10.5px; padding: 0 6px; }
+      .btn-strip-on, .btn-strip-util { height: 26px; font-size: 10px; }
+      .zone-fx-knobs-grid { gap: 6px; padding: 7px; }
+      .zone-fx-knobs-grid .mt-knob-slot { min-height: 82px; padding: 6px 4px; gap: 3px; }
+      .zone-fx-knobs-grid .mt-knob-svg-wrap,
+      .zone-fx-knobs-grid .mt-knob-ring-svg { width: 64px; height: 64px; }
+      .zone-fx-knobs-grid .mt-knob-cap { width: 40px; height: 40px; }
+      .zone-fx-knobs-grid .mt-knob-pointer { height: 11px; margin-top: 4px; }
+      .zone-fx-knobs-grid .mt-knob-label { font-size: 9px; }
+      .zone-fx-knobs-grid .mt-knob-val-mini { font-size: 9.5px; }
+      .zone-fx-actions-tile { padding: 6px; gap: 6px; }
+      .zone-fx-tile-btn { min-height: 32px; font-size: 10px; }
+      .zone-eq-knobs-grid { gap: 6px; padding: 6px; }
+      .zone-eq-knobs-grid .mt-knob-slot { padding: 5px 3px; gap: 2px; }
+      .zone-eq-knobs-grid .mt-knob-svg-wrap,
+      .zone-eq-knobs-grid .mt-knob-ring-svg { width: 56px; height: 56px; }
+      .zone-eq-knobs-grid .mt-knob-cap { width: 35px; height: 35px; }
+      .zone-eq-knobs-grid .mt-knob-pointer { height: 9.5px; margin-top: 3.5px; }
+      .zone-eq-knobs-grid .mt-knob-label { font-size: 9px; }
+      .mfx-modal-knobs-grid { gap: 6px; padding: 7px; }
+      .mfx-modal-knobs-grid .mt-knob-slot { padding: 4px 3px; gap: 2px; }
+      .mfx-modal-knobs-grid .mt-knob-svg-wrap,
+      .mfx-modal-knobs-grid .mt-knob-ring-svg { width: 54px; height: 54px; }
+      .mfx-modal-knobs-grid .mt-knob-cap { width: 34px; height: 34px; }
+      .mfx-modal-knobs-grid .mt-knob-label { font-size: 8.5px; }
+      .zone-tab-btn { height: 29px; padding: 0 9px; font-size: 10.5px; }
+      .browser-pill-btn { height: 30px; padding: 0 10px; font-size: 10.5px; }
+      .inspector-zone-meta-chip { height: 28px; font-size: 10.5px; }
 
       .pads-top-segmented { height: 36px; gap: 5px; }
       .seg-bar-btn { font-size: 10px; padding: 0 9px; }
@@ -1518,7 +1542,7 @@
       .drum-action-pill { height: 24px; font-size: 9px; }
 
       .bottom-dock { height: 92px; padding: 4px 8px; }
-      .browser-modal-card { width: 97vw; height: 94vh; padding: 10px; }
+      .browser-modal-card { width: 97vw; height: 94vh; padding: 9px 10px; gap: 7px; }
       .timbre-visual-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
@@ -1534,6 +1558,7 @@
       .drawer-item-btn { min-height: 28px; padding: 3px 9px; font-size: 10.5px; gap: 8px; border-radius: 7px; }
       .drawer-item-btn i { font-size: 12px; width: 15px; }
       .nav-drawer .btn-panic { height: 28px; padding: 0 9px; font-size: 10.5px; border-radius: 7px; }
+      .modal-card { padding: 12px 14px; max-height: 94vh; }
     }
 
     @media (max-height: 375px) {
@@ -1543,15 +1568,18 @@
       .knob-hud-cap { width: 88px; height: 88px; }
       .knob-hud-pointer { height: 24px; margin-top: 8px; }
       .knob-hud-val-center { font-size: 14px; }
+      .zone-fx-knobs-grid .mt-knob-slot { min-height: 74px; padding: 4px 2px; }
+      .zone-fx-knobs-grid .mt-knob-svg-wrap,
+      .zone-fx-knobs-grid .mt-knob-ring-svg { width: 54px; height: 54px; }
+      .zone-fx-knobs-grid .mt-knob-cap { width: 34px; height: 34px; }
+      .zone-fx-knobs-grid .mt-knob-pointer { height: 9px; margin-top: 3.5px; }
+      .zone-eq-knobs-grid .mt-knob-svg-wrap,
+      .zone-eq-knobs-grid .mt-knob-ring-svg { width: 48px; height: 48px; }
+      .zone-eq-knobs-grid .mt-knob-cap { width: 30px; height: 30px; }
+      .mfx-modal-knobs-grid .mt-knob-svg-wrap,
+      .mfx-modal-knobs-grid .mt-knob-ring-svg { width: 48px; height: 48px; }
+      .mfx-modal-knobs-grid .mt-knob-cap { width: 30px; height: 30px; }
     }
-
-    /* EQ Grid inside Zone Studio Tab */
-    .eq-sliders-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
-      background: var(--bg-slot); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 10px;
-    }
-    .eq-band-col { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; }
-    .eq-vslider { writing-mode: vertical-lr; direction: rtl; height: 95px; accent-color: var(--mt-accent); }
   </style>
 </head>
 <body data-theme="modern">
@@ -1612,51 +1640,19 @@
 
     <!-- ==================== 2. WORKSPACE & VIEWS ==================== -->
     <div class="workspace-wrap">
-      <button id="btnCarouselPrev" class="side-nav-arrow" title="Alternar View (<)">
-        <i class="fa-solid fa-chevron-left"></i>
-      </button>
-
       <div class="view-stage">
-        <!-- ================= MIXER VIEW (MT PLAYER) ================= -->
+        <!-- ================= MIXER VIEW (FULL-HEIGHT FADERS) ================= -->
         <section id="viewMixer" class="view-pane active">
-          <!-- Top Rotary Knobs + FILTROS / EQ / MASTER Toggle -->
-          <div class="knobs-rack">
-            <div class="knobs-focus-meta">
-              <span id="focusedZoneBadge" class="knobs-focus-badge mono">ZONA 1</span>
-              <span id="focusedZoneTimbre" class="knobs-focus-timbre">Model D 1983</span>
-              <button id="btnOpenFocusedStudio" class="knobs-focus-studio-btn">
-                <i class="fa-solid fa-sliders"></i><span>Split / EQ</span>
-              </button>
-            </div>
-
-            <div id="topKnobsRow" class="knobs-row"></div>
-
-            <div class="filters-eq-toggle">
-              <button id="btnModeFiltros" class="mode-switch-btn active" data-rack-mode="filtros">
-                <span>FILTROS</span>
-                <span class="underline-bar"></span>
-              </button>
-              <button id="btnModeEq" class="mode-switch-btn" data-rack-mode="eq">
-                <span>EQ</span>
-                <span class="underline-bar"></span>
-              </button>
-              <button id="btnModeMaster" class="mode-switch-btn" data-rack-mode="master">
-                <span>MASTER</span>
-                <span class="underline-bar"></span>
-              </button>
-            </div>
-          </div>
-
           <!-- 6 Sculpted Faders (4 Zones | Timbres Master + Pads Master) -->
           <div class="mixer-grid">
             <!-- Zone Strips 1..4 rendered cleanly via HTML for instant QWebChannel binding -->
-            <div class="channel-strip is-focused" data-zone="0" id="stripZone0">
+            <div class="channel-strip" data-zone="0" id="stripZone0">
               <button class="strip-head-btn has-timbre" data-open-timbre="0">
                 <span class="strip-head-label" id="zoneTimbreLbl0">Model D 1983</span>
               </button>
               <div class="strip-submeta mono">
                 <span class="zone-pill-tag" style="color:var(--z1-color)">Z1</span>
-                <span id="zoneSplitLbl0">A0–C8</span>
+                <span id="zoneSplitLbl0" class="zone-split-link" data-open-studio="0" title="Abrir Split &amp; EQ da Zona 1">A0–C8</span>
               </div>
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z1" data-control-label="Volume Zona 1">
@@ -1674,8 +1670,8 @@
                 <span class="midi-badge" data-badge-for="mute_z1"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ0" data-zone="0" data-control-id="solo_z1" data-control-label="Solo (R) Zona 1" title="Solo Zona 1 (Botão Direito: MIDI Learn)">R</button>
-                <button class="btn-strip-util btn-fx-focus active" data-focus-zone="0" title="Controlar Filtros/EQ nos Knobs do Topo">FX</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ0" data-zone="0" data-control-id="solo_z1" data-control-label="Solo (R) Zona 1" title="Solo Zona 1">R</button>
+                <button class="btn-strip-util btn-fx-focus" data-focus-zone="0" title="Abrir FX, EQ e Split da Zona 1">FX</button>
               </div>
             </div>
 
@@ -1685,7 +1681,7 @@
               </button>
               <div class="strip-submeta mono">
                 <span class="zone-pill-tag" style="color:var(--z2-color)">Z2</span>
-                <span id="zoneSplitLbl1">A0–C8</span>
+                <span id="zoneSplitLbl1" class="zone-split-link" data-open-studio="1" title="Abrir Split &amp; EQ da Zona 2">A0–C8</span>
               </div>
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z2" data-control-label="Volume Zona 2">
@@ -1703,8 +1699,8 @@
                 <span class="midi-badge" data-badge-for="mute_z2"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ1" data-zone="1" data-control-id="solo_z2" data-control-label="Solo (R) Zona 2">R</button>
-                <button class="btn-strip-util btn-fx-focus" data-focus-zone="1">FX</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ1" data-zone="1" data-control-id="solo_z2" data-control-label="Solo (R) Zona 2" title="Solo Zona 2">R</button>
+                <button class="btn-strip-util btn-fx-focus" data-focus-zone="1" title="Abrir FX, EQ e Split da Zona 2">FX</button>
               </div>
             </div>
 
@@ -1714,7 +1710,7 @@
               </button>
               <div class="strip-submeta mono">
                 <span class="zone-pill-tag" style="color:var(--z3-color)">Z3</span>
-                <span id="zoneSplitLbl2">A0–C8</span>
+                <span id="zoneSplitLbl2" class="zone-split-link" data-open-studio="2" title="Abrir Split &amp; EQ da Zona 3">A0–C8</span>
               </div>
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z3" data-control-label="Volume Zona 3">
@@ -1732,8 +1728,8 @@
                 <span class="midi-badge" data-badge-for="mute_z3"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ2" data-zone="2" data-control-id="solo_z3" data-control-label="Solo (R) Zona 3">R</button>
-                <button class="btn-strip-util btn-fx-focus" data-focus-zone="2">FX</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ2" data-zone="2" data-control-id="solo_z3" data-control-label="Solo (R) Zona 3" title="Solo Zona 3">R</button>
+                <button class="btn-strip-util btn-fx-focus" data-focus-zone="2" title="Abrir FX, EQ e Split da Zona 3">FX</button>
               </div>
             </div>
 
@@ -1743,7 +1739,7 @@
               </button>
               <div class="strip-submeta mono">
                 <span class="zone-pill-tag" style="color:var(--z4-color)">Z4</span>
-                <span id="zoneSplitLbl3">A0–C8</span>
+                <span id="zoneSplitLbl3" class="zone-split-link" data-open-studio="3" title="Abrir Split &amp; EQ da Zona 4">A0–C8</span>
               </div>
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z4" data-control-label="Volume Zona 4">
@@ -1761,8 +1757,8 @@
                 <span class="midi-badge" data-badge-for="mute_z4"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ3" data-zone="3" data-control-id="solo_z4" data-control-label="Solo (R) Zona 4">R</button>
-                <button class="btn-strip-util btn-fx-focus" data-focus-zone="3">FX</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ3" data-zone="3" data-control-id="solo_z4" data-control-label="Solo (R) Zona 4" title="Solo Zona 4">R</button>
+                <button class="btn-strip-util btn-fx-focus" data-focus-zone="3" title="Abrir FX, EQ e Split da Zona 4">FX</button>
               </div>
             </div>
 
@@ -1971,10 +1967,6 @@
           <div id="drumPadsGrid" class="drum-pads-grid"></div>
         </section>
       </div>
-
-      <button id="btnCarouselNext" class="side-nav-arrow" title="Alternar View (>)">
-        <i class="fa-solid fa-chevron-right"></i>
-      </button>
     </div>
 
     <!-- Virtual Piano Dock (61 Keys, collapsible) -->
@@ -2029,7 +2021,7 @@
     <div style="display:flex; justify-content:space-between; align-items:flex-start;">
       <div>
         <div class="drawer-title">P61X CONSOLE</div>
-        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.3.0</span>
+        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.3.1</span>
       </div>
       <button id="btnCloseNavDrawer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -2049,7 +2041,7 @@
       <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL</span></button>
       <button id="btnDrawerUpdates" class="drawer-item-btn">
         <i class="fa-solid fa-circle-exclamation"></i><span>SOBRE</span>
-        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.3.0</span>
+        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.3.1</span>
       </button>
       <button id="btnPanic" class="btn-panic learnable" data-control-id="btn_panic" data-control-label="PANIC (Silenciar Tudo)">
         <span class="midi-badge" data-badge-for="btn_panic"></span>
@@ -2137,8 +2129,8 @@
       <div class="upd-ver-grid">
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VERSÃO INSTALADA</span>
-          <span id="updInstalledVer" class="upd-ver-val mono">v1.3.0</span>
-          <span id="updInstalledCode" class="upd-ver-sub mono">Build 6</span>
+          <span id="updInstalledVer" class="upd-ver-val mono">v1.3.1</span>
+          <span id="updInstalledCode" class="upd-ver-sub mono">Build 7</span>
         </div>
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VIGENTE NO GITHUB</span>
@@ -2169,31 +2161,35 @@
     </div>
   </div>
 
-  <!-- ==================== VISUAL TIMBRE BROWSER & STUDIO MODAL ==================== -->
+  <!-- ==================== VISUAL TIMBRE BROWSER, FX & STUDIO MODAL ==================== -->
   <div id="zoneInspectorModal" class="modal-backdrop">
     <div class="modal-card browser-modal-card">
       <div class="browser-top-strip">
         <div class="zone-tabs-row">
-          <button class="zone-tab-btn active" data-tab-zone="0">ZONA 1</button>
-          <button class="zone-tab-btn" data-tab-zone="1">ZONA 2</button>
-          <button class="zone-tab-btn" data-tab-zone="2">ZONA 3</button>
-          <button class="zone-tab-btn" data-tab-zone="3">ZONA 4</button>
-          <button id="subtabTimbreBtn" class="zone-tab-btn active" style="margin-left:8px;"><i class="fa-solid fa-music"></i> TIMBRES (<span id="timbreCountChip">57</span>)</button>
-          <button id="subtabStudioBtn" class="zone-tab-btn"><i class="fa-solid fa-sliders"></i> SPLIT, OITAVA &amp; EQ</button>
+          <button class="zone-tab-btn active" data-tab-zone="0">Z1</button>
+          <button class="zone-tab-btn" data-tab-zone="1">Z2</button>
+          <button class="zone-tab-btn" data-tab-zone="2">Z3</button>
+          <button class="zone-tab-btn" data-tab-zone="3">Z4</button>
+          <button id="subtabTimbreBtn" class="zone-tab-btn active" style="margin-left:6px;"><i class="fa-solid fa-music"></i> TIMBRES (<span id="timbreCountChip">51</span>)</button>
+          <button id="subtabFxBtn" class="zone-tab-btn"><i class="fa-solid fa-sliders"></i> FX &amp; FILTROS</button>
+          <button id="subtabStudioBtn" class="zone-tab-btn"><i class="fa-solid fa-wave-square"></i> SPLIT &amp; EQ</button>
         </div>
 
         <div class="browser-action-row">
-          <button id="btnImportSf2" class="browser-pill-btn">
-            <i class="fa-solid fa-arrow-up-from-bracket"></i><span>IMPORTAR .SF2</span>
-          </button>
-          <button id="btnOpenSoundPacks" class="browser-pill-btn">
-            <i class="fa-solid fa-box-archive"></i><span>PACOTES</span>
-          </button>
-          <button id="btnFilterFavorites" class="browser-pill-btn">
-            <i class="fa-solid fa-star"></i><span>FAVORITOS</span>
-          </button>
-          <input id="timbreSearchInput" type="text" class="dark-input" placeholder="Buscar timbre..." style="width:170px; height:34px;">
-          <button id="btnCloseInspector" class="nav-arrow-btn" style="height:34px; width:34px;"><i class="fa-solid fa-xmark"></i></button>
+          <div id="inspectorTimbreActions" style="display:flex; align-items:center; gap:6px;">
+            <button id="btnImportSf2" class="browser-pill-btn">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i><span>IMPORTAR .SF2</span>
+            </button>
+            <button id="btnOpenSoundPacks" class="browser-pill-btn">
+              <i class="fa-solid fa-box-archive"></i><span>PACOTES</span>
+            </button>
+            <button id="btnFilterFavorites" class="browser-pill-btn">
+              <i class="fa-solid fa-star"></i><span>FAVORITOS</span>
+            </button>
+            <input id="timbreSearchInput" type="text" class="dark-input" placeholder="Buscar timbre..." style="width:155px; height:30px;">
+          </div>
+          <span id="inspectorZoneMetaChip" class="inspector-zone-meta-chip mono">ZONA 1 • Model D 1983</span>
+          <button id="btnCloseInspector" class="nav-arrow-btn" style="height:32px; width:32px;"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
 
@@ -2208,22 +2204,27 @@
         <div id="timbreVisualGrid" class="timbre-visual-grid"></div>
       </div>
 
-      <!-- SUBTAB 2: SPLIT, OCTAVE, TRANSPOSE & 5-BAND EQ -->
-      <div id="inspectorPaneStudio" style="display:none; flex-direction:column; gap:12px; overflow-y:auto; padding:6px 2px;">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-          <div style="background:var(--bg-slot); border:1px solid var(--border-subtle); border-radius:11px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+      <!-- SUBTAB 2: ZONE FX & FILTERS (9 ROTARY KNOBS + QUICK ACTIONS) -->
+      <div id="inspectorPaneFx" class="zone-fx-pane">
+        <div id="zoneFxKnobsGrid" class="zone-fx-knobs-grid"></div>
+      </div>
+
+      <!-- SUBTAB 3: SPLIT, OCTAVE, TRANSPOSE & 5-BAND ROTARY EQ -->
+      <div id="inspectorPaneStudio" style="display:none; flex:1; min-height:0; flex-direction:column; gap:10px; overflow-y:auto; padding:2px 0;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; flex:1; min-height:0;">
+          <div style="background:var(--bg-slot); border:1px solid var(--border-subtle); border-radius:11px; padding:11px; display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="mono" style="font-size:11px; font-weight:800; color:var(--mt-accent-bright);">OITAVA &amp; TRANSPOSIÇÃO</span>
-              <span id="zoneTransposeVal" class="mono" style="font-size:13px; font-weight:800;">0 st</span>
+              <span class="mono" style="font-size:10.5px; font-weight:800; color:var(--mt-accent-bright);">OITAVA &amp; TRANSPOSIÇÃO</span>
+              <span id="zoneTransposeVal" class="mono" style="font-size:12.5px; font-weight:800;">0 st</span>
             </div>
             <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
-              <button id="btnZoneOctDown" class="btn-tool" style="justify-content:center;">-12</button>
-              <button id="btnZoneSemiDown" class="btn-tool" style="justify-content:center;">-1</button>
-              <button id="btnZoneSemiUp" class="btn-tool" style="justify-content:center;">+1</button>
-              <button id="btnZoneOctUp" class="btn-tool" style="justify-content:center;">+12</button>
+              <button id="btnZoneOctDown" class="btn-tool" style="justify-content:center; height:28px;">-12</button>
+              <button id="btnZoneSemiDown" class="btn-tool" style="justify-content:center; height:28px;">-1</button>
+              <button id="btnZoneSemiUp" class="btn-tool" style="justify-content:center; height:28px;">+1</button>
+              <button id="btnZoneOctUp" class="btn-tool" style="justify-content:center; height:28px;">+12</button>
             </div>
 
-            <div class="mono" style="font-size:10px; color:var(--mt-accent-bright); font-weight:800; margin-top:4px;">DIVISÃO DE TECLADO (KEY SPLIT)</div>
+            <div class="mono" style="font-size:10px; color:var(--mt-accent-bright); font-weight:800; margin-top:2px;">DIVISÃO DE TECLADO (KEY SPLIT)</div>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; font-size:10px;">
@@ -2245,24 +2246,18 @@
               <button class="btn-tool quick-start-key" data-low="21" data-high="59" style="height:24px; font-size:10px;">Mão Esq. (&lt;C4)</button>
               <button class="btn-tool quick-start-key" data-low="60" data-high="108" style="height:24px; font-size:10px;">Mão Dir. (C4+)</button>
             </div>
-            <label style="display:flex; align-items:center; gap:8px; font-size:12px; cursor:pointer; margin-top:4px;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:11.5px; cursor:pointer; margin-top:2px;">
               <input id="zoneSustainCheck" type="checkbox" checked style="accent-color:var(--mt-accent); width:16px; height:16px;">
               <span>Responder ao Pedal Sustain (CC 64)</span>
             </label>
           </div>
 
-          <div style="background:var(--bg-slot); border:1px solid var(--border-subtle); border-radius:11px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+          <div style="background:var(--bg-slot); border:1px solid var(--border-subtle); border-radius:11px; padding:11px; display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="mono" style="font-size:11px; font-weight:800; color:var(--mt-accent-bright);">EQUALIZADOR PARAMÉTRICO 5 BANDAS</span>
-              <button id="btnResetZoneEq" class="btn-tool" style="height:24px; font-size:10px;">Zerar EQ</button>
+              <span class="mono" style="font-size:10.5px; font-weight:800; color:var(--mt-accent-bright);">EQUALIZADOR 5 BANDAS</span>
+              <button id="btnResetZoneEq" class="btn-tool" style="height:24px; font-size:10px;"><i class="fa-solid fa-rotate-left"></i><span>Zerar EQ</span></button>
             </div>
-            <div class="eq-sliders-grid">
-              <div class="eq-band-col"><span class="mono" id="eqVal0">0.0</span><input class="eq-vslider" data-eq-band="0" type="range" min="-12" max="12" step="0.5" value="0"><span>90Hz</span></div>
-              <div class="eq-band-col"><span class="mono" id="eqVal1">0.0</span><input class="eq-vslider" data-eq-band="1" type="range" min="-12" max="12" step="0.5" value="0"><span>280Hz</span></div>
-              <div class="eq-band-col"><span class="mono" id="eqVal2">0.0</span><input class="eq-vslider" data-eq-band="2" type="range" min="-12" max="12" step="0.5" value="0"><span>1kHz</span></div>
-              <div class="eq-band-col"><span class="mono" id="eqVal3">0.0</span><input class="eq-vslider" data-eq-band="3" type="range" min="-12" max="12" step="0.5" value="0"><span>3.2k</span></div>
-              <div class="eq-band-col"><span class="mono" id="eqVal4">0.0</span><input class="eq-vslider" data-eq-band="4" type="range" min="-12" max="12" step="0.5" value="0"><span>8.5k</span></div>
-            </div>
+            <div id="zoneEqKnobsGrid" class="zone-eq-knobs-grid"></div>
           </div>
         </div>
       </div>
@@ -2908,15 +2903,11 @@
     ];
 
     const EQ_DEFS = [
-      { key: "eq0", label: "GRAVES",    min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
-      { key: "eq1", label: "MÉD-GRAVE", min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
-      { key: "eq2", label: "MÉDIOS",    min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
-      { key: "eq3", label: "MÉD-AGUDO", min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
-      { key: "eq4", label: "AGUDOS",    min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
-      { key: "cut", label: "CORTE AGD", min: 0, max: 127, def: 127, bipolar: false, ctrlPrefix: "cut_z" },
-      { key: "res", label: "RESSONÂN.", min: 0, max: 127, def: 0, bipolar: false, ctrlPrefix: "res_z" },
-      { key: "pan", label: "LARGURA/PAN",min: 0, max: 127, def: 64, bipolar: true, ctrlPrefix: "pan_z" },
-      { key: "rev", label: "REVERB",    min: 0, max: 127, def: 50, bipolar: false, ctrlPrefix: "rev_z" }
+      { key: "eq0", label: "90 Hz",  min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
+      { key: "eq1", label: "280 Hz", min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
+      { key: "eq2", label: "1 kHz",  min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
+      { key: "eq3", label: "3.2 kHz",min: -12, max: 12, def: 0, step: 0.5, bipolar: true },
+      { key: "eq4", label: "8.5 kHz",min: -12, max: 12, def: 0, step: 0.5, bipolar: true }
     ];
 
     const MASTER_FX_DEFS = [
@@ -3063,7 +3054,6 @@
       if (key !== "mfx_bpm" && sendToBackend) {
         pushMasterFxState(false);
       }
-      if (topRackMode === "master") renderTopKnobs();
       renderMasterFxModalKnobs();
       syncOpenKnobHud();
     }
@@ -3230,8 +3220,8 @@
         const eq = p.eqs[zIdx];
         if (sendToBackend && numaBackend) numaBackend.setZoneEq(zIdx, eq[0], eq[1], eq[2], eq[3], eq[4]);
       }
-      if (zIdx === focusedZone) {
-        renderTopKnobs();
+      if (zIdx === activeInspectorZone || zIdx === focusedZone) {
+        syncZoneModalKnobs();
         syncOpenKnobHud();
       }
     }
@@ -3316,7 +3306,7 @@
               ...item,
               color: (drumPadsState.pads[idx] && drumPadsState.pads[idx].color) || item.color
             }))
-          : (cur.isMaster ? MASTER_FX_DEFS : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS)));
+          : (cur.isMaster ? MASTER_FX_DEFS : (cur.key && cur.key.startsWith("eq") ? EQ_DEFS : FILTROS_DEFS)));
       const idx = defs.findIndex(d => d.key === cur.key);
       if (idx < 0) return;
       const nextIdx = (idx + deltaIdx + defs.length) % defs.length;
@@ -3444,7 +3434,8 @@
       const slot = document.createElement("div");
       slot.className = "mt-knob-slot";
       const isGlobalKnob = !!(def.isMaster || def.isPad || def.isDrum);
-      const resolveZone = () => (isGlobalKnob ? 0 : focusedZone);
+      slot._zoneIdx = zoneIdx;
+      const resolveZone = () => (isGlobalKnob ? 0 : (typeof slot._zoneIdx === "number" ? slot._zoneIdx : focusedZone));
       const ctrlId = def.ctrlId || (def.ctrlPrefix ? `${def.ctrlPrefix}${zoneIdx + 1}` : null);
       if (ctrlId) {
         slot.classList.add("learnable");
@@ -3581,86 +3572,128 @@
       if (readout) readout.textContent = `${masterFxState.bpm} BPM`;
     }
 
-    function setRackMode(mode) {
-      topRackMode = (mode === "eq" || mode === "master") ? mode : "filtros";
-      document.getElementById("btnModeFiltros")?.classList.toggle("active", topRackMode === "filtros");
-      document.getElementById("btnModeEq")?.classList.toggle("active", topRackMode === "eq");
-      document.getElementById("btnModeMaster")?.classList.toggle("active", topRackMode === "master");
-
-      const isMaster = topRackMode === "master";
-      document.getElementById("btnOpenMasterFxFromStrip")?.classList.toggle("active", isMaster);
-      for (let z = 0; z < 4; z++) {
-        document.getElementById(`stripZone${z}`)?.classList.toggle("is-focused", !isMaster && z === focusedZone);
-        const fxBtn = document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`);
-        if (fxBtn) fxBtn.classList.toggle("active", !isMaster && z === focusedZone);
-      }
-      renderTopKnobs();
+    function updateInspectorZoneMetaChip() {
+      const chip = document.getElementById("inspectorZoneMetaChip");
+      if (!chip) return;
+      const z = activeInspectorZone;
+      const p = programs[currentProgramIndex];
+      const fallbackDom = document.getElementById(`zoneTimbreLbl${z}`)?.textContent?.trim();
+      const modelName = (p && p.zone_models && p.zone_models[z]) ? p.zone_models[z] : (fallbackDom || `Zona ${z + 1}`);
+      chip.textContent = `ZONA ${z + 1} • ${modelName}`;
     }
 
-    function renderTopKnobs() {
-      const row = document.getElementById("topKnobsRow");
-      const isMaster = topRackMode === "master";
-      const defs = isMaster ? MASTER_FX_DEFS : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS);
-      const z = focusedZone;
-      const p = programs[currentProgramIndex];
+    function renderZoneFxModalKnobs() {
+      const grid = document.getElementById("zoneFxKnobsGrid");
+      if (!grid) return;
+      const z = activeInspectorZone;
+      wireKnobHudControls();
 
-      row.classList.toggle("master-mode", isMaster);
-
-      const badgeEl = document.getElementById("focusedZoneBadge");
-      const timbreEl = document.getElementById("focusedZoneTimbre");
-      const studioBtn = document.getElementById("btnOpenFocusedStudio");
-      if (isMaster) {
-        if (badgeEl) badgeEl.textContent = "FX MASTER";
-        if (timbreEl) timbreEl.textContent = `${masterFxState.bpm} BPM`;
-        if (studioBtn) studioBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i><span>Painel FX</span>';
-      } else {
-        if (badgeEl) badgeEl.textContent = `ZONA ${z + 1}`;
-        if (timbreEl) timbreEl.textContent = (p && p.zone_models && p.zone_models[z]) ? p.zone_models[z] : `Zona ${z + 1}`;
-        if (studioBtn) studioBtn.innerHTML = '<i class="fa-solid fa-sliders"></i><span>Split / EQ</span>';
-      }
-
-      const renderKey = isMaster ? "master" : `${topRackMode}:${z}`;
-      if (row.dataset.modeRendered !== renderKey) {
-        row.innerHTML = "";
-        row.dataset.modeRendered = renderKey;
-        wireKnobHudControls();
-
-        defs.forEach(def => {
-          row.appendChild(createRotaryKnobSlot(def, z, isMaster));
+      const renderKey = `fx:${z}`;
+      if (grid.dataset.zoneRendered !== renderKey) {
+        grid.innerHTML = "";
+        grid.dataset.zoneRendered = renderKey;
+        FILTROS_DEFS.forEach(def => {
+          grid.appendChild(createRotaryKnobSlot(def, z, true));
         });
 
-        if (isMaster) {
-          const actions = document.createElement("div");
-          actions.className = "mfx-rack-actions";
-          const tapBtn = document.createElement("button");
-          tapBtn.type = "button";
-          tapBtn.id = "btnRackTapTempo";
-          tapBtn.className = "mfx-rack-btn primary";
-          tapBtn.innerHTML = '<i class="fa-solid fa-bolt"></i><span>TAP BPM</span>';
-          tapBtn.addEventListener("click", triggerTapTempo);
+        const tile = document.createElement("div");
+        tile.className = "zone-fx-actions-tile";
 
-          const saveBtn = document.createElement("button");
-          saveBtn.type = "button";
-          saveBtn.id = "btnRackSaveMasterFx";
-          saveBtn.className = "mfx-rack-btn";
-          saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i><span>SALVAR</span>';
-          saveBtn.addEventListener("click", () => pushMasterFxState(true));
+        const btnReset = document.createElement("button");
+        btnReset.type = "button";
+        btnReset.id = "btnResetZoneFx";
+        btnReset.className = "zone-fx-tile-btn";
+        btnReset.innerHTML = '<i class="fa-solid fa-rotate-left"></i><span>Resetar FX</span>';
+        btnReset.addEventListener("click", () => resetZoneFx(activeInspectorZone));
 
-          actions.appendChild(tapBtn);
-          actions.appendChild(saveBtn);
-          row.appendChild(actions);
-        }
+        const btnEq = document.createElement("button");
+        btnEq.type = "button";
+        btnEq.id = "btnFxGoToStudio";
+        btnEq.className = "zone-fx-tile-btn primary";
+        btnEq.innerHTML = '<i class="fa-solid fa-wave-square"></i><span>Split &amp; EQ</span>';
+        btnEq.addEventListener("click", () => switchInspectorSubtab("studio"));
+
+        tile.appendChild(btnReset);
+        tile.appendChild(btnEq);
+        grid.appendChild(tile);
 
         attachMidiLearnTriggers();
         updateAllBadges();
       }
 
-      row.querySelectorAll(".mt-knob-slot").forEach(slot => {
+      grid.querySelectorAll(".mt-knob-slot").forEach(slot => {
         const def = slot._def;
         const val = getZoneParamValue(z, def.key);
         paintKnobVisual(slot._svg, slot._ptr, val, def.min, def.max, def.bipolar);
         if (slot._valMini) slot._valMini.textContent = formatKnobHudValue(def, val);
       });
+    }
+
+    function renderZoneEqModalKnobs() {
+      const grid = document.getElementById("zoneEqKnobsGrid");
+      if (!grid) return;
+      const z = activeInspectorZone;
+      wireKnobHudControls();
+
+      const renderKey = `eq:${z}`;
+      if (grid.dataset.zoneRendered !== renderKey) {
+        grid.innerHTML = "";
+        grid.dataset.zoneRendered = renderKey;
+        EQ_DEFS.forEach(def => {
+          grid.appendChild(createRotaryKnobSlot(def, z, true));
+        });
+
+        const cell = document.createElement("div");
+        cell.className = "zone-eq-reset-cell";
+        const btnFx = document.createElement("button");
+        btnFx.type = "button";
+        btnFx.className = "zone-fx-tile-btn primary";
+        btnFx.style.width = "100%";
+        btnFx.innerHTML = '<i class="fa-solid fa-sliders"></i><span>FX &amp; Filtros</span>';
+        btnFx.addEventListener("click", () => switchInspectorSubtab("fx"));
+        cell.appendChild(btnFx);
+        grid.appendChild(cell);
+
+        attachMidiLearnTriggers();
+        updateAllBadges();
+      }
+
+      grid.querySelectorAll(".mt-knob-slot").forEach(slot => {
+        const def = slot._def;
+        const val = getZoneParamValue(z, def.key);
+        paintKnobVisual(slot._svg, slot._ptr, val, def.min, def.max, def.bipolar);
+        if (slot._valMini) slot._valMini.textContent = formatKnobHudValue(def, val);
+      });
+    }
+
+    function resetZoneFx(zIdx) {
+      const z = Math.max(0, Math.min(3, zIdx));
+      FILTROS_DEFS.forEach(def => applyZoneKnobValue(z, def.key, def.def, true));
+      syncZoneModalKnobs();
+      setStatusMessage(`Zona ${z + 1}: FX e filtros restaurados`);
+    }
+
+    function resetZoneEq(zIdx) {
+      const z = Math.max(0, Math.min(3, zIdx));
+      const p = programs[currentProgramIndex];
+      if (p) {
+        if (!Array.isArray(p.eqs) || p.eqs.length < 4) p.eqs = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+        p.eqs[z] = [0, 0, 0, 0, 0];
+      }
+      if (numaBackend && numaBackend.setZoneEq) numaBackend.setZoneEq(z, 0, 0, 0, 0, 0);
+      syncZoneModalKnobs();
+      syncOpenKnobHud();
+      setStatusMessage(`Zona ${z + 1}: EQ zerado`);
+    }
+
+    function syncZoneModalKnobs() {
+      updateInspectorZoneMetaChip();
+      renderZoneFxModalKnobs();
+      renderZoneEqModalKnobs();
+    }
+
+    function renderTopKnobs() {
+      syncZoneModalKnobs();
     }
 
     /* =========================================================================
@@ -3830,17 +3863,7 @@
 
     function setFocusedZone(zIdx) {
       focusedZone = Math.max(0, Math.min(3, zIdx));
-      if (topRackMode === "master") {
-        setRackMode("filtros");
-        return;
-      }
-      for (let z = 0; z < 4; z++) {
-        document.getElementById(`stripZone${z}`).classList.toggle("is-focused", z === focusedZone);
-        const fxBtn = document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`);
-        if (fxBtn) fxBtn.classList.toggle("active", z === focusedZone);
-      }
-      document.getElementById("btnOpenMasterFxFromStrip")?.classList.remove("active");
-      renderTopKnobs();
+      syncZoneModalKnobs();
     }
 
     /* =========================================================================
@@ -4283,17 +4306,33 @@
     }
 
     function switchInspectorSubtab(sub) {
-      inspectorSubtab = sub === "studio" ? "studio" : "timbre";
-      document.getElementById("subtabTimbreBtn").classList.toggle("active", inspectorSubtab === "timbre");
-      document.getElementById("subtabStudioBtn").classList.toggle("active", inspectorSubtab === "studio");
+      inspectorSubtab = (sub === "studio" || sub === "fx") ? sub : "timbre";
+      document.getElementById("subtabTimbreBtn")?.classList.toggle("active", inspectorSubtab === "timbre");
+      document.getElementById("subtabFxBtn")?.classList.toggle("active", inspectorSubtab === "fx");
+      document.getElementById("subtabStudioBtn")?.classList.toggle("active", inspectorSubtab === "studio");
       document.getElementById("inspectorPaneTimbre").style.display = inspectorSubtab === "timbre" ? "grid" : "none";
+      const fxPane = document.getElementById("inspectorPaneFx");
+      if (fxPane) fxPane.style.display = inspectorSubtab === "fx" ? "flex" : "none";
       document.getElementById("inspectorPaneStudio").style.display = inspectorSubtab === "studio" ? "flex" : "none";
+
+      const timbreActions = document.getElementById("inspectorTimbreActions");
+      const metaChip = document.getElementById("inspectorZoneMetaChip");
+      if (timbreActions) timbreActions.style.display = inspectorSubtab === "timbre" ? "flex" : "none";
+      if (metaChip) metaChip.style.display = inspectorSubtab === "timbre" ? "none" : "inline-flex";
+
+      if (inspectorSubtab === "timbre") {
+        buildTimbreCategoryPills();
+        renderTimbreGrid();
+      } else {
+        syncZoneModalKnobs();
+      }
     }
 
     function syncInspectorTabsFromPreset() {
       document.querySelectorAll(".zone-tab-btn[data-tab-zone]").forEach(btn => {
         btn.classList.toggle("active", parseInt(btn.dataset.tabZone) === activeInspectorZone);
       });
+      updateInspectorZoneMetaChip();
       const p = programs[currentProgramIndex];
       if (!p) return;
       const tr = (p.transposes && p.transposes[activeInspectorZone] !== undefined) ? p.transposes[activeInspectorZone] : 0;
@@ -4301,13 +4340,7 @@
       document.getElementById("zoneKeyLowSelect").value = String((p.key_lows && p.key_lows[activeInspectorZone] !== undefined) ? p.key_lows[activeInspectorZone] : 21);
       document.getElementById("zoneKeyHighSelect").value = String((p.key_his && p.key_his[activeInspectorZone] !== undefined) ? p.key_his[activeInspectorZone] : 108);
       document.getElementById("zoneSustainCheck").checked = (p.sustain_enables && p.sustain_enables[activeInspectorZone] !== undefined) ? !!p.sustain_enables[activeInspectorZone] : true;
-
-      const eqZ = (p.eqs && p.eqs[activeInspectorZone]) ? p.eqs[activeInspectorZone] : [0,0,0,0,0];
-      document.querySelectorAll(".eq-vslider").forEach(sl => {
-        const b = parseInt(sl.dataset.eqBand);
-        sl.value = eqZ[b] || 0;
-        document.getElementById(`eqVal${b}`).textContent = Number(sl.value).toFixed(1);
-      });
+      syncZoneModalKnobs();
     }
 
     function openZoneInspector(zIdx, subtab = "timbre") {
@@ -4315,8 +4348,10 @@
       setFocusedZone(activeInspectorZone);
       switchInspectorSubtab(subtab);
       syncInspectorTabsFromPreset();
-      buildTimbreCategoryPills();
-      renderTimbreGrid();
+      if (inspectorSubtab === "timbre") {
+        buildTimbreCategoryPills();
+        renderTimbreGrid();
+      }
       document.getElementById("zoneInspectorModal").classList.add("open");
     }
 
@@ -4351,16 +4386,9 @@
       const p = programs[currentProgramIndex];
       if (!p) return;
       if (!p.eqs) p.eqs = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
-      const vals = [];
-      document.querySelectorAll(".eq-vslider").forEach(sl => {
-        const b = parseInt(sl.dataset.eqBand);
-        const v = parseFloat(sl.value || 0);
-        vals[b] = v;
-        document.getElementById(`eqVal${b}`).textContent = v.toFixed(1);
-      });
-      p.eqs[z] = vals;
+      const vals = p.eqs[z] || [0,0,0,0,0];
       if (numaBackend && numaBackend.setZoneEq) numaBackend.setZoneEq(z, vals[0], vals[1], vals[2], vals[3], vals[4]);
-      if (z === focusedZone && topRackMode === "eq") renderTopKnobs();
+      syncZoneModalKnobs();
     }
 
     /* =========================================================================
@@ -5150,8 +5178,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.3.0",
-      installedVersionCode: 6,
+      installedVersionName: "1.3.1",
+      installedVersionCode: 7,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -5810,16 +5838,7 @@
         }
       });
 
-      /* Top FILTROS / EQ / MASTER Toggle */
-      document.getElementById("btnModeFiltros")?.addEventListener("click", () => setRackMode("filtros"));
-      document.getElementById("btnModeEq")?.addEventListener("click", () => setRackMode("eq"));
-      document.getElementById("btnModeMaster")?.addEventListener("click", () => setRackMode("master"));
-      document.getElementById("btnOpenFocusedStudio")?.addEventListener("click", () => {
-        if (topRackMode === "master") openMasterFxModal();
-        else openZoneInspector(focusedZone, "studio");
-      });
-
-      /* Sculpted Zone 1-4 Faders, ON/Mute, Solo (R), FX Focus, Timbre Picker */
+      /* Sculpted Zone 1-4 Faders, ON/Mute, Solo (R), FX Modal, Split Shortcut & Timbre Picker */
       for (let z = 0; z < 4; z++) {
         const sl = document.getElementById(`faderZ${z}`);
         sl.addEventListener("input", () => {
@@ -5849,8 +5868,9 @@
           if (numaBackend) numaBackend.setZoneSolo(z, soloed);
         });
 
-        document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`).addEventListener("click", () => setFocusedZone(z));
-        document.querySelector(`[data-open-timbre="${z}"]`).addEventListener("click", () => openZoneInspector(z, "timbre"));
+        document.querySelector(`.btn-fx-focus[data-focus-zone="${z}"]`)?.addEventListener("click", () => openZoneInspector(z, "fx"));
+        document.querySelector(`[data-open-timbre="${z}"]`)?.addEventListener("click", () => openZoneInspector(z, "timbre"));
+        document.querySelector(`[data-open-studio="${z}"]`)?.addEventListener("click", () => openZoneInspector(z, "studio"));
       }
 
       /* Dual Independent Masters (TIMBRES MASTER & PADS MASTER) */
@@ -5880,13 +5900,7 @@
       });
 
       document.getElementById("btnMasterSynthHeader")?.addEventListener("click", openMasterFxModal);
-      document.getElementById("btnOpenMasterFxFromStrip")?.addEventListener("click", () => {
-        if (topRackMode === "master") {
-          openMasterFxModal();
-        } else {
-          setRackMode("master");
-        }
-      });
+      document.getElementById("btnOpenMasterFxFromStrip")?.addEventListener("click", openMasterFxModal);
       document.getElementById("btnMasterPadHeader")?.addEventListener("click", () => switchMainView("pads"));
 
       /* Pad Controls */
@@ -5930,6 +5944,7 @@
         document.getElementById("zoneInspectorModal").classList.remove("open");
       });
       document.getElementById("subtabTimbreBtn").addEventListener("click", () => switchInspectorSubtab("timbre"));
+      document.getElementById("subtabFxBtn")?.addEventListener("click", () => switchInspectorSubtab("fx"));
       document.getElementById("subtabStudioBtn").addEventListener("click", () => switchInspectorSubtab("studio"));
       document.querySelectorAll(".zone-tab-btn[data-tab-zone]").forEach(b => {
         b.addEventListener("click", () => openZoneInspector(parseInt(b.dataset.tabZone), inspectorSubtab));
@@ -5993,14 +6008,7 @@
           pushZoneInspectorParams();
         });
       });
-      document.querySelectorAll(".eq-vslider").forEach(sl => {
-        sl.addEventListener("input", pushZoneEq);
-        sl.addEventListener("dblclick", () => { sl.value = 0; pushZoneEq(); });
-      });
-      document.getElementById("btnResetZoneEq").addEventListener("click", () => {
-        document.querySelectorAll(".eq-vslider").forEach(sl => { sl.value = 0; });
-        pushZoneEq();
-      });
+      document.getElementById("btnResetZoneEq").addEventListener("click", () => resetZoneEq(activeInspectorZone));
 
       /* Master FX Modal (Rotary LED-Ring Knobs + Tap Tempo + Save) */
       const fxModal = document.getElementById("masterFxModal");
