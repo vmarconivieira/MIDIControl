@@ -1,14 +1,14 @@
 {
-  "versionCode": 4,
-  "versionName": "1.2.1",
-  "tag": "v1.2.1",
+  "versionCode": 5,
+  "versionName": "1.2.2",
+  "tag": "v1.2.2",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.2.1.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.1/P61x_Console_v1.2.1.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.1",
+  "apkFileName": "P61x_Console_v1.2.2.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.2.2/P61x_Console_v1.2.2.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.2.2",
   "notes": [
-    "Correção da afinação e oitava dos Pads contínuos: validação da taxa de amostragem (44.1 kHz -> taxa do hardware) com limpeza do cache PCM antigo e alinhamento da tabela de semitons ao P61x Windows (C = 1.0x)",
-    "Centralização automática de Pitch Bend (8192) ao iniciar, conectar/desconectar controladores USB/BLE MIDI ou zerar o Transpose Global",
-    "Removida a otimização de latência para fones/caixas Bluetooth (modo 96f/USAGE_GAME), mantendo apenas o leitor MIDI Bluetooth (BLE MIDI) e detecção de Hub USB + Placa de Áudio"
+    "Faders horizontais de Pads (5 Camadas, Pads Master rápido) e Drum Pads substituídos por knobs rotativos com anel LED, zoom centralizado ao tocar e MIDI Learn",
+    "Notas dos 12 Pads centralizadas com a relativa menor logo abaixo em tom suave e semitransparente",
+    "Faders verticais das Zonas e Masters refinados com trilho escuro mais fino atrás do botão deslizante e medidor de sinal (VU) somente do lado direito"
   ]
 }

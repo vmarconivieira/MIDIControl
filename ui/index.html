@@ -786,18 +786,18 @@
     }
     .zone-pill-tag { font-weight: 800; color: var(--text-secondary); letter-spacing: 0.04em; }
 
-    /* Sculpted Beveled Fader Housing + Dual LED Dot Ladders */
+    /* Sculpted Beveled Fader Housing + Right-Side LED Dot Ladder */
     .fader-stage {
       flex: 1; min-height: 112px; display: flex; align-items: stretch; justify-content: center;
       position: relative; padding: 2px 4px;
     }
     .fader-bezel {
-      width: 78px; max-width: 100%; height: 100%;
-      background: linear-gradient(180deg, #2a303c 0%, #171b23 50%, #242934 100%);
-      border-radius: 8px; padding: 8px 7px;
-      border: 1px solid rgba(255,255,255,0.14);
+      width: 72px; max-width: 100%; height: 100%;
+      background: linear-gradient(180deg, #282e3a 0%, #161a22 50%, #222732 100%);
+      border-radius: 8px; padding: 7px 6px 7px 8px;
+      border: 1px solid rgba(255,255,255,0.13);
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.6);
-      display: flex; align-items: stretch; justify-content: space-between; gap: 5px;
+      display: flex; align-items: stretch; justify-content: space-between; gap: 4px;
       position: relative; touch-action: none; user-select: none; -webkit-user-select: none;
       cursor: ns-resize; transition: border-color .12s;
     }
@@ -806,7 +806,7 @@
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.85), 0 0 14px rgba(245,158,11,0.22);
     }
     .led-ladder {
-      width: 7px; display: flex; flex-direction: column-reverse; justify-content: space-between;
+      width: 7px; flex-shrink: 0; display: flex; flex-direction: column-reverse; justify-content: space-between;
       padding: 6px 0; pointer-events: none;
     }
     .led-dot {
@@ -820,15 +820,21 @@
 
     .fader-slot-wrap {
       flex: 1; position: relative; display: flex; justify-content: center;
-      background: #05070a; border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.95);
+      background: transparent; border: none; box-shadow: none;
       touch-action: none; contain: layout style;
     }
     .fader-center-groove {
-      width: 5px; height: calc(100% - 14px); margin: 7px 0;
-      background: #010203; border-radius: 3px;
-      box-shadow: inset 0 1px 4px #000;
+      width: 12px; height: calc(100% - 10px); margin: 5px 0;
+      background: linear-gradient(90deg, #04060a 0%, #090c12 50%, #04060a 100%);
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.98), 0 1px 0 rgba(255,255,255,0.04);
+      position: relative; display: flex; justify-content: center;
+    }
+    .fader-center-groove::before {
+      content: ""; width: 3px; height: calc(100% - 10px); margin: 5px 0;
+      background: #010203; border-radius: 2px;
+      box-shadow: inset 0 1px 3px #000;
     }
     .fader-range-hidden {
       position: absolute; inset: 0; width: 100%; height: 100%;
@@ -989,49 +995,76 @@
       border-radius: 13px; background: linear-gradient(180deg, #161a24 0%, #0b0d13 100%);
       border: 2.5px solid var(--pad-neon, #f59e0b);
       box-shadow: inset 0 0 16px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.45);
-      color: #fff; cursor: pointer; padding: 10px 12px;
-      display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;
+      color: #fff; cursor: pointer; padding: 8px 10px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
       position: relative; transition: transform .07s, box-shadow .14s;
     }
     .neon-key-pad:active { transform: scale(0.97); }
-    .neon-key-pad .nkp-label {
-      align-self: flex-start; font-size: 15px; font-weight: 900; color: var(--text-primary);
+    .neon-key-pad .nkp-center {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      pointer-events: none;
+    }
+    .neon-key-pad .nkp-major {
+      font-size: 24px; font-weight: 900; line-height: 1.05; letter-spacing: 0.01em; color: var(--text-primary);
+    }
+    .neon-key-pad .nkp-minor {
+      font-size: 13px; font-weight: 700; line-height: 1.1; letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.46);
     }
     .neon-key-pad .nkp-num {
-      font-size: 16px; font-weight: 900; color: rgba(255,255,255,0.68);
+      position: absolute; bottom: 6px; right: 9px;
+      font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.34);
+      pointer-events: none;
     }
     .neon-key-pad.active {
       background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.16), #0e1118);
       box-shadow: 0 0 22px var(--pad-neon), inset 0 0 18px var(--pad-neon);
       transform: scale(1.015);
     }
+    .neon-key-pad.active .nkp-minor {
+      color: rgba(255, 255, 255, 0.72);
+    }
 
-    /* Compact Pad Master Quick Strip under 12 Keys */
+    /* Compact Pad Master Quick Strip under 12 Keys (with LED-ring Rotary Knob) */
     .pads-quick-bar {
-      height: 40px; flex-shrink: 0;
+      height: 46px; flex-shrink: 0;
       background: linear-gradient(180deg, #12161f, #0b0e14);
       border: 1px solid var(--border-subtle); border-radius: 10px;
-      padding: 0 12px; display: flex; align-items: center; gap: 12px;
+      padding: 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
     .pads-quick-master-wrap {
-      flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0;
+      display: flex; align-items: center; gap: 10px; min-width: 0;
     }
     .pads-quick-label {
       font-size: 10.5px; font-weight: 900; color: var(--master-pad-color);
       letter-spacing: 0.06em; white-space: nowrap;
     }
     .pads-quick-val {
-      font-size: 12px; font-weight: 900; color: var(--text-primary); width: 30px; text-align: right;
+      font-size: 12px; font-weight: 900; color: var(--text-primary); width: 28px; text-align: left;
+    }
+    .pad-quick-knob-host {
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .pad-quick-knob-host .mt-knob-slot {
+      height: 40px; flex-direction: row; gap: 0; padding: 0;
+    }
+    .pad-quick-knob-host .mt-knob-svg-wrap,
+    .pad-quick-knob-host .mt-knob-ring-svg { width: 40px; height: 40px; }
+    .pad-quick-knob-host .mt-knob-cap { width: 24px; height: 24px; }
+    .pad-quick-knob-host .mt-knob-pointer { width: 2px; height: 7px; margin-top: 2.5px; }
+    .pad-quick-knob-host .mt-knob-label { display: none; }
+    .pads-quick-actions {
+      display: flex; align-items: center; gap: 8px;
     }
     .pads-quick-btn {
-      height: 28px; padding: 0 11px; border-radius: 7px;
+      height: 30px; padding: 0 12px; border-radius: 7px;
       border: 1px solid var(--border-strong); background: #191f2c;
       color: var(--text-primary); font-size: 10px; font-weight: 800; letter-spacing: 0.05em;
       cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
     }
     .pads-quick-btn:active { border-color: var(--mt-accent); color: var(--mt-accent-bright); transform: scale(0.96); }
 
-    /* 5 Pad Layers + Pad Master Full-Screen 3x2 Mixer Grid */
+    /* 5 Pad Layers + Pad Master Full-Screen 3x2 Rotary Knob Grid */
     .pad-layers-strip {
       flex: 1; min-height: 0; min-width: 0;
       display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr));
@@ -1047,17 +1080,26 @@
     .layer-mini-card {
       background: linear-gradient(180deg, #141925 0%, #0b0e15 100%);
       border: 1px solid var(--border-subtle); border-radius: 12px;
-      padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
-      min-width: 0; position: relative;
+      padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 4px;
+      min-width: 0; min-height: 0; position: relative;
     }
     .layer-mini-head {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 12.5px; font-weight: 900; letter-spacing: 0.04em;
+      font-size: 12px; font-weight: 900; letter-spacing: 0.04em; flex-shrink: 0;
     }
-    .layer-mini-val { font-size: 14px; font-weight: 900; color: var(--text-primary); }
-    .layer-range {
-      width: 100%; accent-color: var(--mt-accent); height: 26px; cursor: pointer;
+    .layer-mini-val { font-size: 13px; font-weight: 900; color: var(--text-primary); }
+    .layer-knob-stage {
+      flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; position: relative;
     }
+    .layer-knob-stage .mt-knob-slot {
+      height: auto; padding: 2px 10px;
+    }
+    .layer-knob-stage .mt-knob-svg-wrap,
+    .layer-knob-stage .mt-knob-ring-svg { width: 76px; height: 76px; }
+    .layer-knob-stage .mt-knob-cap { width: 46px; height: 46px; }
+    .layer-knob-stage .mt-knob-pointer { width: 3px; height: 13px; margin-top: 5px; }
+    .layer-knob-stage .mt-knob-label { display: none; }
+    .layer-knob-stage .mt-knob-val-mini { font-size: 11px; margin-top: 1px; }
 
     /* DEDICATED 4 LARGE DRUM PADS VIEW (#viewDrums) */
     .drums-top-bar {
@@ -1089,7 +1131,7 @@
       padding: 7px; display: flex; flex-direction: column; gap: 6px; min-height: 0; min-width: 0;
     }
     .drum-trigger-face {
-      flex: 1; min-height: 96px; border-radius: 10px;
+      flex: 1; min-height: 92px; border-radius: 10px;
       background: linear-gradient(180deg, #1b2130 0%, #0c0e15 100%);
       border: 2.5px solid var(--drum-color, #f59e0b);
       box-shadow: inset 0 0 18px rgba(0,0,0,0.85), 0 4px 12px rgba(0,0,0,0.5);
@@ -1134,16 +1176,35 @@
     .drum-mini-btn:hover { border-color: var(--mt-accent); color: var(--text-primary); }
     .drum-mini-btn.loop-on { border-color: #22c55e; background: rgba(34,197,94,0.2); color: #86efac; }
     .drum-mini-btn.muted-on { border-color: #ef4444; background: rgba(239,68,68,0.22); color: #fca5a5; }
-    .drum-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .drum-bottom-row {
+      display: flex; align-items: center; gap: 6px; min-width: 0;
+    }
+    .drum-knob-host {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 9px; padding: 3px 6px;
+    }
+    .drum-knob-host .mt-knob-slot {
+      height: auto; gap: 1px;
+    }
+    .drum-knob-host .mt-knob-svg-wrap,
+    .drum-knob-host .mt-knob-ring-svg { width: 46px; height: 46px; }
+    .drum-knob-host .mt-knob-cap { width: 28px; height: 28px; }
+    .drum-knob-host .mt-knob-pointer { width: 2.2px; height: 8px; margin-top: 3px; }
+    .drum-knob-host .mt-knob-label { display: none; }
+    .drum-knob-host .mt-knob-val-mini { font-size: 9.5px; }
+    .drum-btns-stack {
+      flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;
+    }
+    .drum-actions-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; }
     .drum-action-pill {
-      height: 25px; border-radius: 6px; border: 1px solid var(--border-subtle);
+      height: 26px; border-radius: 6px; border: 1px solid var(--border-subtle);
       background: #171c27; color: var(--text-secondary); cursor: pointer;
       font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em;
       display: inline-flex; align-items: center; justify-content: center; gap: 4px;
     }
     .drum-action-pill.loop-on { border-color: #22c55e; background: rgba(34,197,94,0.2); color: #86efac; }
     .drum-action-pill:active { transform: scale(0.96); }
-    .drum-vol-slider { flex: 1; min-width: 0; accent-color: var(--drum-color, #f59e0b); cursor: pointer; height: 22px; }
 
     /* =========================================================================
        7. VISUAL TIMBRE BROWSER MODAL (screenshots 97c0a75f / 6ec34861 / 1d55a6ea)
@@ -1291,7 +1352,11 @@
     }
     .top-bar .midi-badge { top: auto; bottom: -5px; right: 2px; }
     .pads-top-segmented .midi-badge { top: 3px; right: 6px; }
-    .layer-mini-card .midi-badge { top: -11px; right: 2px; }
+    .layer-mini-card .midi-badge { top: -8px; right: -2px; }
+    .layer-knob-stage .midi-badge { top: -4px; right: -4px; }
+    .pad-quick-knob-host .midi-badge { top: -6px; right: -6px; }
+    .drum-knob-host .midi-badge { top: -6px; left: 50%; right: auto; transform: translateX(-50%); }
+    .drum-actions-row .midi-badge { top: -6px; right: -6px; }
     .midi-badge.has-map { display: inline-block; }
     body.midi-edit-mode .midi-badge { display: inline-block !important; }
     body.midi-edit-mode .learnable { outline: 1px dashed rgba(245,158,11,0.35); outline-offset: 2px; }
@@ -1371,14 +1436,22 @@
       .oct-btn { height: 26px; padding: 0 8px; font-size: 10.5px; }
       .pads-sub-btn { padding: 0 10px; font-size: 10px; }
       .pad-keys-grid { gap: 7px; }
-      .neon-key-pad { padding: 8px 10px; border-radius: 11px; }
-      .neon-key-pad .nkp-label { font-size: 13.5px; }
-      .neon-key-pad .nkp-num { font-size: 14px; }
-      .pads-quick-bar { height: 36px; padding: 0 10px; gap: 8px; }
+      .neon-key-pad { padding: 6px 8px; border-radius: 11px; }
+      .neon-key-pad .nkp-major { font-size: 21px; }
+      .neon-key-pad .nkp-minor { font-size: 11.5px; }
+      .neon-key-pad .nkp-num { font-size: 10px; bottom: 5px; right: 7px; }
+      .pads-quick-bar { height: 42px; padding: 0 10px; gap: 8px; }
+      .pad-quick-knob-host .mt-knob-svg-wrap,
+      .pad-quick-knob-host .mt-knob-ring-svg { width: 36px; height: 36px; }
+      .pad-quick-knob-host .mt-knob-cap { width: 22px; height: 22px; }
       .pad-layers-strip { gap: 7px; }
-      .layer-mini-card { padding: 9px 11px; border-radius: 10px; }
-      .layer-mini-head { font-size: 11.5px; }
-      .layer-mini-val { font-size: 13px; }
+      .layer-mini-card { padding: 8px 10px; border-radius: 10px; }
+      .layer-mini-head { font-size: 11px; }
+      .layer-mini-val { font-size: 12px; }
+      .layer-knob-stage .mt-knob-svg-wrap,
+      .layer-knob-stage .mt-knob-ring-svg { width: 64px; height: 64px; }
+      .layer-knob-stage .mt-knob-cap { width: 38px; height: 38px; }
+      .layer-knob-stage .mt-knob-pointer { width: 2.5px; height: 11px; margin-top: 4px; }
 
       .drums-top-bar { height: 32px; padding: 0 8px; }
       .drums-top-title { font-size: 10px; }
@@ -1390,6 +1463,10 @@
       .drum-sample-title { font-size: 12px; }
       .drum-sample-select { height: 26px; font-size: 10px; }
       .drum-mini-btn { width: 26px; height: 26px; font-size: 10px; }
+      .drum-knob-host .mt-knob-svg-wrap,
+      .drum-knob-host .mt-knob-ring-svg { width: 42px; height: 42px; }
+      .drum-knob-host .mt-knob-cap { width: 26px; height: 26px; }
+      .drum-knob-host .mt-knob-pointer { width: 2px; height: 7px; margin-top: 2.5px; }
       .drum-action-pill { height: 24px; font-size: 9px; }
 
       .bottom-dock { height: 92px; padding: 4px 8px; }
@@ -1533,7 +1610,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z1" data-control-label="Volume Zona 1">
                   <span class="midi-badge" data-badge-for="vol_z1"></span>
-                  <div class="led-ladder" data-vu-left="0"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderZ0" class="fader-range-hidden" type="range" min="0" max="127" value="105" orient="vertical">
@@ -1563,7 +1639,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z2" data-control-label="Volume Zona 2">
                   <span class="midi-badge" data-badge-for="vol_z2"></span>
-                  <div class="led-ladder" data-vu-left="1"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderZ1" class="fader-range-hidden" type="range" min="0" max="127" value="80" orient="vertical">
@@ -1593,7 +1668,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z3" data-control-label="Volume Zona 3">
                   <span class="midi-badge" data-badge-for="vol_z3"></span>
-                  <div class="led-ladder" data-vu-left="2"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderZ2" class="fader-range-hidden" type="range" min="0" max="127" value="50" orient="vertical">
@@ -1623,7 +1697,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_z4" data-control-label="Volume Zona 4">
                   <span class="midi-badge" data-badge-for="vol_z4"></span>
-                  <div class="led-ladder" data-vu-left="3"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderZ3" class="fader-range-hidden" type="range" min="0" max="127" value="80" orient="vertical">
@@ -1656,7 +1729,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_master_synth" data-control-label="Volume Master Timbres">
                   <span class="midi-badge" data-badge-for="vol_master_synth"></span>
-                  <div class="led-ladder" data-vu-left="synth_master"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderMasterSynth" class="fader-range-hidden" type="range" min="0" max="127" value="110" orient="vertical">
@@ -1686,7 +1758,6 @@
               <div class="fader-stage">
                 <div class="fader-bezel learnable" data-control-id="vol_master_pad" data-control-label="Volume Master Pad Contínuo">
                   <span class="midi-badge" data-badge-for="vol_master_pad"></span>
-                  <div class="led-ladder" data-vu-left="pad_master"></div>
                   <div class="fader-slot-wrap">
                     <div class="fader-center-groove"></div>
                     <input id="faderMasterPad" class="fader-range-hidden" type="range" min="0" max="127" value="110" orient="vertical">
@@ -1736,20 +1807,22 @@
             <div id="padKeysGrid" class="pad-keys-grid"></div>
             <div class="pads-quick-bar">
               <div class="pads-quick-master-wrap">
+                <div id="padsQuickMasterKnobHost" class="pad-quick-knob-host"></div>
                 <span class="pads-quick-label mono">PADS MASTER</span>
-                <input id="padsQuickMasterSlider" class="layer-range" type="range" min="0" max="127" value="110" style="accent-color:var(--master-pad-color); flex:1;">
                 <span class="pads-quick-val mono" id="padsQuickMasterVal">110</span>
               </div>
-              <button id="btnQuickOpenLayers" class="pads-quick-btn">
-                <i class="fa-solid fa-sliders"></i><span>CAMADAS</span>
-              </button>
-              <button id="btnQuickGotoDrums" class="pads-quick-btn">
-                <i class="fa-solid fa-drum"></i><span>DRUMS</span>
-              </button>
+              <div class="pads-quick-actions">
+                <button id="btnQuickOpenLayers" class="pads-quick-btn">
+                  <i class="fa-solid fa-sliders"></i><span>CAMADAS</span>
+                </button>
+                <button id="btnQuickGotoDrums" class="pads-quick-btn">
+                  <i class="fa-solid fa-drum"></i><span>DRUMS</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Sub-view B: 5 Pad Layers + Independent Pad Master (spacious 3x2 grid) -->
+          <!-- Sub-view B: 5 Pad Layers + Independent Pad Master (spacious 3x2 rotary knob grid) -->
           <div id="padsSubLayers" class="pads-sub-pane">
             <div class="pad-layers-strip">
               <div class="layer-mini-card" data-pad-layer="0">
@@ -1762,10 +1835,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="learnable" data-control-id="vol_pad1" data-control-label="Volume Warm Pad" style="position:relative;">
-                  <span class="midi-badge" data-badge-for="vol_pad1"></span>
-                  <input id="padLayerSlider0" class="layer-range" type="range" min="0" max="127" value="100" style="accent-color:var(--p1-color)">
-                </div>
+                <div class="layer-knob-stage" id="padLayerKnobHost0"></div>
               </div>
 
               <div class="layer-mini-card" data-pad-layer="1">
@@ -1778,10 +1848,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="learnable" data-control-id="vol_pad2" data-control-label="Volume Cello Pad" style="position:relative;">
-                  <span class="midi-badge" data-badge-for="vol_pad2"></span>
-                  <input id="padLayerSlider1" class="layer-range" type="range" min="0" max="127" value="85" style="accent-color:var(--p2-color)">
-                </div>
+                <div class="layer-knob-stage" id="padLayerKnobHost1"></div>
               </div>
 
               <div class="layer-mini-card" data-pad-layer="2">
@@ -1794,10 +1861,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="learnable" data-control-id="vol_pad3" data-control-label="Volume Flute Pad" style="position:relative;">
-                  <span class="midi-badge" data-badge-for="vol_pad3"></span>
-                  <input id="padLayerSlider2" class="layer-range" type="range" min="0" max="127" value="75" style="accent-color:var(--p3-color)">
-                </div>
+                <div class="layer-knob-stage" id="padLayerKnobHost2"></div>
               </div>
 
               <div class="layer-mini-card" data-pad-layer="3">
@@ -1810,10 +1874,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="learnable" data-control-id="vol_pad4" data-control-label="Volume Ambient Pad" style="position:relative;">
-                  <span class="midi-badge" data-badge-for="vol_pad4"></span>
-                  <input id="padLayerSlider3" class="layer-range" type="range" min="0" max="127" value="80" style="accent-color:var(--p4-color)">
-                </div>
+                <div class="layer-knob-stage" id="padLayerKnobHost3"></div>
               </div>
 
               <div class="layer-mini-card" data-pad-layer="4">
@@ -1826,10 +1887,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="learnable" data-control-id="vol_pad5" data-control-label="Volume Shimmer Pad" style="position:relative;">
-                  <span class="midi-badge" data-badge-for="vol_pad5"></span>
-                  <input id="padLayerSlider4" class="layer-range" type="range" min="0" max="127" value="75" style="accent-color:var(--p5-color)">
-                </div>
+                <div class="layer-knob-stage" id="padLayerKnobHost4"></div>
               </div>
 
               <div class="layer-mini-card" style="border-color:rgba(236,72,153,0.45);">
@@ -1837,7 +1895,7 @@
                   <span style="color:var(--master-pad-color)">PADS MASTER</span>
                   <span class="layer-mini-val mono" id="padsViewMasterVal">110</span>
                 </div>
-                <input id="padsViewMasterSlider" class="layer-range" type="range" min="0" max="127" value="110" style="accent-color:var(--master-pad-color)">
+                <div class="layer-knob-stage" id="padsViewMasterKnobHost"></div>
               </div>
             </div>
           </div>
@@ -1918,7 +1976,7 @@
       <div>
         <div class="drawer-title">P61X CONSOLE</div>
         <div class="drawer-sub mono">STAGE RIG WORKSTATION</div>
-        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.1</span>
+        <span id="drawerVersionChip" class="drawer-version-chip mono">v1.2.2</span>
       </div>
       <button id="btnCloseNavDrawer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -1937,7 +1995,7 @@
       <button id="btnDrawerVirtualPiano" class="drawer-item-btn"><i class="fa-solid fa-keyboard"></i><span>TECLADO VIRTUAL (61 TECLAS)</span></button>
       <button id="btnDrawerUpdates" class="drawer-item-btn">
         <i class="fa-solid fa-circle-exclamation"></i><span>SOBRE</span>
-        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.1</span>
+        <span id="drawerUpdateBadge" class="drawer-pill-badge mono">v1.2.2</span>
       </button>
       <button id="btnPanic" class="btn-panic learnable" data-control-id="btn_panic" data-control-label="PANIC (Silenciar Tudo)">
         <span class="midi-badge" data-badge-for="btn_panic"></span>
@@ -2026,8 +2084,8 @@
       <div class="upd-ver-grid">
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VERSÃO INSTALADA</span>
-          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.1</span>
-          <span id="updInstalledCode" class="upd-ver-sub mono">Build 4 • AAudio + USB/BLE MIDI</span>
+          <span id="updInstalledVer" class="upd-ver-val mono">v1.2.2</span>
+          <span id="updInstalledCode" class="upd-ver-sub mono">Build 5 • AAudio + USB/BLE MIDI</span>
         </div>
         <div class="upd-ver-box">
           <span class="upd-ver-label mono">VIGENTE NO GITHUB</span>
@@ -2507,7 +2565,7 @@
     function updateLedLadder(channelKey, level, isMuted) {
       const pct = isMuted ? 0 : Math.max(0, Math.min(1, level));
       const litCount = Math.round(pct * 16);
-      const clsPrefix = `[data-vu-left="${channelKey}"], [data-vu-right="${channelKey}"]`;
+      const clsPrefix = `[data-vu-right="${channelKey}"]`;
       document.querySelectorAll(clsPrefix).forEach(ladder => {
         const dots = ladder.children;
         for (let i = 0; i < dots.length; i++) {
@@ -2729,6 +2787,22 @@
       { key: "mfx_bpm",       label: "BPM SYNC",   min: 40, max: 200, def: 120, bipolar: false, ctrlId: "mfx_bpm",       unit: " BPM",isMaster: true }
     ];
 
+    const PAD_LAYER_KNOB_DEFS = [
+      { key: "pad_vol_0",      label: "WARM PAD",    min: 0, max: 127, def: 100, bipolar: false, ctrlId: "vol_pad1",       color: "var(--p1-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 0 },
+      { key: "pad_vol_1",      label: "CELLO PAD",   min: 0, max: 127, def: 85,  bipolar: false, ctrlId: "vol_pad2",       color: "var(--p2-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 1 },
+      { key: "pad_vol_2",      label: "FLUTE PAD",   min: 0, max: 127, def: 75,  bipolar: false, ctrlId: "vol_pad3",       color: "var(--p3-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 2 },
+      { key: "pad_vol_3",      label: "AMBIENT PAD", min: 0, max: 127, def: 80,  bipolar: false, ctrlId: "vol_pad4",       color: "var(--p4-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 3 },
+      { key: "pad_vol_4",      label: "SHIMMER PAD", min: 0, max: 127, def: 75,  bipolar: false, ctrlId: "vol_pad5",       color: "var(--p5-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 4 },
+      { key: "pad_master_vol", label: "PADS MASTER", min: 0, max: 127, def: 110, bipolar: false, ctrlId: "vol_master_pad", color: "var(--master-pad-color)", scope: "PADS MASTER", isPad: true }
+    ];
+
+    const DRUM_VOL_KNOB_DEFS = [
+      { key: "drum_vol_0", label: "DRUM 01", min: 0, max: 127, def: 112, bipolar: false, ctrlId: "vol_drum_0", color: "#f59e0b", scope: "DRUM PADS", isDrum: true, drumIdx: 0 },
+      { key: "drum_vol_1", label: "DRUM 02", min: 0, max: 127, def: 112, bipolar: false, ctrlId: "vol_drum_1", color: "#ec4899", scope: "DRUM PADS", isDrum: true, drumIdx: 1 },
+      { key: "drum_vol_2", label: "DRUM 03", min: 0, max: 127, def: 112, bipolar: false, ctrlId: "vol_drum_2", color: "#06b6d4", scope: "DRUM PADS", isDrum: true, drumIdx: 2 },
+      { key: "drum_vol_3", label: "DRUM 04", min: 0, max: 127, def: 112, bipolar: false, ctrlId: "vol_drum_3", color: "#22c55e", scope: "DRUM PADS", isDrum: true, drumIdx: 3 }
+    ];
+
     const masterFxState = {
       revRoom: 84,
       revDamp: 28,
@@ -2874,12 +2948,14 @@
       }
     }
 
-    function paintKnobVisual(svgEl, pointerEl, val, min, max, bipolar) {
+    function paintKnobVisual(svgEl, pointerEl, val, min, max, bipolar, accentColor = null) {
       const norm = Math.max(0, Math.min(1, (val - min) / (max - min)));
       const deg = -135 + norm * 270;
       if (pointerEl && pointerEl.parentElement) {
         pointerEl.parentElement.style.transform = `rotate(${deg}deg)`;
       }
+      const litStroke = accentColor || "var(--mt-accent-bright)";
+      const litGlow = accentColor ? `drop-shadow(0 0 4px ${accentColor})` : "drop-shadow(0 0 4px var(--mt-accent-glow))";
       const lines = svgEl.querySelectorAll("line");
       const midIdx = Math.floor(lines.length / 2);
       const valIdx = Math.round(norm * (lines.length - 1));
@@ -2892,13 +2968,23 @@
         } else {
           lit = (norm > 0.015) && (i <= valIdx);
         }
-        ln.setAttribute("stroke", lit ? "var(--mt-accent-bright)" : "var(--led-off)");
-        ln.style.filter = lit ? "drop-shadow(0 0 4px var(--mt-accent-glow))" : "none";
+        ln.setAttribute("stroke", lit ? litStroke : "var(--led-off)");
+        ln.style.filter = lit ? litGlow : "none";
       });
     }
 
     function getZoneParamValue(zIdx, key) {
       if (key && key.startsWith("mfx_")) return getMasterFxParamValue(key);
+      if (key === "pad_master_vol") return mastersState.pad.volume;
+      if (key && key.startsWith("pad_vol_")) {
+        const lIdx = parseInt(key.replace("pad_vol_", ""), 10);
+        const defVol = (PAD_LAYER_KNOB_DEFS[lIdx] && PAD_LAYER_KNOB_DEFS[lIdx].def) ?? 80;
+        return (padState.volumes && padState.volumes[lIdx] !== undefined) ? padState.volumes[lIdx] : defVol;
+      }
+      if (key && key.startsWith("drum_vol_")) {
+        const dIdx = parseInt(key.replace("drum_vol_", ""), 10);
+        return (drumPadsState.pads[dIdx] && drumPadsState.pads[dIdx].volume !== undefined) ? drumPadsState.pads[dIdx].volume : 112;
+      }
       const p = programs[currentProgramIndex];
       if (!p) return 0;
       if (key === "rev") return (p.rev && p.rev[zIdx] !== undefined) ? p.rev[zIdx] : 50;
@@ -2927,6 +3013,39 @@
     function applyZoneKnobValue(zIdx, key, newVal, sendToBackend = true) {
       if (key && key.startsWith("mfx_")) {
         applyMasterFxKnobValue(key, newVal, sendToBackend);
+        return;
+      }
+      if (key === "pad_master_vol") {
+        mastersState.pad.volume = Math.max(0, Math.min(127, Math.round(Number(newVal) || 0)));
+        syncMastersUI();
+        if (sendToBackend && numaBackend && numaBackend.setPadMasterVolume) {
+          numaBackend.setPadMasterVolume(mastersState.pad.volume);
+        }
+        syncOpenKnobHud();
+        return;
+      }
+      if (key && key.startsWith("pad_vol_")) {
+        const lIdx = parseInt(key.replace("pad_vol_", ""), 10);
+        if (!Number.isNaN(lIdx) && lIdx >= 0 && lIdx < 5) {
+          padState.volumes[lIdx] = Math.max(0, Math.min(127, Math.round(Number(newVal) || 0)));
+          syncPadUIFromState(padState);
+          if (sendToBackend && numaBackend && numaBackend.setPadLayerVolume) {
+            numaBackend.setPadLayerVolume(lIdx, padState.volumes[lIdx]);
+          }
+          syncOpenKnobHud();
+        }
+        return;
+      }
+      if (key && key.startsWith("drum_vol_")) {
+        const dIdx = parseInt(key.replace("drum_vol_", ""), 10);
+        if (!Number.isNaN(dIdx) && drumPadsState.pads[dIdx]) {
+          drumPadsState.pads[dIdx].volume = Math.max(0, Math.min(127, Math.round(Number(newVal) || 0)));
+          syncDrumVolKnobUI(dIdx);
+          if (sendToBackend && numaBackend && numaBackend.setDrumPadVolume) {
+            numaBackend.setDrumPadVolume(dIdx, drumPadsState.pads[dIdx].volume);
+          }
+          syncOpenKnobHud();
+        }
         return;
       }
       const p = programs[currentProgramIndex];
@@ -2997,14 +3116,21 @@
       const valEl = document.getElementById("knobHudVal");
       const midiBtn = document.getElementById("btnKnobHudMidi");
       if (hudSvg && hudSvg.childElementCount === 0) buildKnobArcSegments(hudSvg, 90, 90, 66, 17);
-      if (titleEl) titleEl.textContent = def.isMaster ? `${def.label} • MASTER FX` : `${def.label} • ZONA ${z + 1}`;
-      if (valEl) valEl.textContent = formatKnobHudValue(def, val);
-      if (hudSvg && hudPtr) paintKnobVisual(hudSvg, hudPtr, val, def.min, def.max, def.bipolar);
+      if (titleEl) {
+        const scopeTitle = def.scope || (def.isMaster ? "MASTER FX" : `ZONA ${z + 1}`);
+        titleEl.textContent = `${def.label} • ${scopeTitle}`;
+      }
+      if (valEl) {
+        valEl.textContent = formatKnobHudValue(def, val);
+        valEl.style.color = def.color || "";
+      }
+      if (hudSvg && hudPtr) paintKnobVisual(hudSvg, hudPtr, val, def.min, def.max, def.bipolar, def.color || null);
       if (rangeEl) {
         rangeEl.min = String(def.min);
         rangeEl.max = String(def.max);
         rangeEl.step = String(def.step || 1);
         rangeEl.value = String(val);
+        rangeEl.style.accentColor = def.color || "";
       }
       if (midiBtn) midiBtn.disabled = !(def.ctrlPrefix || def.ctrlId);
     }
@@ -3041,10 +3167,16 @@
 
     function stepKnobHudDef(deltaIdx) {
       if (!knobHudState.def) return;
-      const defs = knobHudState.def.isMaster
-        ? MASTER_FX_DEFS
-        : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS);
-      const idx = defs.findIndex(d => d.key === knobHudState.def.key);
+      const cur = knobHudState.def;
+      const defs = cur.isPad
+        ? PAD_LAYER_KNOB_DEFS
+        : (cur.isDrum
+          ? DRUM_VOL_KNOB_DEFS.map((item, idx) => ({
+              ...item,
+              color: (drumPadsState.pads[idx] && drumPadsState.pads[idx].color) || item.color
+            }))
+          : (cur.isMaster ? MASTER_FX_DEFS : (topRackMode === "eq" ? EQ_DEFS : FILTROS_DEFS)));
+      const idx = defs.findIndex(d => d.key === cur.key);
       if (idx < 0) return;
       const nextIdx = (idx + deltaIdx + defs.length) % defs.length;
       knobHudState.def = defs[nextIdx];
@@ -3107,7 +3239,7 @@
         const def = knobHudState.def;
         if (!def) return;
         applyZoneKnobValue(knobHudState.zone, def.key, def.def, true);
-        const scope = def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`;
+        const scope = def.scope || (def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`);
         setStatusMessage(`${scope} • ${def.label} restaurado → ${formatKnobHudValue(def, def.def)}`);
       });
 
@@ -3154,7 +3286,7 @@
             const now = Date.now();
             if (now - lastTapTime < 300) {
               applyZoneKnobValue(knobHudState.zone, knobHudState.def.key, knobHudState.def.def, true);
-              const scope = knobHudState.def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`;
+              const scope = knobHudState.def.scope || (knobHudState.def.isMaster ? "Master FX" : `Zona ${knobHudState.zone + 1}`);
               setStatusMessage(`${scope} • ${knobHudState.def.label} restaurado → ${formatKnobHudValue(knobHudState.def, knobHudState.def.def)}`);
               lastTapTime = 0;
             } else {
@@ -3170,11 +3302,15 @@
     function createRotaryKnobSlot(def, zoneIdx, showMiniVal = false) {
       const slot = document.createElement("div");
       slot.className = "mt-knob-slot";
+      const isGlobalKnob = !!(def.isMaster || def.isPad || def.isDrum);
+      const resolveZone = () => (isGlobalKnob ? 0 : focusedZone);
       const ctrlId = def.ctrlId || (def.ctrlPrefix ? `${def.ctrlPrefix}${zoneIdx + 1}` : null);
       if (ctrlId) {
         slot.classList.add("learnable");
         slot.dataset.controlId = ctrlId;
-        slot.dataset.controlLabel = def.isMaster ? `${def.label} (Master FX)` : `${def.label} (Zona ${zoneIdx + 1})`;
+        slot.dataset.controlLabel = def.scope
+          ? `${def.label} (${def.scope})`
+          : (def.isMaster ? `${def.label} (Master FX)` : `${def.label} (Zona ${zoneIdx + 1})`);
       }
 
       const wrap = document.createElement("div");
@@ -3218,6 +3354,10 @@
       slot._def = def;
       slot._valMini = valMini;
 
+      const initVal = getZoneParamValue(isGlobalKnob ? 0 : zoneIdx, def.key);
+      paintKnobVisual(svg, ptr, initVal, def.min, def.max, def.bipolar, def.color || null);
+      if (valMini) valMini.textContent = formatKnobHudValue(def, initVal);
+
       let dragging = false;
       let moved = false;
       let startX = 0;
@@ -3231,7 +3371,7 @@
         moved = false;
         startX = e.clientX;
         startY = e.clientY;
-        startVal = getZoneParamValue(def.isMaster ? 0 : focusedZone, def.key);
+        startVal = getZoneParamValue(resolveZone(), def.key);
         slot.setPointerCapture(e.pointerId);
       });
 
@@ -3242,7 +3382,7 @@
         if (!moved && (Math.abs(dy) > 5 || Math.abs(dx) > 5)) {
           moved = true;
           cancelLongPress();
-          openKnobHud(def, def.isMaster ? 0 : focusedZone, false);
+          openKnobHud(def, resolveZone(), false);
         }
         if (!moved) return;
         const delta = dy + dx * 0.65;
@@ -3251,7 +3391,7 @@
         if (def.step) raw = Math.round(raw / def.step) * def.step;
         else raw = Math.round(raw);
         const clamped = Math.max(def.min, Math.min(def.max, raw));
-        applyZoneKnobValue(def.isMaster ? 0 : focusedZone, def.key, clamped, true);
+        applyZoneKnobValue(resolveZone(), def.key, clamped, true);
       });
 
       const endDrag = (e) => {
@@ -3261,7 +3401,7 @@
           closeKnobHud();
         } else if (e.type === "pointerup" && !isLearningActive) {
           cancelLongPress();
-          openKnobHud(def, def.isMaster ? 0 : focusedZone, true);
+          openKnobHud(def, resolveZone(), true);
         }
       };
       slot.addEventListener("pointerup", endDrag);
@@ -3271,8 +3411,8 @@
       });
 
       slot.addEventListener("dblclick", () => {
-        applyZoneKnobValue(def.isMaster ? 0 : focusedZone, def.key, def.def, true);
-        const scope = def.isMaster ? "Master FX" : `Zona ${focusedZone + 1}`;
+        applyZoneKnobValue(resolveZone(), def.key, def.def, true);
+        const scope = def.scope || (def.isMaster ? "Master FX" : `Zona ${focusedZone + 1}`);
         setStatusMessage(`${scope} • ${def.label} restaurado → ${formatKnobHudValue(def, def.def)}`);
       });
 
@@ -3561,6 +3701,23 @@
     /* =========================================================================
        DUAL INDEPENDENT MASTERS UI SYNC
        ========================================================================= */
+    function initPadLayerKnobs() {
+      wireKnobHudControls();
+      for (let i = 0; i < 5; i++) {
+        const host = document.getElementById(`padLayerKnobHost${i}`);
+        if (host && host.childElementCount === 0) {
+          host.appendChild(createRotaryKnobSlot(PAD_LAYER_KNOB_DEFS[i], 0, false));
+        }
+      }
+      const pmDef = PAD_LAYER_KNOB_DEFS[5];
+      ["padsViewMasterKnobHost", "padsQuickMasterKnobHost"].forEach(hostId => {
+        const host = document.getElementById(hostId);
+        if (host && host.childElementCount === 0) {
+          host.appendChild(createRotaryKnobSlot(pmDef, 0, false));
+        }
+      });
+    }
+
     function syncMastersUI() {
       const s = mastersState.synth;
       const p = mastersState.pad;
@@ -3579,16 +3736,17 @@
       document.getElementById("btnOnMasterPad").classList.toggle("is-on", !p.muted);
       document.getElementById("stripMasterPad").classList.toggle("is-muted", p.muted);
 
-      const pViewSl = document.getElementById("padsViewMasterSlider");
-      if (pViewSl) {
-        pViewSl.value = p.volume;
-        document.getElementById("padsViewMasterVal").textContent = p.volume;
-      }
-      const pQuickSl = document.getElementById("padsQuickMasterSlider");
-      if (pQuickSl) {
-        pQuickSl.value = p.volume;
-        document.getElementById("padsQuickMasterVal").textContent = p.volume;
-      }
+      const pvVal = document.getElementById("padsViewMasterVal");
+      if (pvVal) pvVal.textContent = p.volume;
+      const pqVal = document.getElementById("padsQuickMasterVal");
+      if (pqVal) pqVal.textContent = p.volume;
+
+      ["padsViewMasterKnobHost", "padsQuickMasterKnobHost"].forEach(hostId => {
+        const slot = document.querySelector(`#${hostId} .mt-knob-slot`);
+        if (slot && slot._def) {
+          paintKnobVisual(slot._svg, slot._ptr, p.volume, slot._def.min, slot._def.max, slot._def.bipolar, slot._def.color || null);
+        }
+      });
     }
 
     /* =========================================================================
@@ -3600,6 +3758,9 @@
       musicalKeys.forEach((k, idx) => {
         const btn = document.createElement("button");
         const ctrlId = `pad_key_${k.id}`;
+        const parts = String(k.label || "").split("/").map(s => s.trim());
+        const majorTxt = k.major || parts[0] || "";
+        const minorTxt = k.minor || parts[1] || "";
         btn.className = `neon-key-pad learnable ${padState.key_id === k.id ? "active" : ""}`;
         btn.style.setProperty("--pad-neon", PAD_NEON_COLORS[idx % PAD_NEON_COLORS.length]);
         btn.dataset.padKey = String(k.id);
@@ -3607,7 +3768,10 @@
         btn.dataset.controlLabel = `Tom Pad: ${k.label}`;
         btn.innerHTML = `
           <span class="midi-badge" data-badge-for="${ctrlId}"></span>
-          <span class="nkp-label">${k.label}</span>
+          <div class="nkp-center">
+            <span class="nkp-major">${majorTxt}</span>
+            ${minorTxt ? `<span class="nkp-minor">${minorTxt}</span>` : ""}
+          </div>
           <span class="nkp-num mono">${String(idx + 1).padStart(2, "0")}</span>
         `;
         btn.addEventListener("click", () => selectPadKey(k.id, true));
@@ -3659,14 +3823,16 @@
       });
 
       for (let i = 0; i < 5; i++) {
-        const sl = document.getElementById(`padLayerSlider${i}`);
         const vt = document.getElementById(`padLayerVal${i}`);
         const mBtn = document.querySelector(`.btn-pad-layer-mute[data-layer="${i}"]`);
-        const defVol = (padState.layers && padState.layers[i] && padState.layers[i].default_vol) ?? 80;
+        const defVol = (padState.layers && padState.layers[i] && padState.layers[i].default_vol) ?? (PAD_LAYER_KNOB_DEFS[i]?.def ?? 80);
         const val = padState.volumes[i] ?? defVol;
-        if (sl) { sl.value = val; }
         if (vt) { vt.textContent = val; }
         if (mBtn) { mBtn.classList.toggle("muted-on", !!(padState.mutes[i])); }
+        const slot = document.querySelector(`#padLayerKnobHost${i} .mt-knob-slot`);
+        if (slot && slot._def) {
+          paintKnobVisual(slot._svg, slot._ptr, val, slot._def.min, slot._def.max, slot._def.bipolar, slot._def.color || null);
+        }
       }
     }
 
@@ -3688,9 +3854,20 @@
       if (p) setStatusMessage(`Drum Pad 0${idx + 1}: ${p.name}`);
     }
 
+    function syncDrumVolKnobUI(idx) {
+      const pad = drumPadsState.pads[idx];
+      if (!pad) return;
+      const slot = document.querySelector(`#drumVolKnobHost${idx} .mt-knob-slot`);
+      if (slot && slot._def) {
+        paintKnobVisual(slot._svg, slot._ptr, pad.volume, slot._def.min, slot._def.max, slot._def.bipolar, slot._def.color || pad.color || null);
+        if (slot._valMini) slot._valMini.textContent = String(Math.round(pad.volume));
+      }
+    }
+
     function renderDrumPadsUI() {
       const grid = document.getElementById("drumPadsGrid");
       grid.innerHTML = "";
+      wireKnobHudControls();
 
       const samples = drumPadsState.catalog || [];
       const baseCats = ["Kick", "Snare / Clap", "Ride / Hi-Hat", "Crash"];
@@ -3744,22 +3921,29 @@
             <button class="drum-mini-btn" data-drum-import="${idx}" title="Importar WAV / MP3"><i class="fa-solid fa-folder-open"></i></button>
           </div>
 
-          <div class="drum-ctrl-row">
-            <button class="drum-mini-btn learnable ${pad.muted ? "muted-on" : ""}" data-drum-mute="${idx}" data-control-id="${muteCtrlId}" data-control-label="Mute Drum Pad 0${idx + 1}">
-              <span class="midi-badge" data-badge-for="${muteCtrlId}"></span>M
-            </button>
-            <div class="learnable" data-control-id="${volCtrlId}" data-control-label="Volume Drum Pad 0${idx + 1}" style="flex:1; min-width:0; position:relative; display:flex; align-items:center;">
-              <span class="midi-badge" data-badge-for="${volCtrlId}"></span>
-              <input class="drum-vol-slider" data-drum-vol="${idx}" type="range" min="0" max="127" value="${pad.volume}" style="--drum-color:${pad.color};">
+          <div class="drum-bottom-row">
+            <div class="drum-knob-host" id="drumVolKnobHost${idx}"></div>
+            <div class="drum-btns-stack">
+              <div class="drum-actions-row">
+                <button class="drum-mini-btn learnable ${pad.muted ? "muted-on" : ""}" data-drum-mute="${idx}" data-control-id="${muteCtrlId}" data-control-label="Mute Drum Pad 0${idx + 1}" title="Mute Drum Pad 0${idx + 1}">
+                  <span class="midi-badge" data-badge-for="${muteCtrlId}"></span>M
+                </button>
+                <button class="drum-action-pill ${pad.loop ? "loop-on" : ""}" data-drum-loop="${idx}" title="Alternar Loop Contínuo"><i class="fa-solid fa-repeat"></i><span>LOOP</span></button>
+              </div>
+              <button class="drum-action-pill" data-drum-stop="${idx}" title="Parar Pad"><i class="fa-solid fa-stop"></i><span>PARAR</span></button>
             </div>
-            <span class="mono" id="drumVolVal${idx}" style="font-size:10px; width:22px; text-align:right; color:var(--text-secondary); flex-shrink:0;">${pad.volume}</span>
-          </div>
-
-          <div class="drum-actions-row">
-            <button class="drum-action-pill ${pad.loop ? "loop-on" : ""}" data-drum-loop="${idx}" title="Alternar Loop Contínuo"><i class="fa-solid fa-repeat"></i><span>LOOP</span></button>
-            <button class="drum-action-pill" data-drum-stop="${idx}" title="Parar Pad"><i class="fa-solid fa-stop"></i><span>PARAR</span></button>
           </div>
         `;
+
+        const baseDef = DRUM_VOL_KNOB_DEFS[idx] || {
+          key: `drum_vol_${idx}`, label: `DRUM 0${idx + 1}`, min: 0, max: 127, def: 112,
+          bipolar: false, ctrlId: volCtrlId, scope: "DRUM PADS", isDrum: true, drumIdx: idx
+        };
+        const knobDef = { ...baseDef, color: pad.color || baseDef.color };
+        const knobHost = card.querySelector(`#drumVolKnobHost${idx}`);
+        if (knobHost) {
+          knobHost.appendChild(createRotaryKnobSlot(knobDef, 0, true));
+        }
 
         card.querySelector(".drum-trigger-face").addEventListener("pointerdown", (e) => {
           if (e.button !== 0 && e.pointerType === "mouse") return;
@@ -3798,11 +3982,6 @@
           pad.muted = !pad.muted;
           if (numaBackend && numaBackend.setDrumPadMute) numaBackend.setDrumPadMute(idx, pad.muted);
           renderDrumPadsUI();
-        });
-        card.querySelector(`[data-drum-vol="${idx}"]`).addEventListener("input", (e) => {
-          pad.volume = parseInt(e.target.value);
-          document.getElementById(`drumVolVal${idx}`).textContent = pad.volume;
-          if (numaBackend && numaBackend.setDrumPadVolume) numaBackend.setDrumPadVolume(idx, pad.volume);
         });
 
         grid.appendChild(card);
@@ -4156,6 +4335,7 @@
       } else if (ctrlId === "vol_master_pad") {
         mastersState.pad.volume = val;
         syncMastersUI();
+        syncOpenKnobHud();
         if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(val);
       } else if (ctrlId === "mute_master_pad") {
         if (canTriggerToggle(ctrlId, value)) document.getElementById("btnOnMasterPad").click();
@@ -4169,10 +4349,8 @@
         const dIdx = parseInt(ctrlId.replace("vol_drum_", ""));
         if (drumPadsState.pads[dIdx]) {
           drumPadsState.pads[dIdx].volume = val;
-          const s = document.querySelector(`[data-drum-vol="${dIdx}"]`);
-          if (s) s.value = val;
-          const vt = document.getElementById(`drumVolVal${dIdx}`);
-          if (vt) vt.textContent = val;
+          syncDrumVolKnobUI(dIdx);
+          syncOpenKnobHud();
           if (numaBackend && numaBackend.setDrumPadVolume) numaBackend.setDrumPadVolume(dIdx, val);
         }
       } else if (ctrlId.startsWith("mute_drum_") && canTriggerToggle(ctrlId, value)) {
@@ -4183,6 +4361,7 @@
         const lIdx = parseInt(ctrlId.replace("vol_pad", "")) - 1;
         padState.volumes[lIdx] = val;
         syncPadUIFromState(padState);
+        syncOpenKnobHud();
         if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(lIdx, val);
       } else if (ctrlId.startsWith("mute_pad") && canTriggerToggle(ctrlId, value)) {
         const lIdx = parseInt(ctrlId.replace("mute_pad", "")) - 1;
@@ -4600,8 +4779,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.2.1",
-      installedVersionCode: 4,
+      installedVersionName: "1.2.2",
+      installedVersionCode: 5,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -5314,14 +5493,12 @@
       });
 
       const fPadM = document.getElementById("faderMasterPad");
-      const syncPadMasterInput = (val) => {
-        mastersState.pad.volume = parseInt(val);
+      fPadM.addEventListener("input", () => {
+        mastersState.pad.volume = parseInt(fPadM.value);
         syncMastersUI();
+        syncOpenKnobHud();
         if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
-      };
-      fPadM.addEventListener("input", () => syncPadMasterInput(fPadM.value));
-      document.getElementById("padsViewMasterSlider")?.addEventListener("input", (e) => syncPadMasterInput(e.target.value));
-      document.getElementById("padsQuickMasterSlider")?.addEventListener("input", (e) => syncPadMasterInput(e.target.value));
+      });
       document.getElementById("btnOnMasterPad").addEventListener("click", () => {
         mastersState.pad.muted = !mastersState.pad.muted;
         syncMastersUI();
@@ -5348,15 +5525,6 @@
         });
       });
       for (let i = 0; i < 5; i++) {
-        const sliderEl = document.getElementById(`padLayerSlider${i}`);
-        if (sliderEl) {
-          sliderEl.addEventListener("input", (e) => {
-            padState.volumes[i] = parseInt(e.target.value);
-            const valEl = document.getElementById(`padLayerVal${i}`);
-            if (valEl) valEl.textContent = padState.volumes[i];
-            if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(i, padState.volumes[i]);
-          });
-        }
         const muteEl = document.querySelector(`.btn-pad-layer-mute[data-layer="${i}"]`);
         if (muteEl) {
           muteEl.addEventListener("click", () => {
@@ -5681,7 +5849,10 @@
       setGlobalTransposeUI(0, false);
       renderTopKnobs();
       renderMasterFxModalKnobs();
+      initPadLayerKnobs();
       buildPadKeysGrid();
+      syncPadUIFromState(padState);
+      syncMastersUI();
       renderDrumPadsUI();
       buildVirtualKeyboard();
       setupUI();
