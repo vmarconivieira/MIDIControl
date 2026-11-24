@@ -4984,8 +4984,9 @@
     function refreshAudioRouteUI() {
       if (numaBackend && numaBackend.getAudioRouteStatus) {
         try {
-          const res = numaBackend.getAudioRouteStatus();
-          if (res) renderAudioRouteUI(JSON.parse(res));
+          numaBackend.getAudioRouteStatus((res) => {
+            if (res) { try { renderAudioRouteUI(JSON.parse(res)); } catch (_) {} }
+          });
         } catch (_) {}
       }
     }
@@ -5086,8 +5087,9 @@
     function refreshSoundPacksStatus() {
       if (numaBackend && numaBackend.getSoundPacksStatus) {
         try {
-          const res = numaBackend.getSoundPacksStatus();
-          if (res) applySoundPacksStatus(JSON.parse(res));
+          numaBackend.getSoundPacksStatus((res) => {
+            if (res) { try { applySoundPacksStatus(JSON.parse(res)); } catch (_) {} }
+          });
         } catch (_) {}
       } else if (isStandaloneBrowser()) {
         applySoundPacksStatus(mockSoundPacksStatus());
@@ -5155,7 +5157,11 @@
 
     function removeSoundPack(id) {
       if (numaBackend && numaBackend.removeSoundPack) {
-        try { const r = numaBackend.removeSoundPack(id); if (r) applySoundPacksStatus(JSON.parse(r)); } catch (_) {}
+        try {
+          numaBackend.removeSoundPack(id, (r) => {
+            if (r) { try { applySoundPacksStatus(JSON.parse(r)); } catch (_) {} }
+          });
+        } catch (_) {}
       } else if (isStandaloneBrowser() && soundPacksState.mockInstalled) {
         soundPacksState.mockInstalled.delete(id);
         applySoundPacksStatus(mockSoundPacksStatus());
@@ -5570,28 +5576,39 @@
     };
 
     function initNativeBridge() {
-      if (window.AndroidNumaBridge) {
-        numaBackend = createAndroidBackendShim(window.AndroidNumaBridge);
-        numaBackend.getInitialState(applyInitialStateFromJson);
+      const postBridgeInit = () => {
         try {
-          const verStr = numaBackend.getAppVersion ? numaBackend.getAppVersion() : null;
-          if (verStr) {
-            const v = JSON.parse(verStr);
-            if (v.versionName) updaterState.installedVersionName = v.versionName;
-            if (v.versionCode) updaterState.installedVersionCode = v.versionCode;
-            if (v.repo) updaterState.repo = v.repo;
-            if (v.releasesUrl) updaterState.releaseUrl = v.releasesUrl;
-            syncInstalledVersionUI();
+          if (numaBackend.getAppVersion) {
+            numaBackend.getAppVersion((verStr) => {
+              if (!verStr) return;
+              try {
+                const v = JSON.parse(verStr);
+                if (v.versionName) updaterState.installedVersionName = v.versionName;
+                if (v.versionCode) updaterState.installedVersionCode = v.versionCode;
+                if (v.repo) updaterState.repo = v.repo;
+                if (v.releasesUrl) updaterState.releaseUrl = v.releasesUrl;
+                syncInstalledVersionUI();
+              } catch (_) {}
+            });
           }
         } catch (_) {}
         try {
           if (numaBackend.getGlobalTranspose) {
-            const gt = numaBackend.getGlobalTranspose();
-            if (typeof gt === "number" && !Number.isNaN(gt)) setGlobalTransposeUI(gt, false);
+            numaBackend.getGlobalTranspose((gt) => {
+              const n = Number(gt);
+              if (!Number.isNaN(n)) setGlobalTransposeUI(n, false);
+            });
           }
           refreshAudioRouteUI();
+          refreshSoundPacksStatus();
         } catch (_) {}
         setTimeout(() => triggerGithubUpdateCheck(true), 2500);
+      };
+
+      if (window.AndroidNumaBridge) {
+        numaBackend = createAndroidBackendShim(window.AndroidNumaBridge);
+        numaBackend.getInitialState(applyInitialStateFromJson);
+        postBridgeInit();
         return;
       }
       if (typeof QWebChannel === "undefined" || !window.qt || !window.qt.webChannelTransport) return;
@@ -5604,6 +5621,7 @@
         });
 
         numaBackend.getInitialState(applyInitialStateFromJson);
+        postBridgeInit();
       });
     }
 
@@ -5710,22 +5728,26 @@
       setTimeout(() => { if (btn) btn.classList.remove("spinning"); }, 700);
       if (numaBackend && numaBackend.rescanMidiDevices) {
         try {
-          const res = numaBackend.rescanMidiDevices();
-          if (res) {
-            const parsed = JSON.parse(res);
-            populateNativePorts(parsed.ports || [], parsed.active_port || "", parsed.selected_port_id || "auto", parsed.connected_count);
-            if (showToast) {
-              const cnt = Number(parsed.connected_count || 0);
-              setStatusMessage(cnt > 0
-                ? `MIDI detectado: ${parsed.active_port}`
-                : "Varredura USB MIDI concluída — nenhum controlador conectado");
+          numaBackend.rescanMidiDevices((res) => {
+            if (!res) return;
+            try {
+              const parsed = JSON.parse(res);
+              populateNativePorts(parsed.ports || [], parsed.active_port || "", parsed.selected_port_id || "auto", parsed.connected_count);
+              if (showToast) {
+                const cnt = Number(parsed.connected_count || 0);
+                setStatusMessage(cnt > 0
+                  ? `MIDI detectado: ${parsed.active_port}`
+                  : "Varredura USB MIDI concluída — nenhum controlador conectado");
+              }
+            } catch (err) {
+              console.warn("rescanMidiDevices parse error", err);
             }
-          }
+          });
         } catch (err) {
-          console.warn("rescanMidiDevices parse error", err);
+          console.warn("rescanMidiDevices error", err);
         }
       } else if (showToast) {
-        setStatusMessage("Varredura USB MIDI disponível no APK Android");
+        setStatusMessage("Varredura USB MIDI disponível no aplicativo");
       }
     }
 
