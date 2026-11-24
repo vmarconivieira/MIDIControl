@@ -245,7 +245,7 @@ public final class P61xUpdater {
     public static void launchMainActivity(Context ctx) {
         try {
             Intent i = new Intent(ctx, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             ctx.startActivity(i);
         } catch (Throwable t) {
             Log.w(TAG, "Unable to relaunch app", t);
@@ -357,15 +357,23 @@ public final class P61xUpdater {
                     if (Build.VERSION.SDK_INT >= 31) {
                         piFlags |= PendingIntent.FLAG_MUTABLE;
                     }
-                    Bundle balOptions = null;
+                    PendingIntent pendingIntent = null;
                     if (Build.VERSION.SDK_INT >= 34) {
-                        balOptions = ActivityOptions.makeBasic()
-                                .setPendingIntentBackgroundActivityStartMode(
-                                        ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
-                                .toBundle();
+                        try {
+                            Bundle balOptions = ActivityOptions.makeBasic()
+                                    .setPendingIntentCreatorBackgroundActivityStartMode(
+                                            ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
+                                    .toBundle();
+                            pendingIntent = PendingIntent.getActivity(
+                                    appCtx, sessionId, activityIntent, piFlags, balOptions);
+                        } catch (Throwable balErr) {
+                            Log.w(TAG, "PendingIntent creator BAL options fallback", balErr);
+                        }
                     }
-                    PendingIntent pendingIntent = PendingIntent.getActivity(
-                            appCtx, sessionId, activityIntent, piFlags, balOptions);
+                    if (pendingIntent == null) {
+                        pendingIntent = PendingIntent.getActivity(
+                                appCtx, sessionId, activityIntent, piFlags);
+                    }
                     markPendingRelaunch(appCtx);
                     session.commit(pendingIntent.getIntentSender());
                     session.close();

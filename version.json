@@ -1,15 +1,14 @@
 {
-  "versionCode": 7,
-  "versionName": "1.3.1",
-  "tag": "v1.3.1",
+  "versionCode": 8,
+  "versionName": "1.3.2",
+  "tag": "v1.3.2",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.1.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.1/P61x_Console_v1.3.1.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.1",
+  "apkFileName": "P61x_Console_v1.3.2.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.2/P61x_Console_v1.3.2.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.2",
   "notes": [
-    "Mixer em tela cheia: faders ocupam toda a altura útil sem a barra superior de knobs",
-    "Botão FX de cada zona abre o modal com os 9 knobs de Filtros/FX, EQ de 5 bandas em knobs e Split/Oitava",
-    "Botão FX MASTER abre diretamente o modal de Master FX",
-    "Setas laterais removidas para dar mais largura aos 6 canais do Mixer"
+    "Corrige erro ao instalar atualização pelo app no Android 14/15/16 (PendingIntent creator BAL)",
+    "Corrige condição de corrida na reabertura automática após concluir a atualização",
+    "Mixer em tela cheia com faders expandidos, FX & Filtros (9 knobs) e EQ de 5 bandas em modal por canal"
   ]
 }

@@ -27,7 +27,6 @@ public final class UpdateInstallActivity extends Activity {
     }
 
     private void handle(Intent intent) {
-        boolean keepOpen = false;
         try {
             if (intent != null) {
                 int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
@@ -42,9 +41,8 @@ public final class UpdateInstallActivity extends Activity {
                         P61xUpdater.emitProgress("error", 0, 0, 0, "O instalador não retornou confirmação.");
                     }
                 } else if (status == PackageInstaller.STATUS_SUCCESS) {
-                    if (P61xUpdater.consumePendingRelaunch(this)) {
-                        P61xUpdater.launchMainActivity(this);
-                    }
+                    P61xUpdater.clearPendingRelaunch(this);
+                    P61xUpdater.launchMainActivity(this);
                     P61xUpdater.emitProgress("installed", 100, 0, 0, "Atualização instalada.");
                 } else {
                     P61xUpdater.clearPendingRelaunch(this);
@@ -55,9 +53,7 @@ public final class UpdateInstallActivity extends Activity {
             Log.e(TAG, "UpdateInstallActivity failed", t);
             P61xUpdater.clearPendingRelaunch(this);
         }
-        if (!keepOpen) {
-            finish();
-            overridePendingTransition(0, 0);
-        }
+        finish();
+        overridePendingTransition(0, 0);
     }
 }
