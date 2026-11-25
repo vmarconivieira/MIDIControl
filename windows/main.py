@@ -1013,6 +1013,25 @@ def run_cli_check() -> int:
 
 def _cleanup_previous_instances() -> None:
     if sys.platform == "win32":
+        import time
+
+        cflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        killed = False
+        for mod in ("stagerig_dsp.dll", "libfluidsynth-3.dll"):
+            try:
+                res = subprocess.run(
+                    ["taskkill", "/F", "/T", "/FI", f"MODULES eq {mod}", "/IM", "*"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2.0,
+                    creationflags=cflags,
+                )
+                if res.returncode == 0:
+                    killed = True
+            except Exception:
+                pass
+        if killed:
+            time.sleep(0.4)
         return
     import time
 
@@ -1074,6 +1093,7 @@ def main() -> int:
     parser.add_argument("--no-optimize", action="store_true", help="Não altera plano de energia automaticamente")
     args, qt_args = parser.parse_known_args()
 
+    print(f"[Boot 1/5] P61x Console v{APP_VERSION_NAME} iniciando (pid={os.getpid()})...", flush=True)
     _cleanup_previous_instances()
 
     if args.check:
@@ -1088,6 +1108,7 @@ def main() -> int:
             pass
 
     try:
+        print("[Boot 2/5] Criando QApplication...", flush=True)
         app = QApplication([sys.argv[0]] + qt_args)
         app.setApplicationName(f"P61x Console v{APP_VERSION_NAME}")
         app.setDesktopFileName("p61x-keyboard")
@@ -1095,9 +1116,14 @@ def main() -> int:
         if os.path.isfile(APP_ICON_PATH):
             app.setWindowIcon(QIcon(APP_ICON_PATH))
 
+        print("[Boot 3/5] Inicializando StandaloneMidiEngine + Audio DSP...", flush=True)
         midi_engine = StandaloneMidiEngine()
+        print("[Boot 4/5] Criando janela principal QtWebEngine...", flush=True)
         window = StandaloneRigWindow(midi_engine, auto_optimize=not args.no_optimize)
         window.show()
+        window.raise_()
+        window.activateWindow()
+        print("[Boot 5/5] Janela exibida; iniciando event loop.", flush=True)
         if sys.platform == "win32":
             midi_engine.audio.install_crash_handler(rearm_only=True)
 

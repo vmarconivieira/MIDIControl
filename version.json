@@ -1,18 +1,18 @@
 {
-  "versionCode": 13,
-  "versionName": "1.3.7",
-  "tag": "v1.3.7",
+  "versionCode": 14,
+  "versionName": "1.3.8",
+  "tag": "v1.3.8",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.7.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.7/P61x_Console_v1.3.7.apk",
-  "windowsSetupFileName": "P61x_Console_Setup_v1.3.7.exe",
-  "windowsSetupUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.7/P61x_Console_Setup_v1.3.7.exe",
-  "windowsZipFileName": "P61x_Console_Windows_v1.3.7.zip",
-  "windowsZipUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.7/P61x_Console_Windows_v1.3.7.zip",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.7",
+  "apkFileName": "P61x_Console_v1.3.8.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_v1.3.8.apk",
+  "windowsSetupFileName": "P61x_Console_Setup_v1.3.8.exe",
+  "windowsSetupUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_Setup_v1.3.8.exe",
+  "windowsZipFileName": "P61x_Console_Windows_v1.3.8.zip",
+  "windowsZipUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_Windows_v1.3.8.zip",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.8",
   "notes": [
-    "Windows: corrige inicialização do launcher (remove DETACHED_PROCESS, copia MSVC DLLs para runtime/ e restaura pasta padrão de instalação)",
-    "Windows: adiciona captura e alerta de diagnóstico caso o app falhe antes da abertura da janela e elimina crash ao conectar MIDI (ring buffer C WinMM + WebHID/WebUSB desativados)",
-    "Android & Windows: corrige afinação no FluidSynth 2.6.3 recriando o motor na taxa real do stream"
+    "Windows Setup: força encerramento de processos presos nas DLLs DSP via taskkill antes de instalar e restaura pasta padrão AppData\\Local\\P61x Console sem herdar Programs\\P61x Console",
+    "Windows App: limpa instâncias presas anteriores antes de abrir DSP, adiciona logs detalhados de Boot e traz janela para frente",
+    "Mantém correções de MIDI C WinMM (sem crash), remoção do Shimmer Pad e FluidSynth 2.6.3"
   ]
 }

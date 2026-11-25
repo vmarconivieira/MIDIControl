@@ -9,7 +9,6 @@
 Name "${APP_NAME} v${APP_VERSION}"
 OutFile "@OUT_EXE@"
 InstallDir "$LOCALAPPDATA\P61x Console"
-InstallDirRegKey HKCU "Software\P61x Console" "InstallDir"
 RequestExecutionLevel user
 Unicode true
 SetCompressor /SOLID zlib
@@ -33,9 +32,14 @@ SetCompressor /SOLID zlib
 Section "P61x Console" SecMain
     SetOutPath "$INSTDIR"
 
-    ; Encerrar qualquer instancia anterior rodando (LocalAppData\P61x Console ou Programs\P61x Console) antes de atualizar
-    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and ($$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) -or $$_.ExecutablePath.StartsWith('$LOCALAPPDATA\Programs\P61x Console', [System.StringComparison]::OrdinalIgnoreCase)) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
-    Sleep 500
+    ; Encerrar qualquer instância anterior rodando (incluindo processos presos segurando DLLs)
+    nsExec::ExecToLog 'taskkill /F /T /IM "P61x Console.exe"'
+    nsExec::ExecToLog 'taskkill /F /T /IM "QtWebEngineProcess.exe"'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq libfluidsynth-3.dll" /IM *'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq stagerig_dsp.dll" /IM *'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq portaudio_x64.dll" /IM *'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq SDL3.dll" /IM *'
+    Sleep 1500
 
     ; Remover eventual copia duplicada da pasta Programs\P61x Console deixada pela v1.3.6
     RMDir /r "$LOCALAPPDATA\Programs\P61x Console"
@@ -109,8 +113,11 @@ Section "P61x Console" SecMain
 SectionEnd
 
 Section "Uninstall"
-    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and $$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
-    Sleep 450
+    nsExec::ExecToLog 'taskkill /F /T /IM "P61x Console.exe"'
+    nsExec::ExecToLog 'taskkill /F /T /IM "QtWebEngineProcess.exe"'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq libfluidsynth-3.dll" /IM *'
+    nsExec::ExecToLog 'taskkill /F /T /FI "MODULES eq stagerig_dsp.dll" /IM *'
+    Sleep 1000
 
     Delete "$DESKTOP\P61x Console.lnk"
     RMDir /r "$SMPROGRAMS\P61x Console"
