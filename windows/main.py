@@ -19,28 +19,93 @@ import signal
 import subprocess
 import sys
 import threading
+import traceback
 import urllib.request
 import webbrowser
 from typing import Optional
 
-if sys.platform == "win32":
-    os.environ.setdefault(
-        "QTWEBENGINE_CHROMIUM_FLAGS",
-        "--disable-features=WebMidi,WebHid,WebUSB,HardwareMediaKeyHandling",
-    )
-
-from PySide6.QtCore import QObject, QTimer, QUrl, Signal, Slot
-from PySide6.QtGui import QColor, QIcon
-from PySide6.QtWebChannel import QWebChannel
-from PySide6.QtWebEngineCore import QWebEngineSettings
-from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QApplication, QFileDialog, QMainWindow
-
-from standalone_midi_engine import StandaloneMidiEngine, UI_MAPPINGS_FILE
-from standalone_timbre_catalog import CONFIG_DIR
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(BASE_DIR)
+_RUNTIME_LOG_HANDLE = None
+
+
+def _early_windows_log_setup() -> str:
+    global _RUNTIME_LOG_HANDLE
+    if os.environ.get("P61X_RUNTIME_LOG") and _RUNTIME_LOG_HANDLE is not None:
+        return os.environ["P61X_RUNTIME_LOG"]
+    log_dir = os.path.join(BASE_DIR, "logs")
+    try:
+        os.makedirs(log_dir, exist_ok=True)
+        probe = os.path.join(log_dir, ".write_test")
+        with open(probe, "w", encoding="utf-8") as pf:
+            pf.write("ok")
+        os.remove(probe)
+    except Exception:
+        local_app = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
+        log_dir = os.path.join(local_app, "P61x Console", "logs")
+        os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, "p61x_runtime.log")
+    os.environ["P61X_RUNTIME_LOG"] = log_path
+    try:
+        log_file = open(log_path, "a", encoding="utf-8", buffering=1)
+        _RUNTIME_LOG_HANDLE = log_file
+        if sys.stdout is None:
+            sys.stdout = log_file
+        if sys.stderr is None:
+            sys.stderr = log_file
+        faulthandler.enable(file=log_file, all_threads=True)
+    except Exception:
+        pass
+    return log_path
+
+
+def _fatal_pre_qt_error(msg: str) -> None:
+    try:
+        log_dir = os.path.dirname(os.environ.get("P61X_RUNTIME_LOG") or os.path.join(BASE_DIR, "logs", "p61x_runtime.log"))
+        os.makedirs(log_dir, exist_ok=True)
+        err_path = os.path.join(log_dir, "p61x_startup_error.log")
+        with open(err_path, "w", encoding="utf-8") as f:
+            f.write(msg)
+    except Exception:
+        err_path = "logs/p61x_startup_error.log"
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(
+                None,
+                f"Falha ao carregar módulos do P61x Console:\n\n{msg[:900]}\n\nDetalhes em: {err_path}",
+                "P61x Console — Erro ao Iniciar",
+                0x10,
+            )
+        except Exception:
+            pass
+
+
+_early_windows_log_setup()
+
+if sys.platform == "win32":
+    os.environ.setdefault("QTWEBENGINE_DISABLE_SANDBOX", "1")
+    os.environ.setdefault(
+        "QTWEBENGINE_CHROMIUM_FLAGS",
+        "--disable-features=WebMidi,WebHID,WebUSB,HardwareMediaKeyHandling",
+    )
+
+try:
+    from PySide6.QtCore import QObject, QTimer, QUrl, Signal, Slot
+    from PySide6.QtGui import QColor, QIcon
+    from PySide6.QtWebChannel import QWebChannel
+    from PySide6.QtWebEngineCore import QWebEngineSettings
+    from PySide6.QtWebEngineWidgets import QWebEngineView
+    from PySide6.QtWidgets import QApplication, QFileDialog, QMainWindow
+
+    from standalone_midi_engine import StandaloneMidiEngine, UI_MAPPINGS_FILE
+    from standalone_timbre_catalog import CONFIG_DIR
+except Exception:
+    _tb = traceback.format_exc()
+    print(_tb, file=sys.stderr, flush=True)
+    _fatal_pre_qt_error(_tb)
+    sys.exit(1)
+
 _LOCAL_UI = os.path.join(BASE_DIR, "ui", "index.html")
 UI_HTML_PATH = _LOCAL_UI if os.path.isfile(_LOCAL_UI) else os.path.join(PARENT_DIR, "ui", "index.html")
 VERSION_JSON_PATH = os.path.join(BASE_DIR, "version.json") if os.path.isfile(os.path.join(BASE_DIR, "version.json")) else os.path.join(PARENT_DIR, "version.json")
@@ -63,10 +128,10 @@ def _load_local_version() -> tuple[str, int]:
             try:
                 with open(cand, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                return str(data.get("versionName", "1.3.6")), int(data.get("versionCode", 12))
+                return str(data.get("versionName", "1.3.7")), int(data.get("versionCode", 13))
             except Exception:
                 pass
-    return "1.3.6", 12
+    return "1.3.7", 13
 
 
 APP_VERSION_NAME, APP_VERSION_CODE = _load_local_version()
@@ -976,35 +1041,8 @@ def _cleanup_previous_instances() -> None:
         pass
 
 
-_RUNTIME_LOG_HANDLE = None
-
-
 def _setup_windows_runtime_stdio() -> str:
-    global _RUNTIME_LOG_HANDLE
-    log_dir = os.path.join(BASE_DIR, "logs")
-    try:
-        os.makedirs(log_dir, exist_ok=True)
-        test_probe = os.path.join(log_dir, ".write_test")
-        with open(test_probe, "w", encoding="utf-8") as tf:
-            tf.write("ok")
-        os.remove(test_probe)
-    except Exception:
-        local_app = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
-        log_dir = os.path.join(local_app, "P61x Console", "logs")
-        os.makedirs(log_dir, exist_ok=True)
-    log_path = os.path.join(log_dir, "p61x_runtime.log")
-    os.environ["P61X_RUNTIME_LOG"] = log_path
-    try:
-        log_file = open(log_path, "a", encoding="utf-8", buffering=1)
-        _RUNTIME_LOG_HANDLE = log_file
-        if sys.stdout is None:
-            sys.stdout = log_file
-        if sys.stderr is None:
-            sys.stderr = log_file
-        faulthandler.enable(file=log_file, all_threads=True)
-    except Exception:
-        pass
-    return log_path
+    return _early_windows_log_setup()
 
 
 def _show_fatal_startup_error(msg: str) -> None:

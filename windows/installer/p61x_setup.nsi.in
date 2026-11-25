@@ -8,12 +8,11 @@
 
 Name "${APP_NAME} v${APP_VERSION}"
 OutFile "@OUT_EXE@"
-InstallDir "$LOCALAPPDATA\Programs\P61x Console"
+InstallDir "$LOCALAPPDATA\P61x Console"
 InstallDirRegKey HKCU "Software\P61x Console" "InstallDir"
 RequestExecutionLevel user
 Unicode true
-SetCompressor /SOLID lzma
-SetCompressorDictSize 32
+SetCompressor /SOLID zlib
 
 !define MUI_ABORTWARNING
 !define MUI_ICON "@ICON_PATH@"
@@ -34,9 +33,12 @@ SetCompressorDictSize 32
 Section "P61x Console" SecMain
     SetOutPath "$INSTDIR"
 
-    ; Encerrar qualquer instancia anterior rodando a partir desta pasta antes de atualizar
-    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and $$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
-    Sleep 450
+    ; Encerrar qualquer instancia anterior rodando (LocalAppData\P61x Console ou Programs\P61x Console) antes de atualizar
+    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and ($$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) -or $$_.ExecutablePath.StartsWith('$LOCALAPPDATA\Programs\P61x Console', [System.StringComparison]::OrdinalIgnoreCase)) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
+    Sleep 500
+
+    ; Remover eventual copia duplicada da pasta Programs\P61x Console deixada pela v1.3.6
+    RMDir /r "$LOCALAPPDATA\Programs\P61x Console"
 
     ; Arquivos principais (sobrescrever codigo, DLLs, UI, runtime e catálogos)
     SetOverwrite on
@@ -86,6 +88,8 @@ Section "P61x Console" SecMain
     CreateDirectory "$INSTDIR\logs"
 
     SetOverwrite on
+    ; Reset OutPath to $INSTDIR so CreateShortCut WorkingDirectory ("Iniciar em") points to $INSTDIR
+    SetOutPath "$INSTDIR"
     WriteUninstaller "$INSTDIR\Uninstall.exe"
 
     WriteRegStr HKCU "Software\P61x Console" "InstallDir" "$INSTDIR"

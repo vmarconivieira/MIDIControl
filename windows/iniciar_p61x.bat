@@ -1,18 +1,18 @@
 @echo off
 chcp 65001 >nul
 setlocal EnableExtensions
-title P61x Console v1.3.6
+title P61x Console v1.3.7
 cd /d "%~dp0"
 
 echo =======================================================
-echo   P61x Console v1.3.6 (Stage Synth, Worship Pad & Drums)
+echo   P61x Console v1.3.7 (Stage Synth, Worship Pad & Drums)
 echo =======================================================
 echo.
 
 set "RUN_PY="
 if exist "%~dp0runtime\python.exe" set "RUN_PY=%~dp0runtime\python.exe"
 if not defined RUN_PY if exist "%~dp0.venv\Scripts\python.exe" set "RUN_PY=%~dp0.venv\Scripts\python.exe"
-set "PATH=%~dp0dsp;%~dp0runtime;%~dp0runtime\Lib\site-packages\PySide6;%PATH%"
+set "PATH=%~dp0dsp;%~dp0runtime;%~dp0runtime\Lib\site-packages\PySide6;%~dp0runtime\Lib\site-packages\shiboken6;%PATH%"
 if not defined RUN_PY if exist "%~dp0config\.python_exe.txt" (
     for /f "usebackq delims=" %%P in ("%~dp0config\.python_exe.txt") do (
         if exist "%%~P" set "RUN_PY=%%~P"
@@ -43,8 +43,9 @@ if not defined RUN_PY (
     exit /b 1
 )
 
-set "PATH=%~dp0dsp;%PATH%"
 set "PYTHONUTF8=1"
+set "QTWEBENGINE_DISABLE_SANDBOX=1"
+set "QTWEBENGINE_CHROMIUM_FLAGS=--disable-features=WebMidi,WebHID,WebUSB,HardwareMediaKeyHandling"
 
 echo Usando Python: "%RUN_PY%"
 echo Iniciando motor de audio DSP e interface grafica...

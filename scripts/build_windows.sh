@@ -148,6 +148,13 @@ done
 rm -rf "$STAGE_DIR/runtime/Lib/site-packages/PySide6/"{include,typesystems,metatypes,glue,doc,examples}
 find "$STAGE_DIR/runtime/Lib/site-packages" -type f -name "*.pyi" -delete
 
+# Ensure VC++ runtime DLLs sit directly next to pythonw.exe/python312.dll (matching v1.3.5 layout)
+for dll in concrt140.dll msvcp140.dll msvcp140_1.dll msvcp140_2.dll msvcp140_codecvt_ids.dll vcruntime140.dll vcruntime140_1.dll; do
+  if [[ -f "$STAGE_DIR/runtime/Lib/site-packages/PySide6/$dll" ]]; then
+    cp -f "$STAGE_DIR/runtime/Lib/site-packages/PySide6/$dll" "$STAGE_DIR/runtime/$dll"
+  fi
+done
+
 # 7. Compile self-contained NSIS Windows Setup Installer EXE
 echo "[STEP] Building NSIS installer: $OUT_EXE..."
 NSI_GEN="$BUILD_DIR/p61x_setup.nsi"
