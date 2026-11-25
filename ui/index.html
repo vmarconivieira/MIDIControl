@@ -1113,7 +1113,7 @@
     .pads-top-segmented { grid-template-columns: minmax(0, 1.3fr) auto auto auto; }
     #padsLayersModeToggle { display: none; }
     #padsLayersModeToggle.visible { display: flex; }
-    .pad-faders-grid { display: none; flex: 1; min-height: 0; min-width: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; }
+    .pad-faders-grid { display: none; flex: 1; min-height: 0; min-width: 0; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
     #padsSubLayers[data-mode="faders"] .pad-layers-strip { display: none; }
     #padsSubLayers[data-mode="faders"] .pad-faders-grid { display: grid; }
     .pad-fader-strip { --lc: var(--mt-accent); }
@@ -1852,7 +1852,7 @@
                 <i class="fa-solid fa-table-cells"></i><span>12 TONS</span>
               </button>
               <button id="btnPadsSubLayers" class="pads-sub-btn" data-pads-sub="layers">
-                <i class="fa-solid fa-sliders"></i><span>5 CAMADAS</span>
+                <i class="fa-solid fa-sliders"></i><span>4 CAMADAS</span>
               </button>
             </div>
           </div>
@@ -1930,19 +1930,6 @@
                   </div>
                 </div>
                 <div class="layer-knob-stage" id="padLayerKnobHost3"></div>
-              </div>
-
-              <div class="layer-mini-card" data-pad-layer="4">
-                <div class="layer-mini-head">
-                  <span style="color:var(--p5-color)">SHIMMER PAD</span>
-                  <div style="display:flex; gap:8px; align-items:center;">
-                    <span class="layer-mini-val mono" id="padLayerVal4">75</span>
-                    <button class="drum-mini-btn btn-pad-layer-mute learnable" data-layer="4" data-control-id="mute_pad5" data-control-label="Mute Shimmer Pad">
-                      <span class="midi-badge" data-badge-for="mute_pad5"></span>M
-                    </button>
-                  </div>
-                </div>
-                <div class="layer-knob-stage" id="padLayerKnobHost4"></div>
               </div>
 
               <div class="layer-mini-card" style="border-color:rgba(236,72,153,0.45);">
@@ -2649,7 +2636,6 @@
       { name: "CELLO PAD",   color: "var(--p2-color)", ctrl: "vol_pad2", label: "Volume Cello Pad", vu: "pad_1" },
       { name: "FLUTE PAD",   color: "var(--p3-color)", ctrl: "vol_pad3", label: "Volume Flute Pad", vu: "pad_2" },
       { name: "AMBIENT PAD", color: "var(--p4-color)", ctrl: "vol_pad4", label: "Volume Ambient Pad", vu: "pad_3" },
-      { name: "SHIMMER PAD", color: "var(--p5-color)", ctrl: "vol_pad5", label: "Volume Shimmer Pad", vu: "pad_4" },
       { name: "PADS MASTER", color: "var(--master-pad-color)", ctrl: "vol_master_pad", label: "Volume Master Pad Contínuo", vu: "pad_master", master: true }
     ];
 
@@ -3050,7 +3036,6 @@
       { key: "pad_vol_1",      label: "CELLO PAD",   min: 0, max: 127, def: 85,  bipolar: false, ctrlId: "vol_pad2",       color: "var(--p2-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 1 },
       { key: "pad_vol_2",      label: "FLUTE PAD",   min: 0, max: 127, def: 75,  bipolar: false, ctrlId: "vol_pad3",       color: "var(--p3-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 2 },
       { key: "pad_vol_3",      label: "AMBIENT PAD", min: 0, max: 127, def: 80,  bipolar: false, ctrlId: "vol_pad4",       color: "var(--p4-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 3 },
-      { key: "pad_vol_4",      label: "SHIMMER PAD", min: 0, max: 127, def: 75,  bipolar: false, ctrlId: "vol_pad5",       color: "var(--p5-color)",         scope: "CAMADAS PAD", isPad: true, padLayerIdx: 4 },
       { key: "pad_master_vol", label: "PADS MASTER", min: 0, max: 127, def: 110, bipolar: false, ctrlId: "vol_master_pad", color: "var(--master-pad-color)", scope: "PADS MASTER", isPad: true }
     ];
 
@@ -3997,13 +3982,13 @@
        ========================================================================= */
     function initPadLayerKnobs() {
       wireKnobHudControls();
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         const host = document.getElementById(`padLayerKnobHost${i}`);
         if (host && host.childElementCount === 0) {
           host.appendChild(createRotaryKnobSlot(PAD_LAYER_KNOB_DEFS[i], 0, false));
         }
       }
-      const pmDef = PAD_LAYER_KNOB_DEFS[5];
+      const pmDef = PAD_LAYER_KNOB_DEFS[4];
       ["padsViewMasterKnobHost", "padsQuickMasterKnobHost"].forEach(hostId => {
         const host = document.getElementById(hostId);
         if (host && host.childElementCount === 0) {
@@ -4126,7 +4111,7 @@
         b.classList.toggle("active", parseInt(b.dataset.padOct) === padState.octave);
       });
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         const vt = document.getElementById(`padLayerVal${i}`);
         const mBtn = document.querySelector(`.btn-pad-layer-mute[data-layer="${i}"]`);
         const defVol = (padState.layers && padState.layers[i] && padState.layers[i].default_vol) ?? (PAD_LAYER_KNOB_DEFS[i]?.def ?? 80);
@@ -5389,8 +5374,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.3.4",
-      installedVersionCode: 10,
+      installedVersionName: "1.3.5",
+      installedVersionCode: 11,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",

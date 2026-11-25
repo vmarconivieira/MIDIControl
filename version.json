@@ -1,15 +1,14 @@
 {
-  "versionCode": 10,
-  "versionName": "1.3.4",
-  "tag": "v1.3.4",
+  "versionCode": 11,
+  "versionName": "1.3.5",
+  "tag": "v1.3.5",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.4.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.4/P61x_Console_v1.3.4.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.4",
+  "apkFileName": "P61x_Console_v1.3.5.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.5/P61x_Console_v1.3.5.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.5",
   "notes": [
-    "Corrige afinação (sync do sample-rate real do hardware) e distorção com limiter transparente no motor DSP",
-    "Alinhamento de burst AAudio e otimização da interface/faders para celulares como o Redmi Note 9",
-    "Perfil Origin 62//P61x AMW (21 mapeamentos) como padrão e nova função Exportar/Importar Perfil MIDI JSON",
-    "Versão Windows corrigida (WASAPI 48kHz, Python 3.8-3.14 com fallback WinMM, caminhos com acentos e atalho na Área de Trabalho)"
+    "Remove camada Shimmer Pad (4 camadas no Worship Pad Contínuo: Warm, Cello, Flute e Ambient) eliminando distorção",
+    "Windows: corrige fechamento inesperado (0xC0000005) ao conectar controlador MIDI com fila thread-safe no Qt e driver WinMM nativo",
+    "Instalador autônomo P61x_Console_Setup_v1.3.5.exe para Windows e melhorias contínuas de áudio/UI no Android"
   ]
 }

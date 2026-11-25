@@ -85,7 +85,7 @@ def main():
         assert 'id="btnPadsModeFaders"' in html, "Missing Pads FADERS toggle"
         assert 'id="btnExportCtrlProfile"' in html, "Missing #btnExportCtrlProfile"
         assert 'id="btnImportCtrlProfile"' in html, "Missing #btnImportCtrlProfile"
-        for bad in ("\U0001F3B5", "\U0001F3B9", "STAGE RIG WORKSTATION", "Arraste no knob ou na barra"):
+        for bad in ("\U0001F3B5", "\U0001F3B9", "STAGE RIG WORKSTATION", "Arraste no knob ou na barra", "SHIMMER PAD"):
             assert bad not in html, f"Removed UI text/emoji still present: {bad!r}"
         ui_map_def = json.loads(zf.read("assets/config_defaults/ui_mappings.json").decode("utf-8"))
         assert len(ui_map_def) == 21 and "vol_master_pad" in ui_map_def, f"Unexpected default ui_mappings count: {len(ui_map_def)}"

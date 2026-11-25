@@ -1179,11 +1179,11 @@ DSP_EXPORT StageRigDSP *stagerig_create(float sample_rate) {
     __atomic_store_n(&dsp->dly_lvl_bits, f2u(0.52f), __ATOMIC_RELEASE);
     update_delay_timing(dsp, 72.0f);
 
-    /* 5-Layer Pad, 4-Slot Drum & Dual Master defaults */
-    int def_pad_vols[NUM_PAD_LAYERS] = {100, 85, 75, 80, 75};
+    /* 4-Layer Continuous Pad (Shimmer Layer 4 disabled), 4-Slot Drum & Dual Master defaults */
+    int def_pad_vols[NUM_PAD_LAYERS] = {100, 85, 75, 80, 0};
     for (int i = 0; i < NUM_PAD_LAYERS; i++) {
         dsp->pad_layer_vols[i] = def_pad_vols[i];
-        dsp->pad_layer_mutes[i] = 0;
+        dsp->pad_layer_mutes[i] = (i >= 4) ? 1 : 0;
         dsp->cur_pad_gains[i] = (float)def_pad_vols[i] / 127.0f;
     }
     for (int d = 0; d < NUM_DRUM_PADS; d++) {
@@ -1955,7 +1955,7 @@ DSP_EXPORT void stagerig_set_master_fx(
 }
 
 DSP_EXPORT void stagerig_set_pad_layer(StageRigDSP *dsp, int layer_idx, const float *interleaved_lr, int frames) {
-    if (!dsp || layer_idx < 0 || layer_idx >= NUM_PAD_LAYERS || !interleaved_lr || frames <= 16) return;
+    if (!dsp || layer_idx < 0 || layer_idx >= 4 || !interleaved_lr || frames <= 16) return;
     if (__atomic_load_n(&dsp->pad_lengths[layer_idx], __ATOMIC_ACQUIRE) > 0) return;
     size_t bytes = (size_t)frames * 2 * sizeof(float);
     float *copy = (float *)malloc(bytes);
@@ -1980,7 +1980,7 @@ DSP_EXPORT void stagerig_set_pad_layers_ex(
     if (!dsp) return;
     if (!isfinite(rate) || rate < 0.25f || rate > 4.0f) rate = 1.0f;
     __atomic_store_n(&dsp->pad_playing, playing ? 1 : 0, __ATOMIC_RELEASE);
-    int n = (count < NUM_PAD_LAYERS) ? count : NUM_PAD_LAYERS;
+    int n = (count < 4) ? count : 4;
     for (int i = 0; i < n; i++) {
         if (vols) {
             int vc = vols[i] < 0 ? 0 : (vols[i] > 127 ? 127 : vols[i]);
@@ -1990,6 +1990,8 @@ DSP_EXPORT void stagerig_set_pad_layers_ex(
             __atomic_store_n(&dsp->pad_layer_mutes[i], mutes[i] ? 1 : 0, __ATOMIC_RELEASE);
         }
     }
+    __atomic_store_n(&dsp->pad_layer_vols[4], 0, __ATOMIC_RELEASE);
+    __atomic_store_n(&dsp->pad_layer_mutes[4], 1, __ATOMIC_RELEASE);
     float old_rate = u2f(__atomic_load_n(&dsp->pad_rate_bits, __ATOMIC_ACQUIRE));
     if (fabsf(rate - old_rate) > 1e-5f) {
         __atomic_store_n(&dsp->pad_rate_bits, f2u(rate), __ATOMIC_RELEASE);
@@ -2253,7 +2255,7 @@ DSP_EXPORT void stagerig_render_block(StageRigDSP *dsp, float *out_interleaved_l
 
         int p_playing = __atomic_load_n(&dsp->pad_playing, __ATOMIC_ACQUIRE);
         int pad_len_ref = 0;
-        for (int l = 0; l < NUM_PAD_LAYERS; l++) {
+        for (int l = 0; l < 4; l++) {
             int ln = __atomic_load_n(&dsp->pad_lengths[l], __ATOMIC_ACQUIRE);
             if (ln > 16) {
                 pad_len_ref = ln;
@@ -2284,7 +2286,7 @@ DSP_EXPORT void stagerig_render_block(StageRigDSP *dsp, float *out_interleaved_l
         int any_pad_layer = 0;
 
         if (pad_active) {
-            for (int l = 0; l < NUM_PAD_LAYERS; l++) {
+            for (int l = 0; l < 4; l++) {
                 int len = __atomic_load_n(&dsp->pad_lengths[l], __ATOMIC_ACQUIRE);
                 int lv = __atomic_load_n(&dsp->pad_layer_vols[l], __ATOMIC_ACQUIRE);
                 int lm = __atomic_load_n(&dsp->pad_layer_mutes[l], __ATOMIC_ACQUIRE);
@@ -2501,7 +2503,7 @@ DSP_EXPORT void stagerig_render_block(StageRigDSP *dsp, float *out_interleaved_l
                 float mix_a_l = 0.0f, mix_a_r = 0.0f;
                 int ia0 = (int)pos_a;
                 float fa = (float)(pos_a - (double)ia0);
-                for (int l = 0; l < NUM_PAD_LAYERS; l++) {
+                for (int l = 0; l < 4; l++) {
                     if (!pad_ptr[l]) continue;
                     int len = pad_lens[l];
                     int i0 = (len == pad_len_ref) ? ia0 : (ia0 % len);
@@ -2520,7 +2522,7 @@ DSP_EXPORT void stagerig_render_block(StageRigDSP *dsp, float *out_interleaved_l
                     float mix_b_l = 0.0f, mix_b_r = 0.0f;
                     int ib0 = (int)pos_b;
                     float fb = (float)(pos_b - (double)ib0);
-                    for (int l = 0; l < NUM_PAD_LAYERS; l++) {
+                    for (int l = 0; l < 4; l++) {
                         if (!pad_ptr[l]) continue;
                         int len = pad_lens[l];
                         int i0 = (len == pad_len_ref) ? ib0 : (ib0 % len);
