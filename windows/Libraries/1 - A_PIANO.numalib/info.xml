@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <Header
+    version="1.5"
+    zoneImagePath="zoneimages/LAYER_A_PIANO.png"
+    sideImagePath="zoneimages/SIDENAV_A_PIANO.png"
+    />
+
+    <SoundImages
+    sound1="soundimages/INSTR_GRAND_PIANO_2.png"
+    sound2="soundimages/INSTR_GRAND_PIANO_1.png"
+    sound3="soundimages/INSTR_UPRIGHT_2.png"
+    sound4="soundimages/INSTR_E_PIANO.png"
+    />
+
+    <SoundFXs
+    sound1="a_piano"
+    sound2="a_piano"
+    sound3="a_piano"
+    sound4="a_piano"
+    />
+</root>
+
+<!-- v. 1.0.3 by GG
+1) Extended the Model D sample and corresponding decay of the bass section, from about A0 to C2, up to over 30 seconds;
+2) Extended the decay of the Model F bass section from about A0 to C2, up to over 30 seconds;
+3) Fine-tuning of all the sounds in the Piano section with A4 around 440-441 Hz;
+4) Better-tuned some notes of the Fazioli (Heel) based on the spread of harmonic overtones;
+5) Increased the filter range in the minimum dynamic values of Model D and F: modulator Note on velocity value changed to -8000 instead of -7500.
+-->
+<!-- v. 1.0.4 by GG
+1) Fixed 4 - CP E-Grand key velocity off-set
+2) Fixed inverted notes
+-->
+
+<!-- v. 1.0.5 by GG
+1) Fixed releases for louder notes
+2) Improved sound
+-->
+
+<!-- How to use the SoundFXs
+Currently available effects:
+
+    none
+    a_piano
+    e_piano
+    generic
+    tremolo
+    flanger
+    chorus
+    phaser
+    rotary
+
+You can concatenate effects with the '+', maintaining top-down order 
+
+    sound1="e_piano"
+    sound2="e_piano+tremolo"
+    sound3="flanger+chorus+phaser"
+    ...
+
+    This will affect all instruments
+    default="soundimages/MY_DEF_IMG.png"
+    default="chorus"
+-->

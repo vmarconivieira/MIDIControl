@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <Header
+    version="1.3"
+    zoneImagePath="zoneimages/LAYER_KEYS.png"
+    sideImagePath="zoneimages/SIDENAV_KEYS.png"
+    />
+
+    <SoundImages
+    sound1="soundimages/INSTR_CLAVINET.png"
+    sound2="soundimages/INSTR_HARPISCHORD.png"
+    sound3="soundimages/INSTR_VIBRAFONO.png"
+    sound4="soundimages/INSTR_MARIMBA.png"
+    sound5="soundimages/INSTR_CELESTA.png"
+    sound6="soundimages/INSTR_FISARMONICA.png"
+    sound7="soundimages/INSTR_FISARMONICA.png"
+    sound8="soundimages/INSTR_MUSETTE.png"
+    />
+
+    <SoundFXs
+    sound1="generic+chorus"
+    sound2="generic+chorus"
+    sound3="generic+chorus"
+    sound4="generic+chorus"
+    sound5="generic+chorus"
+    sound6="generic+chorus"
+    sound7="generic+chorus"
+    sound8="generic+chorus"
+    />
+</root>
+
+<!-- v. 1.0.3 by GG
+1) Sistemato split FA# su Cassotto e rifatto daccapo tutta la stesura;
+2) Ottave acute di alcuni suoni, incluso Cassotto, sovra-campionate a 96 Hz tramite resampling, per ridurre aliasing (peraltro lieve anche prima);
+-->
+
+<!-- How to use the SoundFXs
+Currently available effects:
+
+    none
+    a_piano
+    e_piano
+    generic
+    tremolo
+    flanger
+    chorus
+    phaser
+    rotary
+
+You can concatenate effects with the '+', maintaining top-down order 
+
+    sound1="e_piano"
+    sound2="e_piano+tremolo"
+    sound3="flanger+chorus+phaser"
+    ...
+
+    This will affect all instruments
+    default="soundimages/MY_DEF_IMG.png"
+    default="chorus"
+-->

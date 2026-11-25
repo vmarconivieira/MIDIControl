@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <Header
+    version="1.0"
+    zoneImagePath="zoneimages/LAYER_ORGANS.png"
+    sideImagePath="zoneimages/SIDENAV_ORGANS.png"
+    />
+
+    <SoundImages
+    sound1="soundimages/INSTR_HMND_ORGAN.png"
+    sound2="soundimages/INSTR_HMND_ORGAN.png"
+    sound3="soundimages/INSTR_HMND_ORGAN.png"
+    sound4="soundimages/INSTR_HMND_ORGAN.png"
+    sound5="soundimages/INSTR_HMND_ORGAN.png"
+    sound6="soundimages/INSTR_HMND_ORGAN.png"
+    sound7="soundimages/INSTR_HMND_ORGAN.png"
+    sound8="soundimages/INSTR_HMND_ORGAN.png"
+    sound9="soundimages/INSTR_HMND_ORGAN.png"
+    sound10="soundimages/INSTR_HMND_ORGAN.png"
+    sound11="soundimages/INSTR_HMND_ORGAN.png"
+    sound12="soundimages/INSTR_EL_ORGAN.png"
+    sound13="soundimages/INSTR_EL_ORGAN.png"
+    sound14="soundimages/INSTR_FM_ORGAN.png"
+    sound15="soundimages/INSTR_FM_ORGAN.png"
+    sound16="soundimages/INSTR_VINT_ORGAN.png"
+    sound17="soundimages/INSTR_VINT_ORGAN.png"
+    sound18="soundimages/INSTR_PIPE_ORGAN.png"
+    sound19="soundimages/INSTR_PIPE_ORGAN.png"
+    sound20="soundimages/INSTR_PIPE_ORGAN.png"
+    />
+
+    <SoundFXs
+    sound1="generic+rotary"
+    sound2="generic+rotary"
+    sound3="generic+rotary"
+    sound4="generic+rotary"
+    sound5="generic+rotary"
+    sound6="generic+rotary"
+    sound7="generic+rotary"
+    sound8="generic+rotary"
+    sound9="generic+rotary"
+    sound10="generic+rotary"
+    sound11="generic+rotary"
+    sound12="generic+rotary"
+    sound13="generic+rotary"
+    sound14="generic+rotary"
+    sound15="generic+rotary"
+    sound16="generic+rotary"
+    sound17="generic+rotary"
+    sound18="generic+chorus"
+    sound19="generic+chorus"
+    sound20="generic+chorus"
+    />
+</root>
+
+<!-- How to use the SoundFXs
+Currently available effects:
+
+    none
+    a_piano
+    e_piano
+    generic
+    tremolo
+    flanger
+    chorus
+    phaser
+    rotary
+
+You can concatenate effects with the '+', maintaining top-down order 
+
+    sound1="e_piano"
+    sound2="e_piano+tremolo"
+    sound3="flanger+chorus+phaser"
+    ...
+
+    This will affect all instruments
+    default="soundimages/MY_DEF_IMG.png"
+    default="chorus"
+-->

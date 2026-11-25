@@ -23,3 +23,13 @@ Thumbs.db
 *.iml
 __pycache__/
 *.pyc
+windows/logs/
+windows/cache/
+windows/pad_loops_cache/
+windows/runtime/
+windows/dsp/*.so
+windows/soundfonts/*.sf2
+windows/*.zip
+windows/installer/*.rc
+windows/installer/*.nsi
+windows/P61x Console.exe

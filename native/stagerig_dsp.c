@@ -67,6 +67,7 @@ int fluid_synth_get_active_voice_count(fluid_synth_t *synth);
 int fluid_synth_set_interp_method(fluid_synth_t *synth, int chan, int interp_method);
 int fluid_synth_set_polyphony(fluid_synth_t *synth, int polyphony);
 void fluid_synth_set_sample_rate(fluid_synth_t *synth, float sample_rate);
+int fluid_synth_sfcount(fluid_synth_t *synth);
 
 typedef int PaError;
 typedef int PaDeviceIndex;
@@ -211,6 +212,7 @@ int fluid_synth_get_active_voice_count(fluid_synth_t *synth);
 int fluid_synth_set_interp_method(fluid_synth_t *synth, int chan, int interp_method);
 int fluid_synth_set_polyphony(fluid_synth_t *synth, int polyphony);
 void fluid_synth_set_sample_rate(fluid_synth_t *synth, float sample_rate);
+int fluid_synth_sfcount(fluid_synth_t *synth);
 
 typedef AAudioStream PaStream;
 typedef pthread_mutex_t rig_mutex_t;
@@ -1319,7 +1321,20 @@ static void sync_dsp_sample_rate(StageRigDSP *dsp, double actual_sr, double req_
         if (dsp->settings) {
             fluid_settings_setnum(dsp->settings, "synth.sample-rate", actual_sr);
         }
-        if (dsp->synth) {
+        if (dsp->synth && dsp->settings && fluid_synth_sfcount(dsp->synth) == 0) {
+            fluid_synth_t *new_synth = new_fluid_synth(dsp->settings);
+            if (new_synth) {
+                delete_fluid_synth(dsp->synth);
+                dsp->synth = new_synth;
+#ifdef __ANDROID__
+                fluid_synth_set_interp_method(dsp->synth, -1, 1);
+#endif
+                for (int z = 0; z < NUM_ZONES; z++) {
+                    fluid_synth_cc(dsp->synth, z, 7, 127);
+                    fluid_synth_cc(dsp->synth, z, 11, 127);
+                }
+            }
+        } else if (dsp->synth) {
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -1669,11 +1684,11 @@ DSP_EXPORT int stagerig_start_stream(
             );
             if (err == paNoError && stream) {
                 (void)Pa_SetStreamFinishedCallback(stream, pa_stream_finished_cb);
+                const PaStreamInfo *si = Pa_GetStreamInfo(stream);
+                double actual_sr = (si && si->sampleRate >= 8000.0) ? si->sampleRate : sr_use;
+                sync_dsp_sample_rate(dsp, actual_sr, sample_rate);
                 err = Pa_StartStream(stream);
                 if (err == paNoError) {
-                    const PaStreamInfo *si = Pa_GetStreamInfo(stream);
-                    double actual_sr = (si && si->sampleRate >= 8000.0) ? si->sampleRate : sr_use;
-                    sync_dsp_sample_rate(dsp, actual_sr, sample_rate);
                     dsp->pa_stream = stream;
                     __atomic_store_n(&dsp->stream_active, 1, __ATOMIC_RELEASE);
                     if (out_latency_ms) {
@@ -2668,3 +2683,232 @@ DSP_EXPORT void stagerig_render_block(StageRigDSP *dsp, float *out_interleaved_l
         done += chunk;
     }
 }
+
+#ifdef _WIN32
+/* ============================================================================
+ * Pure-C Windows WinMM MIDI Input Ring Buffer & Native Crash Logger
+ * ============================================================================
+ * Eliminates ctypes.WINFUNCTYPE callbacks on WinMM OS multimedia threads
+ * (preventing Python GIL / thread-state faults during MIDI hotplug/streaming)
+ * and records exact faulting DLL + RVA offset on any native SEH crash.
+ */
+#define WINMM_RING_CAP 1024
+
+static SRWLOCK g_winmm_lock = SRWLOCK_INIT;
+static HMIDIIN g_winmm_in_handle = NULL;
+static volatile LONG g_winmm_active = 0;
+static volatile LONG g_winmm_head = 0;
+static volatile LONG g_winmm_tail = 0;
+static uint32_t g_winmm_ring[WINMM_RING_CAP];
+
+static void CALLBACK stagerig_winmm_in_proc(
+    HMIDIIN hMidiIn,
+    UINT wMsg,
+    DWORD_PTR dwInstance,
+    DWORD_PTR dwParam1,
+    DWORD_PTR dwParam2
+) {
+    (void)hMidiIn;
+    (void)dwInstance;
+    (void)dwParam2;
+    if (wMsg != MIM_DATA) return;
+    if (!__atomic_load_n(&g_winmm_active, __ATOMIC_ACQUIRE)) return;
+
+    uint32_t msg = (uint32_t)(dwParam1 & 0x00FFFFFFu);
+    uint8_t status = (uint8_t)(msg & 0xFFu);
+    if (status == 0xF8u || status == 0xFEu) return;
+
+    LONG tail = __atomic_load_n(&g_winmm_tail, __ATOMIC_RELAXED);
+    LONG head = __atomic_load_n(&g_winmm_head, __ATOMIC_ACQUIRE);
+    LONG next = (tail + 1) & (WINMM_RING_CAP - 1);
+    if (next == head) {
+        return;
+    }
+    g_winmm_ring[tail] = msg;
+    __atomic_store_n(&g_winmm_tail, next, __ATOMIC_RELEASE);
+}
+
+static void winmm_close_locked(void) {
+    __atomic_store_n(&g_winmm_active, 0, __ATOMIC_RELEASE);
+    if (g_winmm_in_handle) {
+        HMIDIIN h = g_winmm_in_handle;
+        g_winmm_in_handle = NULL;
+        midiInStop(h);
+        midiInReset(h);
+        midiInClose(h);
+    }
+    __atomic_store_n(&g_winmm_head, 0, __ATOMIC_RELEASE);
+    __atomic_store_n(&g_winmm_tail, 0, __ATOMIC_RELEASE);
+}
+
+DSP_EXPORT int stagerig_winmm_in_count(void) {
+    return (int)midiInGetNumDevs();
+}
+
+DSP_EXPORT int stagerig_winmm_in_name_utf8(int idx, char *out_buf, int cap) {
+    if (!out_buf || cap <= 0 || idx < 0) return -1;
+    out_buf[0] = '\0';
+    MIDIINCAPSW caps;
+    memset(&caps, 0, sizeof(caps));
+    MMRESULT mm = midiInGetDevCapsW((UINT)idx, &caps, (UINT)sizeof(caps));
+    if (mm != MMSYSERR_NOERROR) return -1;
+    int len = WideCharToMultiByte(CP_UTF8, 0, caps.szPname, -1, out_buf, cap, NULL, NULL);
+    if (len <= 0) {
+        out_buf[0] = '\0';
+        return -1;
+    }
+    return len - 1;
+}
+
+DSP_EXPORT int stagerig_winmm_in_open(int idx) {
+    if (idx < 0) return -1;
+    AcquireSRWLockExclusive(&g_winmm_lock);
+    winmm_close_locked();
+
+    HMIDIIN h = NULL;
+    MMRESULT mm = midiInOpen(
+        &h,
+        (UINT)idx,
+        (DWORD_PTR)stagerig_winmm_in_proc,
+        0,
+        CALLBACK_FUNCTION
+    );
+    if (mm != MMSYSERR_NOERROR || !h) {
+        ReleaseSRWLockExclusive(&g_winmm_lock);
+        return (int)mm;
+    }
+
+    g_winmm_in_handle = h;
+    __atomic_store_n(&g_winmm_head, 0, __ATOMIC_RELEASE);
+    __atomic_store_n(&g_winmm_tail, 0, __ATOMIC_RELEASE);
+    __atomic_store_n(&g_winmm_active, 1, __ATOMIC_RELEASE);
+
+    mm = midiInStart(h);
+    if (mm != MMSYSERR_NOERROR) {
+        winmm_close_locked();
+        ReleaseSRWLockExclusive(&g_winmm_lock);
+        return (int)mm;
+    }
+    ReleaseSRWLockExclusive(&g_winmm_lock);
+    return 0;
+}
+
+DSP_EXPORT void stagerig_winmm_in_close(void) {
+    AcquireSRWLockExclusive(&g_winmm_lock);
+    winmm_close_locked();
+    ReleaseSRWLockExclusive(&g_winmm_lock);
+}
+
+DSP_EXPORT int stagerig_winmm_in_is_open(void) {
+    return (__atomic_load_n(&g_winmm_active, __ATOMIC_ACQUIRE) && g_winmm_in_handle != NULL) ? 1 : 0;
+}
+
+DSP_EXPORT int stagerig_winmm_in_poll(uint32_t *out_msgs, int max_count) {
+    if (!out_msgs || max_count <= 0) return 0;
+    LONG head = __atomic_load_n(&g_winmm_head, __ATOMIC_RELAXED);
+    LONG tail = __atomic_load_n(&g_winmm_tail, __ATOMIC_ACQUIRE);
+    int n = 0;
+    while (head != tail && n < max_count) {
+        out_msgs[n++] = g_winmm_ring[head];
+        head = (head + 1) & (WINMM_RING_CAP - 1);
+    }
+    if (n > 0) {
+        __atomic_store_n(&g_winmm_head, head, __ATOMIC_RELEASE);
+    }
+    return n;
+}
+
+static wchar_t g_crash_log_path_w[MAX_PATH] = {0};
+static LPTOP_LEVEL_EXCEPTION_FILTER g_prev_exception_filter = NULL;
+static volatile LONG g_crash_logging_guard = 0;
+
+static void write_ascii_handle(HANDLE fh, const char *s) {
+    if (fh == INVALID_HANDLE_VALUE || !s) return;
+    DWORD written = 0;
+    WriteFile(fh, s, (DWORD)strlen(s), &written, NULL);
+}
+
+static void format_module_addr(const void *addr, char *out, size_t cap) {
+    if (!out || cap == 0) return;
+    out[0] = '\0';
+    HMODULE hmod = NULL;
+    if (GetModuleHandleExW(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (LPCWSTR)addr,
+            &hmod) && hmod != NULL) {
+        wchar_t mod_w[MAX_PATH];
+        mod_w[0] = L'\0';
+        DWORD mlen = GetModuleFileNameW(hmod, mod_w, MAX_PATH);
+        char mod_u8[MAX_PATH * 2];
+        mod_u8[0] = '\0';
+        if (mlen > 0) {
+            WideCharToMultiByte(CP_UTF8, 0, mod_w, -1, mod_u8, (int)sizeof(mod_u8), NULL, NULL);
+        }
+        const char *base_name = mod_u8;
+        for (const char *p = mod_u8; *p; ++p) {
+            if (*p == '\\' || *p == '/') base_name = p + 1;
+        }
+        uintptr_t rva = (uintptr_t)addr - (uintptr_t)hmod;
+        snprintf(out, cap, "%s+0x%llX (%p)", base_name[0] ? base_name : "unknown", (unsigned long long)rva, addr);
+    } else {
+        snprintf(out, cap, "<unknown-module> (%p)", addr);
+    }
+}
+
+static LONG WINAPI stagerig_unhandled_exc_filter(EXCEPTION_POINTERS *ep) {
+    if (ep && ep->ExceptionRecord &&
+        InterlockedCompareExchange(&g_crash_logging_guard, 1, 0) == 0) {
+        if (g_crash_log_path_w[0] != L'\0') {
+            HANDLE fh = CreateFileW(
+                g_crash_log_path_w,
+                FILE_APPEND_DATA,
+                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                NULL,
+                OPEN_ALWAYS,
+                FILE_ATTRIBUTE_NORMAL,
+                NULL
+            );
+            if (fh != INVALID_HANDLE_VALUE) {
+                char line[1024];
+                char mod_desc[512];
+                format_module_addr(ep->ExceptionRecord->ExceptionAddress, mod_desc, sizeof(mod_desc));
+                snprintf(
+                    line,
+                    sizeof(line),
+                    "\r\n[NativeCrash] Unhandled SEH code=0x%08lX tid=%lu addr=%s\r\n",
+                    (unsigned long)ep->ExceptionRecord->ExceptionCode,
+                    (unsigned long)GetCurrentThreadId(),
+                    mod_desc
+                );
+                write_ascii_handle(fh, line);
+
+                void *frames[24];
+                USHORT nframes = RtlCaptureStackBackTrace(0, 24, frames, NULL);
+                for (USHORT i = 0; i < nframes; ++i) {
+                    format_module_addr(frames[i], mod_desc, sizeof(mod_desc));
+                    snprintf(line, sizeof(line), "  #%02u %s\r\n", (unsigned)i, mod_desc);
+                    write_ascii_handle(fh, line);
+                }
+                FlushFileBuffers(fh);
+                CloseHandle(fh);
+            }
+        }
+    }
+    if (g_prev_exception_filter) {
+        return g_prev_exception_filter(ep);
+    }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
+DSP_EXPORT void stagerig_install_crash_handler(const char *log_path_utf8) {
+    if (log_path_utf8 && log_path_utf8[0] != '\0') {
+        MultiByteToWideChar(CP_UTF8, 0, log_path_utf8, -1, g_crash_log_path_w, MAX_PATH);
+        g_crash_log_path_w[MAX_PATH - 1] = L'\0';
+    }
+    LPTOP_LEVEL_EXCEPTION_FILTER prev = SetUnhandledExceptionFilter(stagerig_unhandled_exc_filter);
+    if (prev && prev != stagerig_unhandled_exc_filter) {
+        g_prev_exception_filter = prev;
+    }
+}
+#endif
+

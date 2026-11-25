@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <Header
+    version="1.0"
+    zoneImagePath="zoneimages/LAYER_E_PIANO.png"
+    sideImagePath="zoneimages/SIDENAV_E_PIANO.png"
+    />
+
+    <SoundImages
+    sound1="soundimages/INSTR_RHODES_1.png"
+    sound2="soundimages/INSTR_RHODES_1.png"
+    sound3="soundimages/INSTR_WURLITZER_1.png"
+    sound4="soundimages/INSTR_WURLITZER_1.png"
+    sound5="soundimages/INSTR_FM_PIANO.png"
+    sound6="soundimages/INSTR_FM_PIANO.png"
+    sound7="soundimages/INSTR_FM_PIANO.png"
+    sound8="soundimages/INSTR_FM_PIANO.png"
+    />
+
+    <SoundFXs
+    sound1="e_piano+tremolo"
+    sound2="e_piano+tremolo"
+    sound3="e_piano+tremolo"
+    sound4="e_piano+tremolo"
+    sound5="e_piano+tremolo"
+    sound6="e_piano+tremolo"
+    sound7="e_piano+tremolo"
+    sound8="e_piano+tremolo"
+    />
+</root>
+
+<!-- How to use the SoundFXs
+Currently available effects:
+
+    none
+    a_piano
+    e_piano
+    generic
+    tremolo
+    flanger
+    chorus
+    phaser
+    rotary
+
+You can concatenate effects with the '+', maintaining top-down order 
+
+    sound1="e_piano"
+    sound2="e_piano+tremolo"
+    sound3="flanger+chorus+phaser"
+    ...
+
+    This will affect all instruments
+    default="soundimages/MY_DEF_IMG.png"
+    default="chorus"
+-->

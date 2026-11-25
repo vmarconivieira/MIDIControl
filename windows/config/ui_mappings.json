@@ -1,0 +1,149 @@
+{
+  "vol_z1": {
+    "type": "CC",
+    "number": 82,
+    "channel": "1",
+    "label": "CC 82",
+    "invert": false
+  },
+  "vol_z2": {
+    "type": "CC",
+    "number": 83,
+    "channel": "1",
+    "label": "CC 83",
+    "invert": false
+  },
+  "vol_z3": {
+    "type": "CC",
+    "number": 84,
+    "channel": "1",
+    "label": "CC 84",
+    "invert": false
+  },
+  "vol_z4": {
+    "type": "CC",
+    "number": 85,
+    "channel": "1",
+    "label": "CC 85",
+    "invert": false
+  },
+  "vol_master_synth": {
+    "type": "CC",
+    "number": 7,
+    "channel": "1",
+    "label": "CC 7",
+    "invert": false
+  },
+  "pad_toggle": {
+    "type": "CC",
+    "number": 24,
+    "channel": "1",
+    "label": "CC 24",
+    "invert": false
+  },
+  "next_patch": {
+    "type": "CC",
+    "number": 22,
+    "channel": "1",
+    "label": "CC 22",
+    "invert": false
+  },
+  "prev_patch": {
+    "type": "CC",
+    "number": 21,
+    "channel": "1",
+    "label": "CC 21",
+    "invert": false
+  },
+  "btn_panic": {
+    "type": "CC",
+    "number": 25,
+    "channel": "1",
+    "label": "CC 25",
+    "invert": false
+  },
+  "dly_z1": {
+    "type": "CC",
+    "number": 21,
+    "channel": "1",
+    "label": "CC 21",
+    "invert": false
+  },
+  "dly_z2": {
+    "type": "CC",
+    "number": 21,
+    "channel": "1",
+    "label": "CC 21",
+    "invert": false
+  },
+  "dly_z3": {
+    "type": "CC",
+    "number": 21,
+    "channel": "1",
+    "label": "CC 21",
+    "invert": false
+  },
+  "dly_z4": {
+    "type": "CC",
+    "number": 21,
+    "channel": "1",
+    "label": "CC 21",
+    "invert": false
+  },
+  "vol_pad1": {
+    "type": "CC",
+    "number": 70,
+    "channel": "1",
+    "label": "CC 70",
+    "invert": false
+  },
+  "vol_pad2": {
+    "type": "CC",
+    "number": 71,
+    "channel": "1",
+    "label": "CC 71",
+    "invert": false
+  },
+  "vol_pad3": {
+    "type": "CC",
+    "number": 72,
+    "channel": "1",
+    "label": "CC 72",
+    "invert": false
+  },
+  "drum_pad_0": {
+    "type": "NOTE",
+    "number": 64,
+    "channel": "10",
+    "label": "N10:64",
+    "invert": false
+  },
+  "drum_pad_1": {
+    "type": "NOTE",
+    "number": 65,
+    "channel": "10",
+    "label": "N10:65",
+    "invert": false
+  },
+  "drum_pad_2": {
+    "type": "NOTE",
+    "number": 66,
+    "channel": "10",
+    "label": "N10:66",
+    "invert": false
+  },
+  "drum_pad_3": {
+    "type": "NOTE",
+    "number": 67,
+    "channel": "10",
+    "label": "N10:67",
+    "invert": false
+  },
+  "vol_master_pad": {
+    "type": "CC",
+    "number": 0,
+    "channel": "1",
+    "label": "CC 0",
+    "invert": false
+  }
+}

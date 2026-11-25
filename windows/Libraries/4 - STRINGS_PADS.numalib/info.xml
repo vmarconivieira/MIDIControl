@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <Header
+    version="1.4"
+    zoneImagePath="zoneimages/LAYER_STRINGS_PADS.png"
+    sideImagePath="zoneimages/SIDENAV_STRINGS_PADS.png"
+    />
+
+    <SoundImages
+    sound1="soundimages/INSTR_STRINGS_4.png"
+    sound2="soundimages/INSTR_STRINGS_2.png"
+    sound3="soundimages/INSTR_CELLOS.png"
+    sound4="soundimages/INSTR_PAD_1.png"
+    sound5="soundimages/INSTR_PADS.png"
+    sound6="soundimages/INSTR_PAD_2.png"
+    sound7="soundimages/INSTR_SYNTH.png"
+    />
+
+    <SoundFXs
+    sound1="generic+flanger"
+    sound2="generic+flanger"
+    sound3="generic+flanger"
+    sound4="generic+flanger"
+    sound5="generic+flanger"
+    sound6="generic+flanger"
+    sound7="generic+flanger"
+    />
+</root>
+
+<!-- v. 1.0.3 by GG
+1)Ridotto da 0,5 a 0,3 valore Release di Strings Section;
+-->
+
+<!-- How to use the SoundFXs
+Currently available effects:
+
+    none
+    a_piano
+    e_piano
+    generic
+    tremolo
+    flanger
+    chorus
+    phaser
+    rotary
+
+You can concatenate effects with the '+', maintaining top-down order 
+
+    sound1="e_piano"
+    sound2="e_piano+tremolo"
+    sound3="flanger+chorus+phaser"
+    ...
+
+    This will affect all instruments
+    default="soundimages/MY_DEF_IMG.png"
+    default="chorus"
+-->

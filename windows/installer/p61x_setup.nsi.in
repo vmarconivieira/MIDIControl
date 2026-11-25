@@ -1,0 +1,145 @@
+!include "MUI2.nsh"
+
+!define APP_NAME "P61x Console"
+!define APP_VERSION "@VERSION_NAME@"
+!define APP_EXE "P61x Console.exe"
+!define APP_PUBLISHER "P61x Console"
+!define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\P61x Console"
+
+Name "${APP_NAME} v${APP_VERSION}"
+OutFile "@OUT_EXE@"
+InstallDir "$LOCALAPPDATA\Programs\P61x Console"
+InstallDirRegKey HKCU "Software\P61x Console" "InstallDir"
+RequestExecutionLevel user
+Unicode true
+SetCompressor /SOLID lzma
+SetCompressorDictSize 32
+
+!define MUI_ABORTWARNING
+!define MUI_ICON "@ICON_PATH@"
+!define MUI_UNICON "@ICON_PATH@"
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${APP_EXE}"
+!define MUI_FINISHPAGE_RUN_TEXT "Abrir o P61x Console agora"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "PortugueseBR"
+
+Section "P61x Console" SecMain
+    SetOutPath "$INSTDIR"
+
+    ; Encerrar qualquer instancia anterior rodando a partir desta pasta antes de atualizar
+    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and $$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
+    Sleep 450
+
+    ; Arquivos principais (sobrescrever codigo, DLLs, UI, runtime e catálogos)
+    SetOverwrite on
+    File "@STAGE_DIR@\P61x Console.exe"
+    File "@STAGE_DIR@\main.py"
+    File "@STAGE_DIR@\standalone_audio_engine.py"
+    File "@STAGE_DIR@\standalone_midi_engine.py"
+    File "@STAGE_DIR@\standalone_timbre_catalog.py"
+    File "@STAGE_DIR@\version.json"
+    File "@STAGE_DIR@\soundpacks.json"
+    File "@STAGE_DIR@\mobile_catalog.json"
+    File "@STAGE_DIR@\requirements-windows.txt"
+    File "@STAGE_DIR@\iniciar_p61x.bat"
+    File "@STAGE_DIR@\iniciar_p61x_sem_terminal.vbs"
+    File "@STAGE_DIR@\instalar_windows.bat"
+    File "@STAGE_DIR@\LEIAME_WINDOWS.txt"
+
+    SetOutPath "$INSTDIR\dsp"
+    File /r "@STAGE_DIR@\dsp\*.*"
+
+    SetOutPath "$INSTDIR\ui"
+    File /r "@STAGE_DIR@\ui\*.*"
+
+    SetOutPath "$INSTDIR\Libraries"
+    File /r "@STAGE_DIR@\Libraries\*.*"
+
+    SetOutPath "$INSTDIR\drum_pads"
+    File /r "@STAGE_DIR@\drum_pads\*.*"
+
+    SetOutPath "$INSTDIR\pad_loops"
+    File /r "@STAGE_DIR@\pad_loops\*.*"
+
+    SetOutPath "$INSTDIR\soundbank"
+    File /r "@STAGE_DIR@\soundbank\*.*"
+
+    SetOutPath "$INSTDIR\soundimages"
+    File /r "@STAGE_DIR@\soundimages\*.*"
+
+    SetOutPath "$INSTDIR\runtime"
+    File /r "@STAGE_DIR@\runtime\*.*"
+
+    ; Preservar mapeamentos, bancos e preferencias existentes do usuario ao atualizar
+    SetOverwrite off
+    SetOutPath "$INSTDIR\config"
+    File /r "@STAGE_DIR@\config\*.*"
+    CreateDirectory "$INSTDIR\soundfonts"
+    CreateDirectory "$INSTDIR\logs"
+
+    SetOverwrite on
+    WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+    WriteRegStr HKCU "Software\P61x Console" "InstallDir" "$INSTDIR"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName" "${APP_NAME}"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion" "${APP_VERSION}"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher" "${APP_PUBLISHER}"
+    WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon" "$INSTDIR\${APP_EXE},0"
+    WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" '"$INSTDIR\Uninstall.exe"'
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoModify" 1
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoRepair" 1
+
+    CreateDirectory "$SMPROGRAMS\P61x Console"
+    CreateShortCut "$SMPROGRAMS\P61x Console\P61x Console.lnk" "$INSTDIR\${APP_EXE}" "" "$INSTDIR\${APP_EXE}" 0
+    CreateShortCut "$SMPROGRAMS\P61x Console\Desinstalar P61x Console.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\${APP_EXE}" 0
+    CreateShortCut "$DESKTOP\P61x Console.lnk" "$INSTDIR\${APP_EXE}" "" "$INSTDIR\${APP_EXE}" 0
+SectionEnd
+
+Section "Uninstall"
+    nsExec::ExecToLog "powershell -NoProfile -Command $\"Get-CimInstance Win32_Process | Where-Object { $$_.ExecutablePath -and $$_.ExecutablePath.StartsWith('$INSTDIR', [System.StringComparison]::OrdinalIgnoreCase) } | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force -ErrorAction SilentlyContinue }$\""
+    Sleep 450
+
+    Delete "$DESKTOP\P61x Console.lnk"
+    RMDir /r "$SMPROGRAMS\P61x Console"
+
+    Delete "$INSTDIR\Uninstall.exe"
+    Delete "$INSTDIR\P61x Console.exe"
+    Delete "$INSTDIR\main.py"
+    Delete "$INSTDIR\standalone_audio_engine.py"
+    Delete "$INSTDIR\standalone_midi_engine.py"
+    Delete "$INSTDIR\standalone_timbre_catalog.py"
+    Delete "$INSTDIR\version.json"
+    Delete "$INSTDIR\soundpacks.json"
+    Delete "$INSTDIR\mobile_catalog.json"
+    Delete "$INSTDIR\requirements-windows.txt"
+    Delete "$INSTDIR\iniciar_p61x.bat"
+    Delete "$INSTDIR\iniciar_p61x_sem_terminal.vbs"
+    Delete "$INSTDIR\instalar_windows.bat"
+    Delete "$INSTDIR\LEIAME_WINDOWS.txt"
+
+    RMDir /r "$INSTDIR\dsp"
+    RMDir /r "$INSTDIR\ui"
+    RMDir /r "$INSTDIR\Libraries"
+    RMDir /r "$INSTDIR\drum_pads"
+    RMDir /r "$INSTDIR\pad_loops"
+    RMDir /r "$INSTDIR\soundbank"
+    RMDir /r "$INSTDIR\soundimages"
+    RMDir /r "$INSTDIR\runtime"
+    RMDir /r "$INSTDIR\__pycache__"
+    RMDir /r "$INSTDIR\config"
+    RMDir /r "$INSTDIR\soundfonts"
+    RMDir /r "$INSTDIR\logs"
+    RMDir "$INSTDIR"
+
+    DeleteRegKey HKCU "Software\P61x Console"
+    DeleteRegKey HKCU "${UNINST_KEY}"
+SectionEnd

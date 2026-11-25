@@ -96,12 +96,92 @@ jobs:
           path: dist/${{ steps.meta.outputs.apk_name }}
           retention-days: 30
 
+  build-windows:
+    name: Build Windows Setup EXE & ZIP
+    needs: soundpacks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read Version Metadata
+        id: meta
+        run: |
+          python3 - << 'PY' >> "$GITHUB_OUTPUT"
+          import json
+          with open("version.json", "r", encoding="utf-8") as f:
+              d = json.load(f)
+          print(f"version_name={d['versionName']}")
+          PY
+
+      - name: Install MinGW-w64, NSIS & packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 nsis zip unzip p7zip-full curl
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build Windows ZIP and Setup EXE installer
+        run: |
+          chmod +x scripts/build_windows.sh
+          ./scripts/build_windows.sh
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: P61x-Console-Windows-v${{ steps.meta.outputs.version_name }}
+          path: |
+            dist/P61x_Console_Setup_*.exe
+            dist/P61x_Console_Windows_*.zip
+          retention-days: 30
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build-apk, build-windows]
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.create_release == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read Version & Release Notes
+        id: meta
+        run: |
+          python3 - << 'PY' >> "$GITHUB_OUTPUT"
+          import json
+          with open("version.json", "r", encoding="utf-8") as f:
+              d = json.load(f)
+          print(f"version_name={d['versionName']}")
+          print(f"tag={d.get('tag', 'v' + d['versionName'])}")
+          PY
+          python3 -c "import json; notes=json.load(open('version.json')).get('notes', []); print('\n'.join(f'- {n}' for n in notes) if isinstance(notes, list) else str(notes))" > release_notes.md
+
+      - name: Download APK Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: P61x-Console-v${{ steps.meta.outputs.version_name }}
+          path: dist
+
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: P61x-Console-Windows-v${{ steps.meta.outputs.version_name }}
+          path: dist
+
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v') || inputs.create_release == true
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || steps.meta.outputs.tag }}
           name: P61x Console v${{ steps.meta.outputs.version_name }}
           body_path: release_notes.md
-          files: dist/${{ steps.meta.outputs.apk_name }}
+          files: |
+            dist/P61x_Console_*.apk
+            dist/P61x_Console_Setup_*.exe
+            dist/P61x_Console_Windows_*.zip
           make_latest: true

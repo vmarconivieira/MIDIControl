@@ -1,0 +1,49 @@
+================================================================================
+   P61X CONSOLE v1.3.6 (BUILD 12) — VERSÃO WINDOWS & LINUX STANDALONE
+   STAGE SYNTH 4 ZONAS • WORSHIP PAD 4 CAMADAS • DRUM PADS • 98 TIMBRES
+================================================================================
+
+Este pacote contém a versão completa para Windows (64-bit) do P61x Console v1.3.6,
+sincronizada com todas as funções e melhorias do aplicativo Android:
+- Áudio sem distorção (limiter transparente), sem desafinação (sincronia de sample-rate
+  WASAPI 48 kHz / 44.1 kHz) e Chorus estéreo corrigido
+- Mixer com Faders otimizados e medição VU no lado direito
+- Modal de FX & Filtros por Zona (9 Knobs Rotativos: Reverb, Delay, Chorus,
+  Cutoff, Resonance, Tone, Attack, Release e Pan)
+- Equalizador de 5 Bandas Rotativo e Divisão de Teclado (Key Split) por Zona
+- Preset inicial "Worship Immersion" com Nord Red Ambient Pad na Zona 4
+  (download automático em segundo plano na primeira abertura)
+- Catálogo expandido com 98 Timbres divididos em 18 Pacotes Modulares sob demanda
+- Worship Pad Contínuo de 4 Camadas + 4 Drum Pads Estéreo (suporte a acentos/Unicode)
+- Perfil padrão "Origin 62//P61x AMW" pré-configurado (21 mapeamentos) + botão
+  Exportar/Importar Perfil MIDI JSON para transferir entre celular e PC
+
+--------------------------------------------------------------------------------
+1. COMO INSTALAR NO WINDOWS (APENAS 1 VEZ):
+--------------------------------------------------------------------------------
+1. IMPORTANTE: Clique com o botão direito no arquivo .zip e escolha
+   "Extrair Tudo..." antes de abrir qualquer arquivo (não execute direto dentro
+   do ZIP). Extraia por exemplo para Documentos\P61x_Keyboard_Windows.
+2. Dê DOIS CLIQUES em:
+   --> instalar_windows.bat
+   (Detecta Python 3.10–3.14 64-bit dando preferência ao Python 3.12, cria .venv,
+   instala PySide6/numpy e usa driver MIDI nativo do Windows WinMM se necessário,
+   valida o motor de áudio DSP e cria o atalho "P61x Console" na Área de Trabalho).
+
+--------------------------------------------------------------------------------
+2. COMO ABRIR NO DIA A DIA:
+--------------------------------------------------------------------------------
+- Dê dois cliques no atalho "P61x Console" na Área de Trabalho; ou
+- Execute "iniciar_p61x_sem_terminal.vbs" (abre direto sem janela preta); ou
+- Execute "iniciar_p61x.bat" (mostra log no terminal — útil caso ocorra algum erro).
+
+--------------------------------------------------------------------------------
+3. COMO TRANSFERIR SEU PERFIL MIDI DO CELULAR PARA O PC (OU VICE-VERSA):
+--------------------------------------------------------------------------------
+- O perfil "Origin 62//P61x AMW" já vem ativo por padrão com os 21 mapeamentos.
+- Para copiar outro perfil criado no Android:
+  1. No aplicativo -> Config / MIDI -> clique em "Exportar Perfil" -> "Copiar JSON"
+     (ou "Baixar .json").
+  2. No outro aparelho -> Config / MIDI -> clique em "Importar Perfil" -> cole o JSON
+     (ou abra o arquivo .json) -> "Aplicar & Salvar".
+================================================================================
