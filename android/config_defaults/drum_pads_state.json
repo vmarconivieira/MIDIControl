@@ -1,0 +1,8 @@
+{
+  "pads": [
+    {"index": 0, "sample_id": "01_Worship_Arena_Kick", "name": "Worship Arena Kick", "category": "Kick", "style": "Worship", "volume": 112, "muted": false, "loop": false, "color": "#f59e0b"},
+    {"index": 1, "sample_id": "06_Worship_Arena_Snare", "name": "Worship Arena Snare", "category": "Snare / Clap", "style": "Worship", "volume": 112, "muted": false, "loop": false, "color": "#ec4899"},
+    {"index": 2, "sample_id": "11_Worship_Shimmer_Ride", "name": "Worship Shimmer Ride", "category": "Ride / Hi-Hat", "style": "Worship", "volume": 112, "muted": false, "loop": false, "color": "#06b6d4"},
+    {"index": 3, "sample_id": "17_Worship_Dark_Crash", "name": "Worship Dark Crash", "category": "Crash", "style": "Worship", "volume": 112, "muted": false, "loop": false, "color": "#22c55e"}
+  ]
+}

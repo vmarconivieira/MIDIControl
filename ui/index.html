@@ -755,12 +755,17 @@
       border: 1px solid var(--border-subtle); border-radius: 12px;
       padding: 7px 8px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
       min-height: 0; position: relative; transition: border-color .15s, opacity .15s;
+      contain: layout style paint;
     }
     .channel-strip.is-focused {
       border-color: var(--mt-accent);
       box-shadow: inset 0 0 18px rgba(245, 158, 11, 0.08);
     }
     .channel-strip.is-muted .fader-bezel { opacity: 0.58; }
+    body.is-fader-active .channel-strip,
+    body.is-fader-active .fader-bezel,
+    body.is-fader-active .mt-fader-cap { transition: none !important; }
+    body.is-fader-active .channel-strip.is-focused { box-shadow: none; }
 
     .strip-head-btn {
       height: 28px; border-radius: 7px; padding: 0 8px;
@@ -803,23 +808,22 @@
       display: flex; align-items: stretch; justify-content: space-between; gap: 5px;
       position: relative; touch-action: none; user-select: none; -webkit-user-select: none;
       cursor: ns-resize; transition: border-color .12s;
+      contain: layout style paint;
     }
     .fader-bezel.is-dragging {
       border-color: var(--mt-accent);
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.85), 0 0 14px rgba(245,158,11,0.22);
     }
     .led-ladder {
       width: 7px; flex-shrink: 0; display: flex; flex-direction: column-reverse; justify-content: space-between;
-      padding: 6px 0; pointer-events: none;
+      padding: 6px 0; pointer-events: none; contain: layout style paint;
     }
     .led-dot {
       width: 5px; height: 5px; border-radius: 50%; margin: 0 auto;
       background: #0d1016; border: 1px solid rgba(255,255,255,0.06);
-      transition: background .05s;
     }
-    .led-dot.lit-low { background: #22c55e; box-shadow: 0 0 5px rgba(34,197,94,0.8); }
-    .led-dot.lit-mid { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.9); }
-    .led-dot.lit-hi  { background: #ef4444; box-shadow: 0 0 7px rgba(239,68,68,0.95); }
+    .led-dot.lit-low { background: #22c55e; box-shadow: 0 0 3px rgba(34,197,94,0.7); }
+    .led-dot.lit-mid { background: #f59e0b; box-shadow: 0 0 3px rgba(245,158,11,0.78); }
+    .led-dot.lit-hi  { background: #ef4444; box-shadow: 0 0 4px rgba(239,68,68,0.85); }
 
     .fader-slot-wrap {
       flex: 1; position: relative; display: flex; justify-content: center;
@@ -847,25 +851,25 @@
       position: absolute; left: 50%; top: 0;
       transform: translate3d(-50%, 24px, 0);
       will-change: transform;
+      backface-visibility: hidden;
       width: 42px; height: 42px; border-radius: 6px; pointer-events: none;
       background: linear-gradient(180deg,
         #3a4150 0%, #232833 22%, #11141b 46%,
         #0c0e13 54%, #262c38 78%, #3c4353 100%);
       border: 1px solid #06070a;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.95), inset 0 1px 1px rgba(255,255,255,0.32);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.3);
       display: flex; align-items: center; justify-content: center;
     }
     .fader-bezel.is-dragging .mt-fader-cap {
       border-color: var(--mt-accent-bright);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.98), 0 0 12px rgba(245,158,11,0.45), inset 0 1px 2px rgba(255,255,255,0.45);
     }
     .mt-fader-cap::after {
       content: ""; width: 32px; height: 3.5px; border-radius: 2px;
-      background: #f8fafc; box-shadow: 0 0 6px var(--mt-accent-glow);
+      background: #f8fafc; box-shadow: 0 0 4px var(--mt-accent-glow);
     }
     .master-strip-pad .mt-fader-cap::after {
       background: var(--master-pad-color);
-      box-shadow: 0 0 7px rgba(236, 72, 153, 0.75);
+      box-shadow: 0 0 5px rgba(236, 72, 153, 0.7);
     }
     .master-strip-synth .mt-fader-cap::after {
       background: var(--mt-accent-bright);
@@ -2385,6 +2389,10 @@
             <button id="btnSaveCtrlProfile" class="btn-tool active">Salvar Perfil</button>
             <button id="btnClearAllMidi" class="btn-tool" style="color:#fca5a5;">Limpar CCs</button>
           </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <button id="btnExportCtrlProfile" class="btn-tool" style="justify-content:center;"><i class="fa-solid fa-file-export"></i><span>Exportar Perfil</span></button>
+            <button id="btnImportCtrlProfile" class="btn-tool" style="justify-content:center;"><i class="fa-solid fa-file-import"></i><span>Importar Perfil</span></button>
+          </div>
         </div>
 
         <label style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:var(--bg-slot); border-radius:8px; cursor:pointer; font-size:11.5px;">
@@ -2421,7 +2429,7 @@
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <button id="btnApplyAudioCfg" class="btn-tool active" style="justify-content:center;">Aplicar Buffer</button>
-          <button id="btnRestartNuma" class="btn-tool" style="justify-content:center;">Reiniciar AAudio</button>
+          <button id="btnRestartNuma" class="btn-tool" style="justify-content:center;">Reiniciar Áudio</button>
         </div>
         <button id="btnSettingsOpenFx" class="btn-tool" style="justify-content:space-between;">
           <span>Abrir Master FX &amp; Tap Tempo</span><i class="fa-solid fa-chevron-right"></i>
@@ -2499,6 +2507,32 @@
           <button id="btnModalTest" class="btn-tool">Testar</button>
           <button id="btnModalSave" class="btn-tool active">Salvar</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EXPORTAR / IMPORTAR PERFIL MIDI MODAL ==================== -->
+  <div id="ctrlProfileTransferModal" class="modal-backdrop">
+    <div class="modal-card" style="max-width:480px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span class="mono" style="font-size:10px; font-weight:800; color:var(--mt-accent-bright);">PERFIL MIDI PORTÁTIL</span>
+          <h2 id="ctrlTransferTitle" style="font-size:15px; margin-top:2px;">Exportar / Importar Perfil</h2>
+        </div>
+        <button id="btnCloseCtrlTransfer" class="nav-arrow-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input id="ctrlTransferNameInput" type="text" class="dark-input" placeholder="Nome do Perfil (ex: Origin 62//P61x AMW)">
+      <textarea id="ctrlTransferJsonArea" class="dark-input mono" style="height:165px; padding:9px; font-size:10.5px; resize:vertical; line-height:1.35;" placeholder='Cole aqui o JSON do perfil ou use "Abrir .json"'></textarea>
+      <div id="ctrlTransferActionsExport" style="display:flex; gap:8px; justify-content:flex-end;">
+        <button id="btnCopyCtrlJson" class="btn-tool"><i class="fa-regular fa-copy"></i><span>Copiar JSON</span></button>
+        <button id="btnDownloadCtrlJson" class="btn-tool active"><i class="fa-solid fa-download"></i><span>Baixar .json</span></button>
+      </div>
+      <div id="ctrlTransferActionsImport" style="display:none; gap:8px; justify-content:space-between; align-items:center;">
+        <label class="btn-tool" style="cursor:pointer;">
+          <i class="fa-solid fa-folder-open"></i><span>Abrir .json</span>
+          <input id="ctrlTransferFileInput" type="file" accept=".json,application/json,text/plain" style="display:none;">
+        </label>
+        <button id="btnApplyCtrlJson" class="btn-tool active"><i class="fa-solid fa-check"></i><span>Aplicar &amp; Salvar</span></button>
       </div>
     </div>
   </div>
@@ -2646,21 +2680,42 @@
         host.appendChild(strip);
 
         const sl = strip.querySelector(".fader-range-hidden");
+        const valEl = strip.querySelector(".fader-val-badge");
         const onBtn = strip.querySelector(".btn-strip-on");
         if (d.master) {
           sl.addEventListener("input", () => {
-            mastersState.pad.volume = parseInt(sl.value, 10);
-            syncMastersUI();
-            syncOpenKnobHud();
-            if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+            const val = parseInt(sl.value, 10);
+            mastersState.pad.volume = val;
+            if (sl.dataset.dragging === "1") {
+              if (valEl) valEl.textContent = val;
+              scheduleBridgeCall("master_pad", () => {
+                if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+              });
+            } else {
+              syncMastersUI();
+              if (knobHudState.open) syncOpenKnobHud();
+              flushBridgeCall("master_pad", () => {
+                if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+              });
+            }
           });
           onBtn.addEventListener("click", () => document.getElementById("btnOnMasterPad")?.click());
         } else {
           sl.addEventListener("input", () => {
-            padState.volumes[i] = parseInt(sl.value, 10);
-            syncPadUIFromState(padState);
-            syncOpenKnobHud();
-            if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(i, padState.volumes[i]);
+            const val = parseInt(sl.value, 10);
+            padState.volumes[i] = val;
+            if (sl.dataset.dragging === "1") {
+              if (valEl) valEl.textContent = val;
+              scheduleBridgeCall(`pad_${i}`, () => {
+                if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(i, padState.volumes[i]);
+              });
+            } else {
+              syncPadUIFromState(padState);
+              if (knobHudState.open) syncOpenKnobHud();
+              flushBridgeCall(`pad_${i}`, () => {
+                if (numaBackend && numaBackend.setPadLayerVolume) numaBackend.setPadLayerVolume(i, padState.volumes[i]);
+              });
+            }
           });
           onBtn.addEventListener("click", () => {
             padState.mutes[i] = !padState.mutes[i];
@@ -2685,35 +2740,101 @@
     }
 
     /* =========================================================================
-       SCULPTED FADER & DUAL LED DOT LADDER ENGINE (120Hz GPU translate3d + rAF)
+       SCULPTED FADER & DUAL LED DOT LADDER ENGINE (CACHED DIFF + COALESCED BRIDGE)
        ========================================================================= */
-    function initLedLadders() {
+    const LED_CLASS_BY_IDX = Array.from({ length: 16 }, (_, i) =>
+      i >= 13 ? "led-dot lit-hi" : (i >= 9 ? "led-dot lit-mid" : "led-dot lit-low")
+    );
+    const ledLadderCache = new Map();
+
+    function refreshLedLadderCache() {
+      ledLadderCache.clear();
       document.querySelectorAll(".led-ladder").forEach(ladder => {
-        if (ladder.childElementCount > 0) return;
-        for (let i = 0; i < 16; i++) {
-          const d = document.createElement("div");
-          d.className = "led-dot";
-          ladder.appendChild(d);
+        const key = ladder.dataset.vuRight;
+        if (!key) return;
+        let arr = ledLadderCache.get(key);
+        if (!arr) {
+          arr = [];
+          ledLadderCache.set(key, arr);
         }
+        arr.push({ dots: ladder.children, prevLit: 0 });
       });
     }
 
+    function initLedLadders() {
+      document.querySelectorAll(".led-ladder").forEach(ladder => {
+        if (ladder.childElementCount > 0) return;
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < 16; i++) {
+          const d = document.createElement("div");
+          d.className = "led-dot";
+          frag.appendChild(d);
+        }
+        ladder.appendChild(frag);
+      });
+      refreshLedLadderCache();
+    }
+
     function updateLedLadder(channelKey, level, isMuted) {
+      let entries = ledLadderCache.get(channelKey);
+      if (!entries) {
+        refreshLedLadderCache();
+        entries = ledLadderCache.get(channelKey);
+        if (!entries) return;
+      }
       const pct = isMuted ? 0 : Math.max(0, Math.min(1, level));
       const litCount = Math.round(pct * 16);
-      const clsPrefix = `[data-vu-right="${channelKey}"]`;
-      document.querySelectorAll(clsPrefix).forEach(ladder => {
-        const dots = ladder.children;
-        for (let i = 0; i < dots.length; i++) {
-          const dot = dots[i];
-          dot.className = "led-dot";
-          if (i < litCount) {
-            if (i >= 13) dot.classList.add("lit-hi");
-            else if (i >= 9) dot.classList.add("lit-mid");
-            else dot.classList.add("lit-low");
-          }
+      for (let e = 0; e < entries.length; e++) {
+        const entry = entries[e];
+        const prev = entry.prevLit;
+        if (litCount === prev) continue;
+        const dots = entry.dots;
+        if (litCount > prev) {
+          const hi = Math.min(litCount, dots.length);
+          for (let i = prev; i < hi; i++) dots[i].className = LED_CLASS_BY_IDX[i];
+        } else {
+          const hi = Math.min(prev, dots.length);
+          for (let i = litCount; i < hi; i++) dots[i].className = "led-dot";
         }
-      });
+        entry.prevLit = litCount;
+      }
+    }
+
+    const _bridgeThrottleMap = new Map();
+    function scheduleBridgeCall(key, fn, delayMs = 28) {
+      let st = _bridgeThrottleMap.get(key);
+      if (!st) {
+        st = { lastAt: 0, timer: 0, fn: null };
+        _bridgeThrottleMap.set(key, st);
+      }
+      st.fn = fn;
+      const now = performance.now();
+      const elapsed = now - st.lastAt;
+      if (elapsed >= delayMs) {
+        if (st.timer) { clearTimeout(st.timer); st.timer = 0; }
+        st.lastAt = now;
+        const run = st.fn;
+        st.fn = null;
+        if (run) run();
+      } else if (!st.timer) {
+        st.timer = setTimeout(() => {
+          st.timer = 0;
+          st.lastAt = performance.now();
+          const run = st.fn;
+          st.fn = null;
+          if (run) run();
+        }, delayMs - elapsed);
+      }
+    }
+
+    function flushBridgeCall(key, fn) {
+      const st = _bridgeThrottleMap.get(key);
+      if (st) {
+        if (st.timer) { clearTimeout(st.timer); st.timer = 0; }
+        st.fn = null;
+        st.lastAt = performance.now();
+      }
+      if (fn) fn();
     }
 
     function setFaderCapPosition(wrap, cap, valFloat, forcedHeight) {
@@ -2784,7 +2905,7 @@
         let rafId = 0;
         let lastSentVal = parseInt(sl.value || 0, 10);
 
-        const commitY = (clientY, snapAfter) => {
+        const commitY = (clientY, snapAfter, forceInput = false) => {
           const travel = Math.max(12, cachedMaxTop - cachedMinTop);
           const targetCenterY = clientY - grabOffsetY;
           const rawTop = targetCenterY - cachedTop - cachedCapH * 0.5;
@@ -2798,7 +2919,7 @@
             cap.style.transform = `translate3d(-50%, ${topPx.toFixed(2)}px, 0)`;
           }
 
-          if (intVal !== lastSentVal) {
+          if (forceInput || intVal !== lastSentVal) {
             lastSentVal = intVal;
             sl.value = String(intVal);
             sl.dispatchEvent(new Event("input"));
@@ -2808,7 +2929,7 @@
         const flushFrame = () => {
           rafId = 0;
           if (!dragging) return;
-          commitY(pendingClientY, false);
+          commitY(pendingClientY, false, false);
         };
 
         bezel.addEventListener("pointerdown", (e) => {
@@ -2848,8 +2969,10 @@
             moved = true;
             cancelLongPress();
             wrap.dataset.faderDragging = "1";
+            sl.dataset.dragging = "1";
             bezel.classList.add("is-dragging");
             if (strip) strip.classList.add("is-fader-dragging");
+            document.body.classList.add("is-fader-active");
           }
           if (moved && !rafId) {
             rafId = requestAnimationFrame(flushFrame);
@@ -2862,18 +2985,21 @@
             cancelAnimationFrame(rafId);
             rafId = 0;
           }
-          if (moved) {
-            commitY(e.clientY !== undefined ? e.clientY : pendingClientY, true);
-          } else if (e.type === "pointerup" && !isLearningActive) {
-            // Short tap on empty track jumps smoothly to tapped level
-            grabOffsetY = 0;
-            commitY(e.clientY, true);
-          }
           dragging = false;
           activePointerId = -1;
           wrap.dataset.faderDragging = "0";
+          sl.dataset.dragging = "0";
           bezel.classList.remove("is-dragging");
           if (strip) strip.classList.remove("is-fader-dragging");
+          document.body.classList.remove("is-fader-active");
+
+          if (moved) {
+            commitY(e.clientY !== undefined ? e.clientY : pendingClientY, true, true);
+          } else if (e.type === "pointerup" && !isLearningActive) {
+            // Short tap on empty track jumps smoothly to tapped level
+            grabOffsetY = 0;
+            commitY(e.clientY, true, true);
+          }
           try { if (e.pointerId !== undefined) bezel.releasePointerCapture(e.pointerId); } catch (_) {}
         };
 
@@ -4682,34 +4808,69 @@
     }
 
     /* =========================================================================
-       NATIVE QT BRIDGE HANDLERS
+       NATIVE QT BRIDGE HANDLERS (rAF-BATCHED VU TELEMETRY)
        ========================================================================= */
-    function handleNativeEvent(ev) {
-      if (ev.event === "numa_status") {
-        updateNumaStatusBadge(ev);
-      } else if (ev.event === "vu_telemetry") {
+    let _pendingVuEv = null;
+    let _vuRafId = 0;
+    let _stripZoneCache = null;
+    let _drumFillCache = null;
+    let _numaDotEl = null;
+    let _numaLblEl = null;
+    let _lastNumaOnline = null;
+    let _lastNumaLabel = "";
+
+    function _flushVuTelemetry() {
+      _vuRafId = 0;
+      const ev = _pendingVuEv;
+      _pendingVuEv = null;
+      if (!ev || document.hidden) return;
+
+      if (activeView === "mixer") {
+        if (!_stripZoneCache) {
+          _stripZoneCache = [0, 1, 2, 3].map(i => document.getElementById(`stripZone${i}`));
+        }
         if (Array.isArray(ev.zone_vu)) {
-          ev.zone_vu.forEach((lvl, idx) => {
-            const muted = document.getElementById(`stripZone${idx}`)?.classList.contains("is-muted");
-            updateLedLadder(String(idx), lvl, muted);
-          });
+          for (let idx = 0; idx < ev.zone_vu.length; idx++) {
+            const muted = !!(_stripZoneCache[idx] && _stripZoneCache[idx].classList.contains("is-muted"));
+            updateLedLadder(String(idx), ev.zone_vu[idx], muted);
+          }
         }
         if (typeof ev.synth_master_vu === "number") {
           updateLedLadder("synth_master", ev.synth_master_vu, mastersState.synth.muted);
         }
+        if (typeof ev.pad_master_vu === "number") {
+          updateLedLadder("pad_master", ev.pad_master_vu, mastersState.pad.muted);
+        }
+      } else if (activeView === "pads") {
         if (Array.isArray(ev.pad_vu)) {
-          ev.pad_vu.forEach((lvl, idx) => updateLedLadder(`pad_${idx}`, lvl, padState.mutes[idx]));
+          for (let idx = 0; idx < ev.pad_vu.length; idx++) {
+            updateLedLadder(`pad_${idx}`, ev.pad_vu[idx], padState.mutes[idx]);
+          }
         }
         if (typeof ev.pad_master_vu === "number") {
           updateLedLadder("pad_master", ev.pad_master_vu, mastersState.pad.muted);
         }
-        if (Array.isArray(ev.drum_vu)) {
-          ev.drum_vu.forEach((lvl, idx) => {
-            const fill = document.getElementById(`drumVuFill${idx}`);
-            if (fill) fill.style.width = `${Math.min(100, Math.round(lvl * 100))}%`;
-          });
+      } else if (activeView === "drums") {
+        if (!_drumFillCache) {
+          _drumFillCache = [0, 1, 2, 3].map(i => document.getElementById(`drumVuFill${i}`));
         }
-        updateNumaStatusBadge({ running: ev.stream_active, latency_ms: ev.latency_ms, active_voices: ev.active_voices });
+        if (Array.isArray(ev.drum_vu)) {
+          for (let idx = 0; idx < ev.drum_vu.length; idx++) {
+            const fill = _drumFillCache[idx];
+            if (fill) fill.style.width = `${Math.min(100, Math.round(ev.drum_vu[idx] * 100))}%`;
+          }
+        }
+      }
+      updateNumaStatusBadge({ running: ev.stream_active, latency_ms: ev.latency_ms, active_voices: ev.active_voices });
+    }
+
+    function handleNativeEvent(ev) {
+      if (ev.event === "numa_status") {
+        updateNumaStatusBadge(ev);
+      } else if (ev.event === "vu_telemetry") {
+        if (document.hidden) return;
+        _pendingVuEv = ev;
+        if (!_vuRafId) _vuRafId = requestAnimationFrame(_flushVuTelemetry);
       } else if (ev.event === "port_status") {
         const ports = Array.isArray(ev.ports) ? ev.ports : null;
         const activeIn = ev.input_port || "";
@@ -4750,13 +4911,22 @@
     }
 
     function updateNumaStatusBadge(st) {
-      const dot = document.getElementById("numaDot");
-      const lbl = document.getElementById("numaEngineLabel");
-      if (!dot || !lbl || !st) return;
-      dot.classList.toggle("online", !!st.running);
+      if (!st) return;
+      if (!_numaDotEl) _numaDotEl = document.getElementById("numaDot");
+      if (!_numaLblEl) _numaLblEl = document.getElementById("numaEngineLabel");
+      if (!_numaDotEl || !_numaLblEl) return;
+      const on = !!st.running;
+      if (on !== _lastNumaOnline) {
+        _lastNumaOnline = on;
+        _numaDotEl.classList.toggle("online", on);
+      }
       const lat = st.latency_ms ? `${Number(st.latency_ms).toFixed(1)}ms` : "--";
       const v = st.active_voices ?? 0;
-      lbl.textContent = st.running ? `${lat} • ${v}v` : "Parado";
+      const txt = on ? `${lat} • ${v}v` : "Parado";
+      if (txt !== _lastNumaLabel) {
+        _lastNumaLabel = txt;
+        _numaLblEl.textContent = txt;
+      }
     }
 
     let lastMidiPorts = [];
@@ -5219,8 +5389,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.3.3",
-      installedVersionCode: 9,
+      installedVersionName: "1.3.4",
+      installedVersionCode: 10,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -5444,6 +5614,9 @@
         midiMappings = (st.ui_mappings && typeof st.ui_mappings === "object") ? st.ui_mappings : {};
         controllerProfiles = Array.isArray(st.controller_profiles) ? st.controller_profiles : [];
         activeControllerProfile = st.active_controller_profile || "";
+        if (!activeControllerProfile && Object.keys(midiMappings).length > 0 && controllerProfiles.some(p => p.name === "Origin 62//P61x AMW")) {
+          activeControllerProfile = "Origin 62//P61x AMW";
+        }
         refreshControllerProfilesUI();
 
         if (st.masters_state) mastersState = st.masters_state;
@@ -5542,7 +5715,7 @@
         openExternalUrl: (url) => wrapCb("openExternalUrl", String(url || "")),
         rescanMidiDevices: (cb) => wrapCb("rescanMidiDevices", cb),
         setGlobalTranspose: (st) => wrapCb("setGlobalTranspose", Number(st)),
-        getGlobalTranspose: () => wrapCb("getGlobalTranspose"),
+        getGlobalTranspose: (cb) => wrapCb("getGlobalTranspose", cb),
         startBleMidiScan: (includeAll) => wrapCb("startBleMidiScan", !!includeAll),
         stopBleMidiScan: () => wrapCb("stopBleMidiScan"),
         connectBleMidiDevice: (addr) => wrapCb("connectBleMidiDevice", String(addr || "")),
@@ -5898,12 +6071,21 @@
       /* Sculpted Zone 1-4 Faders, ON/Mute, Solo (R), FX Modal, Split Shortcut & Timbre Picker */
       for (let z = 0; z < 4; z++) {
         const sl = document.getElementById(`faderZ${z}`);
+        const valEl = document.getElementById(`faderValZ${z}`);
         sl.addEventListener("input", () => {
-          const val = parseInt(sl.value);
-          document.getElementById(`faderValZ${z}`).textContent = val;
+          const val = parseInt(sl.value, 10);
+          if (valEl) valEl.textContent = val;
           syncFaderVisual(sl);
           if (programs[currentProgramIndex]?.volumes) programs[currentProgramIndex].volumes[z] = val;
-          if (numaBackend) numaBackend.setZoneVolume(z, val);
+          if (sl.dataset.dragging === "1") {
+            scheduleBridgeCall(`zone_${z}`, () => {
+              if (numaBackend) numaBackend.setZoneVolume(z, programs[currentProgramIndex]?.volumes ? programs[currentProgramIndex].volumes[z] : val);
+            });
+          } else {
+            flushBridgeCall(`zone_${z}`, () => {
+              if (numaBackend) numaBackend.setZoneVolume(z, val);
+            });
+          }
         });
         sl.addEventListener("dblclick", () => {
           sl.value = 100;
@@ -5932,10 +6114,21 @@
 
       /* Dual Independent Masters (TIMBRES MASTER & PADS MASTER) */
       const fSynth = document.getElementById("faderMasterSynth");
+      const fSynthVal = document.getElementById("faderValMasterSynth");
       fSynth.addEventListener("input", () => {
-        mastersState.synth.volume = parseInt(fSynth.value);
-        syncMastersUI();
-        if (numaBackend && numaBackend.setSynthMasterVolume) numaBackend.setSynthMasterVolume(mastersState.synth.volume);
+        const val = parseInt(fSynth.value, 10);
+        mastersState.synth.volume = val;
+        if (fSynth.dataset.dragging === "1") {
+          if (fSynthVal) fSynthVal.textContent = val;
+          scheduleBridgeCall("master_synth", () => {
+            if (numaBackend && numaBackend.setSynthMasterVolume) numaBackend.setSynthMasterVolume(mastersState.synth.volume);
+          });
+        } else {
+          syncMastersUI();
+          flushBridgeCall("master_synth", () => {
+            if (numaBackend && numaBackend.setSynthMasterVolume) numaBackend.setSynthMasterVolume(mastersState.synth.volume);
+          });
+        }
       });
       document.getElementById("btnOnMasterSynth").addEventListener("click", () => {
         mastersState.synth.muted = !mastersState.synth.muted;
@@ -5944,11 +6137,22 @@
       });
 
       const fPadM = document.getElementById("faderMasterPad");
+      const fPadMVal = document.getElementById("faderValMasterPad");
       fPadM.addEventListener("input", () => {
-        mastersState.pad.volume = parseInt(fPadM.value);
-        syncMastersUI();
-        syncOpenKnobHud();
-        if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+        const val = parseInt(fPadM.value, 10);
+        mastersState.pad.volume = val;
+        if (fPadM.dataset.dragging === "1") {
+          if (fPadMVal) fPadMVal.textContent = val;
+          scheduleBridgeCall("master_pad", () => {
+            if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+          });
+        } else {
+          syncMastersUI();
+          if (knobHudState.open) syncOpenKnobHud();
+          flushBridgeCall("master_pad", () => {
+            if (numaBackend && numaBackend.setPadMasterVolume) numaBackend.setPadMasterVolume(mastersState.pad.volume);
+          });
+        }
       });
       document.getElementById("btnOnMasterPad").addEventListener("click", () => {
         mastersState.pad.muted = !mastersState.pad.muted;
@@ -6163,6 +6367,117 @@
         if (numaBackend) numaBackend.clearAllMappings(() => {});
         updateAllBadges(); refreshControllerProfilesUI();
       });
+
+      const transferModal = document.getElementById("ctrlProfileTransferModal");
+      const transferTitle = document.getElementById("ctrlTransferTitle");
+      const transferName = document.getElementById("ctrlTransferNameInput");
+      const transferArea = document.getElementById("ctrlTransferJsonArea");
+      const transferExportRow = document.getElementById("ctrlTransferActionsExport");
+      const transferImportRow = document.getElementById("ctrlTransferActionsImport");
+      document.getElementById("btnCloseCtrlTransfer")?.addEventListener("click", () => transferModal?.classList.remove("open"));
+      document.getElementById("btnExportCtrlProfile")?.addEventListener("click", () => {
+        const name = activeControllerProfile
+          || document.getElementById("controllerProfileNameInput")?.value.trim()
+          || document.getElementById("controllerProfileSelect")?.value
+          || "Meu Controlador";
+        if (transferTitle) transferTitle.textContent = "Exportar Perfil MIDI";
+        if (transferName) transferName.value = name;
+        const payload = {
+          name,
+          updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+          ui_mappings: midiMappings
+        };
+        if (transferArea) transferArea.value = JSON.stringify(payload, null, 2);
+        if (transferExportRow) transferExportRow.style.display = "flex";
+        if (transferImportRow) transferImportRow.style.display = "none";
+        transferModal?.classList.add("open");
+      });
+      document.getElementById("btnImportCtrlProfile")?.addEventListener("click", () => {
+        if (transferTitle) transferTitle.textContent = "Importar Perfil MIDI";
+        if (transferName) transferName.value = "";
+        if (transferArea) transferArea.value = "";
+        if (transferExportRow) transferExportRow.style.display = "none";
+        if (transferImportRow) transferImportRow.style.display = "flex";
+        transferModal?.classList.add("open");
+      });
+      document.getElementById("btnCopyCtrlJson")?.addEventListener("click", () => {
+        if (!transferArea) return;
+        const txt = transferArea.value;
+        const done = () => setStatusMessage("JSON do perfil copiado! Cole em outro aparelho.");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(done).catch(() => {
+            transferArea.select();
+            try { document.execCommand("copy"); } catch (_) {}
+            done();
+          });
+        } else {
+          transferArea.select();
+          try { document.execCommand("copy"); } catch (_) {}
+          done();
+        }
+      });
+      document.getElementById("btnDownloadCtrlJson")?.addEventListener("click", () => {
+        if (!transferArea) return;
+        try {
+          const slug = (transferName?.value.trim() || "perfil_midi").replace(/[^A-Za-z0-9_-]+/g, "_");
+          const blob = new Blob([transferArea.value], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${slug}.json`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          setStatusMessage(`Arquivo ${slug}.json exportado`);
+        } catch (err) {
+          setStatusMessage("Use 'Copiar JSON' para transferir no celular");
+        }
+      });
+      document.getElementById("ctrlTransferFileInput")?.addEventListener("change", (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (transferArea) transferArea.value = String(reader.result || "");
+          try {
+            const parsed = JSON.parse(transferArea.value);
+            if (parsed && parsed.name && transferName && !transferName.value.trim()) {
+              transferName.value = String(parsed.name);
+            }
+          } catch (_) {}
+        };
+        reader.readAsText(f);
+        e.target.value = "";
+      });
+      document.getElementById("btnApplyCtrlJson")?.addEventListener("click", () => {
+        if (!transferArea) return;
+        try {
+          const parsed = JSON.parse(transferArea.value.trim());
+          const maps = (parsed && typeof parsed.ui_mappings === "object" && !Array.isArray(parsed.ui_mappings))
+            ? parsed.ui_mappings
+            : ((parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : null);
+          if (!maps) throw new Error("Formato inválido");
+          const nm = (transferName?.value.trim() || (parsed && parsed.name) || "Perfil Importado").trim();
+          midiMappings = maps;
+          saveMappingsToStorage();
+          if (numaBackend && numaBackend.saveControllerProfile) {
+            numaBackend.saveControllerProfile(nm, JSON.stringify(midiMappings), (r) => {
+              try {
+                const d = JSON.parse(r);
+                controllerProfiles = d.profiles || [];
+                activeControllerProfile = d.active_profile || nm;
+                refreshControllerProfilesUI();
+              } catch (_) {}
+            });
+          }
+          transferModal?.classList.remove("open");
+          setStatusMessage(`Perfil "${nm}" importado com sucesso!`);
+        } catch (err) {
+          setStatusMessage("JSON inválido — verifique o conteúdo colado.");
+        }
+      });
+
       document.getElementById("midiInSelect").addEventListener("change", (e) => {
         lastMidiSelectedId = e.target.value;
         if (numaBackend) numaBackend.selectInputPort(e.target.value);
@@ -6180,7 +6495,7 @@
         if (numaBackend && numaBackend.restartAudioEngine) {
           numaBackend.restartAudioEngine(() => { setTimeout(refreshAudioRouteUI, 350); });
         }
-        setStatusMessage("Stream AAudio reiniciado");
+        setStatusMessage("Motor de áudio reiniciado");
       });
 
       /* MIDI Learn Modal Buttons */

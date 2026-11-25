@@ -1,14 +1,15 @@
 {
-  "versionCode": 9,
-  "versionName": "1.3.3",
-  "tag": "v1.3.3",
+  "versionCode": 10,
+  "versionName": "1.3.4",
+  "tag": "v1.3.4",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.3.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.3/P61x_Console_v1.3.3.apk",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.3",
+  "apkFileName": "P61x_Console_v1.3.4.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.4/P61x_Console_v1.3.4.apk",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.4",
   "notes": [
-    "Preset Worship Immersion atualizado com Nord Red Ambient Pad na Zona 4 (com download automático)",
-    "Catálogo expandido de 51 para 98 timbres com os 22 bancos SoundFont da pasta Audio Evolution em 11 novos pacotes sob demanda",
-    "Corrige instalador de atualização no Android 14/15/16 e reabertura automática pós-update"
+    "Corrige afinação (sync do sample-rate real do hardware) e distorção com limiter transparente no motor DSP",
+    "Alinhamento de burst AAudio e otimização da interface/faders para celulares como o Redmi Note 9",
+    "Perfil Origin 62//P61x AMW (21 mapeamentos) como padrão e nova função Exportar/Importar Perfil MIDI JSON",
+    "Versão Windows corrigida (WASAPI 48kHz, Python 3.8-3.14 com fallback WinMM, caminhos com acentos e atalho na Área de Trabalho)"
   ]
 }

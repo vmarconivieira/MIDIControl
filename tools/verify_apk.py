@@ -83,8 +83,21 @@ def main():
         assert 'id="soundPacksModal"' in html, "Missing #soundPacksModal"
         assert 'id="padLayersFadersGrid"' in html, "Missing Pads faders grid"
         assert 'id="btnPadsModeFaders"' in html, "Missing Pads FADERS toggle"
+        assert 'id="btnExportCtrlProfile"' in html, "Missing #btnExportCtrlProfile"
+        assert 'id="btnImportCtrlProfile"' in html, "Missing #btnImportCtrlProfile"
         for bad in ("\U0001F3B5", "\U0001F3B9", "STAGE RIG WORKSTATION", "Arraste no knob ou na barra"):
             assert bad not in html, f"Removed UI text/emoji still present: {bad!r}"
+        ui_map_def = json.loads(zf.read("assets/config_defaults/ui_mappings.json").decode("utf-8"))
+        assert len(ui_map_def) == 21 and "vol_master_pad" in ui_map_def, f"Unexpected default ui_mappings count: {len(ui_map_def)}"
+        origin_prof = json.loads(zf.read("assets/config_defaults/controller_profiles/Origin_62_P61x_AMW.json").decode("utf-8"))
+        assert "vol_master_pad" in origin_prof.get("ui_mappings", {}), "Origin_62_P61x_AMW missing vol_master_pad"
+        assert len(origin_prof.get("ui_mappings", {})) == 21, f"Origin_62_P61x_AMW should have 21 mappings"
+        prebuilt_so = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "native", "prebuilt", "arm64-v8a", "libstagerig_dsp.so")
+        if os.path.isfile(prebuilt_so):
+            import hashlib
+            h_prebuilt = hashlib.sha256(open(prebuilt_so, "rb").read()).hexdigest()
+            h_apk = hashlib.sha256(zf.read("lib/arm64-v8a/libstagerig_dsp.so")).hexdigest()
+            assert h_apk == h_prebuilt, f"APK libstagerig_dsp.so SHA mismatch: {h_apk} != {h_prebuilt}"
         sp = json.loads(zf.read("assets/soundpacks.json").decode("utf-8"))
         assert len(sp["packs"]) == 18, f"Expected 18 sound packs, got {len(sp['packs'])}"
         for core in sp["coreAssetFiles"]:
@@ -96,7 +109,7 @@ def main():
         w0 = cat["banks"]["0 - Live Rig"][0]
         assert w0["name"] == "Worship Immersion", f"Expected Preset 0 to be Worship Immersion, got {w0['name']}"
         assert w0["libs"][3] == "Nord Red Ambient Pad.sf2/Red Ambient Pad", f"Unexpected Zona 4 timbre in Worship Immersion: {w0['libs'][3]}"
-    print(f"[OK] ZIP CRC + structure + UI + 98-timbre catalog checks passed ({len(names)} entries)")
+    print(f"[OK] ZIP CRC + structure + UI + DSP SHA + 98-timbre catalog checks passed ({len(names)} entries)")
 
     # 2. Manifest & resource IDs
     badging = run([aapt2, "dump", "badging", apk_path])

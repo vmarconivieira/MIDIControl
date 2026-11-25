@@ -134,7 +134,8 @@ with open(catalog_path, "rb") as f:
     catalog_bytes = f.read()
 CORE_ASSETS = set("assets/" + a for a in json.loads(manifest_bytes)["coreAssetFiles"])
 thumb_dir = os.path.join(root_dir, "android", "soundimages")
-SKIP_PREFIXES = ("META-INF/", "res/")
+cfg_defaults_dir = os.path.join(root_dir, "android", "config_defaults")
+SKIP_PREFIXES = ("META-INF/", "res/", "assets/config_defaults/")
 SKIP_EXACT = {"AndroidManifest.xml", "resources.arsc", "classes.dex", "assets/ui/index.html", "assets/mobile_catalog.json"}
 
 with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
@@ -176,6 +177,13 @@ with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
             if fn.startswith("assets/soundimages/"):
                 continue
             data = zbase.read(fn)
+            # Optimized DSP core (native/stagerig_dsp.c) replaces the prebuilt engine from the base APK
+            if fn == "lib/arm64-v8a/libstagerig_dsp.so":
+                prebuilt = os.path.join(root_dir, "native", "prebuilt", "arm64-v8a", "libstagerig_dsp.so")
+                if os.path.isfile(prebuilt):
+                    with open(prebuilt, "rb") as pf:
+                        data = pf.read()
+                    print("[INFO] Using optimized libstagerig_dsp.so from native/prebuilt")
             zi = zipfile.ZipInfo(fn)
             zi.date_time = info.date_time
             if fn.endswith(".so"):
@@ -202,6 +210,17 @@ with zipfile.ZipFile(out_apk, "w", allowZip64=True) as zout:
         zi_t.compress_type = zipfile.ZIP_STORED
         with open(os.path.join(thumb_dir, name), "rb") as f:
             zout.writestr(zi_t, f.read())
+
+    if os.path.isdir(cfg_defaults_dir):
+        for r, _, files in sorted(os.walk(cfg_defaults_dir)):
+            for fname in sorted(files):
+                fpath = os.path.join(r, fname)
+                rel = os.path.relpath(fpath, cfg_defaults_dir).replace("\\", "/")
+                zi_c = zipfile.ZipInfo("assets/config_defaults/" + rel)
+                zi_c.date_time = (2026, 1, 1, 0, 0, 0)
+                zi_c.compress_type = zipfile.ZIP_DEFLATED
+                with open(fpath, "rb") as f:
+                    zout.writestr(zi_c, f.read())
 
 print("[OK] Packed unaligned APK:", out_apk)
 PY
