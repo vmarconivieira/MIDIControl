@@ -1,18 +1,18 @@
 {
-  "versionCode": 14,
-  "versionName": "1.3.8",
-  "tag": "v1.3.8",
+  "versionCode": 15,
+  "versionName": "1.3.9",
+  "tag": "v1.3.9",
   "repo": "vmarconivieira/MIDIControl",
-  "apkFileName": "P61x_Console_v1.3.8.apk",
-  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_v1.3.8.apk",
-  "windowsSetupFileName": "P61x_Console_Setup_v1.3.8.exe",
-  "windowsSetupUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_Setup_v1.3.8.exe",
-  "windowsZipFileName": "P61x_Console_Windows_v1.3.8.zip",
-  "windowsZipUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.8/P61x_Console_Windows_v1.3.8.zip",
-  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.8",
+  "apkFileName": "P61x_Console_v1.3.9.apk",
+  "apkUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.9/P61x_Console_v1.3.9.apk",
+  "windowsSetupFileName": "P61x_Console_Setup_v1.3.9.exe",
+  "windowsSetupUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.9/P61x_Console_Setup_v1.3.9.exe",
+  "windowsZipFileName": "P61x_Console_Windows_v1.3.9.zip",
+  "windowsZipUrl": "https://github.com/vmarconivieira/MIDIControl/releases/download/v1.3.9/P61x_Console_Windows_v1.3.9.zip",
+  "releaseUrl": "https://github.com/vmarconivieira/MIDIControl/releases/tag/v1.3.9",
   "notes": [
-    "Windows Setup: força encerramento de processos presos nas DLLs DSP via taskkill antes de instalar e restaura pasta padrão AppData\\Local\\P61x Console sem herdar Programs\\P61x Console",
-    "Windows App: limpa instâncias presas anteriores antes de abrir DSP, adiciona logs detalhados de Boot e traz janela para frente",
-    "Mantém correções de MIDI C WinMM (sem crash), remoção do Shimmer Pad e FluidSynth 2.6.3"
+    "Android APK & UI: corrige tags CC deslocadas e cortadas na tela Mixer (contain: paint e alinhamento centralizado sobre os faders)",
+    "Mixer & Pads: exibe badges CC também nos botões Solo (R) das Zonas 1-4 e nos botões ON dos Faders de Pad",
+    "Topo, Drums & Timbres: elimina sobreposição de badges CC, impede disparo acidental de drum ao tocar no badge CC, habilita rolagem das categorias de timbres no celular e evita decodificar o pad shimmer inativo no Android"
   ]
 }

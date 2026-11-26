@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
 setlocal EnableExtensions
-title P61x Console v1.3.8
+title P61x Console v1.3.9
 cd /d "%~dp0"
 
 echo =======================================================
-echo   P61x Console v1.3.8 (Stage Synth, Worship Pad & Drums)
+echo   P61x Console v1.3.9 (Stage Synth, Worship Pad & Drums)
 echo =======================================================
 echo.
 

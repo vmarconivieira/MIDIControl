@@ -755,7 +755,7 @@
       border: 1px solid var(--border-subtle); border-radius: 12px;
       padding: 7px 8px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
       min-height: 0; position: relative; transition: border-color .15s, opacity .15s;
-      contain: layout style paint;
+      contain: layout style;
     }
     .channel-strip.is-focused {
       border-color: var(--mt-accent);
@@ -808,7 +808,7 @@
       display: flex; align-items: stretch; justify-content: space-between; gap: 5px;
       position: relative; touch-action: none; user-select: none; -webkit-user-select: none;
       cursor: ns-resize; transition: border-color .12s;
-      contain: layout style paint;
+      contain: layout style;
     }
     .fader-bezel.is-dragging {
       border-color: var(--mt-accent);
@@ -1308,9 +1308,10 @@
     .browser-sidebar {
       background: var(--bg-slot); border: 1px solid var(--border-subtle); border-radius: 12px;
       padding: 8px; display: flex; flex-direction: column; gap: 5px;
+      min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
     .cat-side-btn {
-      width: 100%; height: 38px; padding: 0 11px; border-radius: 9px;
+      width: 100%; height: 38px; flex-shrink: 0; padding: 0 11px; border-radius: 9px;
       border: 1px solid transparent; background: transparent; color: var(--text-secondary);
       cursor: pointer; display: flex; align-items: center; gap: 10px;
       font-size: 12px; font-weight: 700; text-align: left;
@@ -1399,19 +1400,26 @@
 
     /* MIDI Learn Badges */
     .midi-badge {
-      position: absolute; top: -6px; right: 2px; z-index: 8;
-      padding: 1px 5px; border-radius: 4px; font-size: 8.5px; font-weight: 800;
+      position: absolute; top: -6px; right: 2px; z-index: 12;
+      padding: 1px 5px; border-radius: 4px; font-size: 8.5px; line-height: 1.15; font-weight: 800;
       font-family: "Cascadia Mono", monospace; background: #0f172a;
       border: 1px solid var(--mt-accent); color: var(--mt-accent-bright);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.72);
       pointer-events: auto; cursor: pointer; display: none; white-space: nowrap;
     }
-    .top-bar .midi-badge { top: auto; bottom: -5px; right: 2px; }
+    .fader-stage { padding-top: 7px; }
+    .fader-bezel .midi-badge { top: -7px; left: 50%; right: auto; transform: translateX(-50%); font-size: 8px; padding: 1px 5px; }
+    .btn-strip-on .midi-badge { top: -6px; right: 4px; left: auto; font-size: 8px; padding: 1px 4px; }
+    .btn-strip-util.btn-solo .midi-badge { top: -6px; left: 50%; right: auto; transform: translateX(-50%); font-size: 7.5px; line-height: 1.1; padding: 1px 4px; }
+    .top-bar .midi-badge { top: auto; bottom: -7px; left: 50%; right: auto; transform: translateX(-50%); font-size: 7.5px; line-height: 1.1; padding: 1px 4px; }
+    .top-bar [data-badge-for="prev_patch"] { left: 0; right: auto; transform: none; }
+    .top-bar [data-badge-for="next_patch"] { left: auto; right: 0; transform: none; }
     .pads-top-segmented .midi-badge { top: 3px; right: 6px; }
     .layer-mini-card .midi-badge { top: -8px; right: -2px; }
     .layer-knob-stage .midi-badge { top: -4px; right: -4px; }
     .pad-quick-knob-host .midi-badge { top: -6px; right: -6px; }
-    .drum-knob-host .midi-badge { top: -6px; left: 50%; right: auto; transform: translateX(-50%); }
-    .drum-actions-row .midi-badge { top: -6px; right: -6px; }
+    .drum-knob-host .midi-badge { top: -7px; left: 50%; right: auto; transform: translateX(-50%); font-size: 8px; padding: 1px 4px; }
+    .drum-actions-row .midi-badge { top: -7px; left: 50%; right: auto; transform: translateX(-50%); font-size: 8px; padding: 1px 4px; }
     .midi-badge.has-map { display: inline-block; }
     body.midi-edit-mode .midi-badge { display: inline-block !important; }
     body.midi-edit-mode .learnable { outline: 1px dashed rgba(245,158,11,0.35); outline-offset: 2px; }
@@ -1674,7 +1682,7 @@
                 <span class="midi-badge" data-badge-for="mute_z1"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ0" data-zone="0" data-control-id="solo_z1" data-control-label="Solo (R) Zona 1" title="Solo Zona 1">R</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ0" data-zone="0" data-control-id="solo_z1" data-control-label="Solo (R) Zona 1" title="Solo Zona 1"><span class="midi-badge" data-badge-for="solo_z1"></span>R</button>
                 <button class="btn-strip-util btn-fx-focus" data-focus-zone="0" title="Abrir FX, EQ e Split da Zona 1">FX</button>
               </div>
             </div>
@@ -1703,7 +1711,7 @@
                 <span class="midi-badge" data-badge-for="mute_z2"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ1" data-zone="1" data-control-id="solo_z2" data-control-label="Solo (R) Zona 2" title="Solo Zona 2">R</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ1" data-zone="1" data-control-id="solo_z2" data-control-label="Solo (R) Zona 2" title="Solo Zona 2"><span class="midi-badge" data-badge-for="solo_z2"></span>R</button>
                 <button class="btn-strip-util btn-fx-focus" data-focus-zone="1" title="Abrir FX, EQ e Split da Zona 2">FX</button>
               </div>
             </div>
@@ -1732,7 +1740,7 @@
                 <span class="midi-badge" data-badge-for="mute_z3"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ2" data-zone="2" data-control-id="solo_z3" data-control-label="Solo (R) Zona 3" title="Solo Zona 3">R</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ2" data-zone="2" data-control-id="solo_z3" data-control-label="Solo (R) Zona 3" title="Solo Zona 3"><span class="midi-badge" data-badge-for="solo_z3"></span>R</button>
                 <button class="btn-strip-util btn-fx-focus" data-focus-zone="2" title="Abrir FX, EQ e Split da Zona 3">FX</button>
               </div>
             </div>
@@ -1761,7 +1769,7 @@
                 <span class="midi-badge" data-badge-for="mute_z4"></span>ON
               </button>
               <div class="strip-bottom-row">
-                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ3" data-zone="3" data-control-id="solo_z4" data-control-label="Solo (R) Zona 4" title="Solo Zona 4">R</button>
+                <button class="btn-strip-util btn-solo learnable" id="btnSoloZ3" data-zone="3" data-control-id="solo_z4" data-control-label="Solo (R) Zona 4" title="Solo Zona 4"><span class="midi-badge" data-badge-for="solo_z4"></span>R</button>
                 <button class="btn-strip-util btn-fx-focus" data-focus-zone="3" title="Abrir FX, EQ e Split da Zona 4">FX</button>
               </div>
             </div>
@@ -2632,11 +2640,11 @@
     }
 
     const PAD_FADER_DEFS = [
-      { name: "WARM PAD",    color: "var(--p1-color)", ctrl: "vol_pad1", label: "Volume Warm Pad", vu: "pad_0" },
-      { name: "CELLO PAD",   color: "var(--p2-color)", ctrl: "vol_pad2", label: "Volume Cello Pad", vu: "pad_1" },
-      { name: "FLUTE PAD",   color: "var(--p3-color)", ctrl: "vol_pad3", label: "Volume Flute Pad", vu: "pad_2" },
-      { name: "AMBIENT PAD", color: "var(--p4-color)", ctrl: "vol_pad4", label: "Volume Ambient Pad", vu: "pad_3" },
-      { name: "PADS MASTER", color: "var(--master-pad-color)", ctrl: "vol_master_pad", label: "Volume Master Pad Contínuo", vu: "pad_master", master: true }
+      { name: "WARM PAD",    color: "var(--p1-color)", ctrl: "vol_pad1", label: "Volume Warm Pad", muteCtrl: "mute_pad1", muteLabel: "Mute Warm Pad", vu: "pad_0" },
+      { name: "CELLO PAD",   color: "var(--p2-color)", ctrl: "vol_pad2", label: "Volume Cello Pad", muteCtrl: "mute_pad2", muteLabel: "Mute Cello Pad", vu: "pad_1" },
+      { name: "FLUTE PAD",   color: "var(--p3-color)", ctrl: "vol_pad3", label: "Volume Flute Pad", muteCtrl: "mute_pad3", muteLabel: "Mute Flute Pad", vu: "pad_2" },
+      { name: "AMBIENT PAD", color: "var(--p4-color)", ctrl: "vol_pad4", label: "Volume Ambient Pad", muteCtrl: "mute_pad4", muteLabel: "Mute Ambient Pad", vu: "pad_3" },
+      { name: "PADS MASTER", color: "var(--master-pad-color)", ctrl: "vol_master_pad", label: "Volume Master Pad Contínuo", muteCtrl: "mute_master_pad", muteLabel: "ON / Mute Pads Master", vu: "pad_master", master: true }
     ];
 
     function buildPadFaders() {
@@ -2662,7 +2670,7 @@
             </div>
           </div>
           <div class="fader-val-badge mono" id="faderVal${sid}">100</div>
-          <button class="btn-strip-on is-on" id="btnOn${sid}" type="button">ON</button>`;
+          <button class="btn-strip-on is-on learnable" id="btnOn${sid}" data-control-id="${d.muteCtrl}" data-control-label="${d.muteLabel}" type="button"><span class="midi-badge" data-badge-for="${d.muteCtrl}"></span>ON</button>`;
         host.appendChild(strip);
 
         const sl = strip.querySelector(".fader-range-hidden");
@@ -3227,8 +3235,7 @@
         const dIdx = parseInt(key.replace("drum_vol_", ""), 10);
         return (drumPadsState.pads[dIdx] && drumPadsState.pads[dIdx].volume !== undefined) ? drumPadsState.pads[dIdx].volume : 112;
       }
-      const p = programs[currentProgramIndex];
-      if (!p) return 0;
+      const p = programs[currentProgramIndex] || {};
       if (key === "rev") return (p.rev && p.rev[zIdx] !== undefined) ? p.rev[zIdx] : 50;
       if (key === "dly") return (p.dly && p.dly[zIdx] !== undefined) ? p.dly[zIdx] : 30;
       if (key === "chorus") return (p.chorus_ccs && p.chorus_ccs[zIdx] !== undefined) ? p.chorus_ccs[zIdx] : 0;
@@ -3654,8 +3661,9 @@
       });
 
       slot.addEventListener("dblclick", () => {
-        applyZoneKnobValue(resolveZone(), def.key, def.def, true);
-        const scope = def.scope || (def.isMaster ? "Master FX" : `Zona ${focusedZone + 1}`);
+        const rz = resolveZone();
+        applyZoneKnobValue(rz, def.key, def.def, true);
+        const scope = def.scope || (def.isMaster ? "Master FX" : `Zona ${rz + 1}`);
         setStatusMessage(`${scope} • ${def.label} restaurado → ${formatKnobHudValue(def, def.def)}`);
       });
 
@@ -4066,6 +4074,8 @@
         btn.addEventListener("click", () => selectPadKey(k.id, true));
         grid.appendChild(btn);
       });
+      attachMidiLearnTriggers();
+      updateAllBadges();
     }
 
     function selectPadKey(keyId, sendToBackend = true) {
@@ -4245,6 +4255,7 @@
 
         card.querySelector(".drum-trigger-face").addEventListener("pointerdown", (e) => {
           if (e.button !== 0 && e.pointerType === "mouse") return;
+          if (e.target && e.target.closest && e.target.closest(".midi-badge")) return;
           triggerDrumPadUI(idx, 118, false);
         });
         card.querySelector(`[data-drum-sel="${idx}"]`).addEventListener("change", (e) => {
@@ -4481,7 +4492,9 @@
       if (!p.sustain_enables) p.sustain_enables = [true,true,true,true];
 
       const kl = parseInt(document.getElementById("zoneKeyLowSelect").value || 21);
-      const kh = Math.max(kl, parseInt(document.getElementById("zoneKeyHighSelect").value || 108));
+      const khEl = document.getElementById("zoneKeyHighSelect");
+      const kh = Math.max(kl, parseInt((khEl && khEl.value) || 108));
+      if (khEl && parseInt(khEl.value || 108) !== kh) khEl.value = String(kh);
       const sus = document.getElementById("zoneSustainCheck").checked;
       p.key_lows[z] = kl;
       p.key_his[z] = kh;
@@ -4603,7 +4616,7 @@
 
         el.addEventListener("pointerdown", (e) => {
           if (e.button !== 0 && e.pointerType === "mouse") return;
-          if (e.target.classList.contains("midi-badge")) return;
+          if (e.target && e.target.closest && e.target.closest(".midi-badge")) return;
           const start = Date.now();
           const px = e.clientX;
           const py = e.clientY;
@@ -5374,8 +5387,8 @@
        (!) SOBRE & GITHUB AUTO-UPDATER STATE & UI
        ========================================================================= */
     const updaterState = {
-      installedVersionName: "1.3.8",
-      installedVersionCode: 14,
+      installedVersionName: "1.3.9",
+      installedVersionCode: 15,
       repo: "vmarconivieira/MIDIControl",
       releaseUrl: "https://github.com/vmarconivieira/MIDIControl/releases",
       apkUrl: "",
@@ -6158,7 +6171,7 @@
           syncPadUIFromState(padState);
         });
       });
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         const muteEl = document.querySelector(`.btn-pad-layer-mute[data-layer="${i}"]`);
         if (muteEl) {
           muteEl.addEventListener("click", () => {

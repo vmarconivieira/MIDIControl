@@ -38,7 +38,7 @@ End If
 If runExe <> "" Then
     rc = shell.Run("""" & runExe & """ """ & baseDir & "\main.py""", 0, True)
     If rc <> 0 Then
-        MsgBox "O P61x Console encerrou com erro (codigo " & rc & ")." & vbCrLf & "Execute 'iniciar_p61x.bat' para ver os detalhes no console ou confira a pasta 'logs'.", 16, "P61x Console v1.3.8"
+        MsgBox "O P61x Console encerrou com erro (codigo " & rc & ")." & vbCrLf & "Execute 'iniciar_p61x.bat' para ver os detalhes no console ou confira a pasta 'logs'.", 16, "P61x Console v1.3.9"
     End If
 Else
     shell.Run """" & baseDir & "\iniciar_p61x.bat""", 1, False

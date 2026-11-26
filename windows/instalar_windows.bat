@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 >nul
 setlocal EnableExtensions
-title Instalador P61x Console v1.3.8 - Windows
+title Instalador P61x Console v1.3.9 - Windows
 cd /d "%~dp0"
 
 echo =====================================================================
-echo         INSTALADOR AUTOMATICO DO P61X CONSOLE v1.3.8 (WINDOWS)
+echo         INSTALADOR AUTOMATICO DO P61X CONSOLE v1.3.9 (WINDOWS)
 echo =====================================================================
 echo.
 

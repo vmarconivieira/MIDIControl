@@ -43,7 +43,7 @@ public final class P61xEngine {
             int expectedFrames = P61xAudioHelper.expectedPadFramesForRate(sr);
             boolean anyLoaded = false;
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 4; i++) {
                 long ptr = this.dspPtr;
                 if (ptr == 0L) return;
 
